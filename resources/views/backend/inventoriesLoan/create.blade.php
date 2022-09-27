@@ -80,7 +80,7 @@
                         <label for="inputPassword4" class="form-label">Tanggal Peminjaman</label>
                         <input type="date" name="inventoryloan_tgltransaksi" class="form-control" value="{{ old('inventoryloan_tgltransaksi') }}" id="inventoryloan_tgltransaksi" required>
                       </div>
-                      <input type="hidden" name="inventoryloan_tglpengembalian" value="{{ old('inventoryloan_duration',$inventoriesLoan->inventoryloan_tglpengembalian) }}" id="tglKembali" />
+                      <input type="hidden" name="inventoryloan_tglpengembalian" value="{{ old('inventoryloan_duration') }}" id="tglKembali" />
                       <div class="col-md-6">
                         <label for="inputPassword4" class="form-label">Durasi Peminjaman (Hari)</label>
                         <input type="text" name="inventoryloan_duration" value="{{ old('inventoryloan_duration') }}" class="form-control" id="duration" required>
