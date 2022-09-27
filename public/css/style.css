@@ -1,0 +1,51 @@
+.form-control{
+    padding: .3rem .5rem;
+}
+table.dataTable{
+    max-width: 100% !important;
+}
+table .action{
+    text-align: center;
+}
+
+.container-form-additional{
+    box-shadow: 0 0 2rem 0 rgb(33 37 41 / 10%);
+    padding: 20px;
+
+}
+
+.hide{
+    display: none !important;
+}
+
+.inventory-management-index .select2-container{
+   width: 100% !important;
+}
+.select2-container{
+    max-width: 100%;
+}
+#myModal .select2-container{
+    padding-right: 0;
+    max-width: 100%;
+    width: 97% !important;
+}
+
+.modal-add-inventory .modal-dialog {
+    position: fixed;
+    margin: 0;
+    top: auto;
+    right: auto;
+    height: 100%;
+    bottom: 0;
+    left: auto;
+    max-width: 100%;
+    width: 100%;
+    background: white;
+}
+.modal-add-inventory .modal-content, .modal-add-inventory .modal-body, .modal-add-inventory .modal-footer {
+    border:none;
+}
+
+button.badge{
+    border: none;
+}
