@@ -193,7 +193,7 @@ class InventoriesLoanController extends Controller
 
     public function generateBAST(InventoriesLoan $inventoriesLoan)
     {
-        $templateProcessor = new TemplateProcessor('storage/bast-template/templateBASTPeminjamanFix.docx');
+        $templateProcessor = new TemplateProcessor('public/template/templateBASTPeminjamanFix.docx');
         $kasubag = Accounts::select('account_name','account_nip_bkn')->where('account_role', 'Pejabat Struktural')->where('account_unit','Subbagian Umum dan Teknologi Informasi')->get();
         $petugasBMN = Accounts::select('account_name','account_nip_bkn')->where('account_role', 'Petugas BMN')->get();
         $table = new Table(['borderSize' => 12, 'borderColor' => 'black', 'width' => 5000, 'unit' => TblWidth::PERCENT]);
