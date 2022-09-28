@@ -1,11 +1,6 @@
 /node_modules
 /public/hot
-!public/storage/
-public/storage/*
-!public/storage/bast-template/
-public/storage/bast-template/*
-!public/storage/bast-template/templateBA*
-
+/public/storage
 /storage/*.key
 /vendor
 .env
