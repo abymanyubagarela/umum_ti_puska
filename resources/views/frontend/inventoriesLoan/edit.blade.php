@@ -12,29 +12,18 @@
 
     </div>
     <div class="col-md-4">
-        <form action="{{ route('export-InventoriesLoanDetail') }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            {{-- <div class="form-group mb-3">
-                <label for="inputDetail" class="col-sm-3 control-label">NUP</label>
-                <input type="text" class="form-control inputData" id="inventory_nup" name="inventory_nup" placeholder="nup" value="">
-            </div> --}}
-            {{-- <div class="form-group mb-3">
-                <label for="inputDetail" class="col-sm-3 mb-2 control-label">Kondisi</label>
-                <select class="form-select inputData" aria-label="Default select example" id="inventory_condition" name="inventory_condition">
-                    <option value="all">Semua</option>
-                    <option value="baik">Baik</option>
-                    <option value="rusak">Rusak</option>
-                </select>
-            </div> --}}
             <div class="text-end">
             @if($inventoriesLoan->inventoryloan_file)
                 <a class="inline btn btn-success" href="{{ asset('storage'). '/' . $inventoriesLoan->inventoryloan_file }}" target="_blank" download>Download BAST</a>
             @else
-            <a href="{{ 'generate-bast'}}". class="inline btn btn-success">Cetak Template BAST</a>
+            <a href="{{ 'generate-bast'}}". class="inline btn btn-secondary">Cetak Template BAST</a>
+            @endif
+            @if($inventoriesLoan->inventoryloan_filepengembalian)
+                <a class="inline btn btn-success" href="{{ asset('storage'). '/' . $inventoriesLoan->inventoryloan_file }}" target="_blank" download>Download BAST</a>
+            @else
+            <a href="{{ 'generate-bap'}}". class="inline btn btn-secondary">Cetak Template BAP</a>
             @endif
             </div>
-        </form>
-
     </div>
 </div>
 <div class="row">
@@ -59,10 +48,8 @@
                         <label for="inputPassword4" class="form-label">Jenis Transaksi</label>
                         <select class="form-select" name="inventoryloan_type">
                             <option value="Peminjaman" {{ old('inventoryloan_status',$inventoriesLoan->inventoryloan_type) == "Peminjaman" ? 'selected' : '' }}>Peminjaman</option>
-                            <option {{ old('inventoryloan_type',$inventoriesLoan->inventoryloan_type) == "Pengembalian" ? 'selected' : '' }} value="Pengembalian">Pengembalian</option>
                         </select>
                       </div>
-
                       <div class="col-md-4">
                         <label for="inputEmail4" class="form-label">Nama Penanggung Jawab</label>
                         <select class="select2input form-select" name="inventoryloan_penanggung_jawab" required>
@@ -77,23 +64,20 @@
                       </div>
                       <div class="col-md-4">
                         <label for="inputPassword4" class="form-label">Status</label>
-                        <select class="form-select" id="status" name="inventoryloan_status" disabled>
-                            <option value="Sudah diproses" {{ old('inventoryloan_status',$inventoriesLoan->inventoryloan_status) == "Sudah diproses" ? 'selected' : '' }}>Sudah diproses</option>
-                            <option {{ old('inventoryloan_status',$inventoriesLoan->inventoryloan_status) == "Belum diproses" ? 'selected' : '' }} value="Belum diproses">Belum diproses</option>
-                        </select>
+                        <input id="status" name="inventoryloan_status" class="form-control" type="text" value="{{ old('inventoryloan_status',$inventoriesLoan->inventoryloan_status)}}" readonly>
                     </div>
                       <div class="col-md-4">
                         <label for="inputPassword4" class="form-label">Tanggal Transaksi</label>
-                        <input type="date" name="inventoryloan_tgltransaksi" class="form-control" value="{{ old('body',$inventoriesLoan->inventoryloan_tgltransaksi) }}" id="inventoryloan_tgltransaksi">
+                        <input type="date" name="inventoryloan_tglpeminjaman" class="form-control" value="{{ old('body',$inventoriesLoan->inventoryloan_tglpeminjaman) }}" id="inventoryloan_tglpeminjaman">
                       </div>
-                      <input type="hidden" name="inventoryloan_tglpengembalian" value="{{ old('inventoryloan_duration',$inventoriesLoan->inventoryloan_tglpengembalian) }}" id="tglKembali" />
+                      <input type="hidden" name="inventoryloan_esttglpengembalian" value="{{ old('inventoryloan_duration',$inventoriesLoan->inventoryloan_esttglpengembalian) }}" id="tglKembali" />
                       <div class="col-md-4">
                         <label for="inputPassword4" class="form-label">Durasi Peminjaman (Hari)</label>
                         <input type="text" id="duration" name="inventoryloan_duration" value="{{ old('inventoryloan_duration',$inventoriesLoan->inventoryloan_duration) }}" class="form-control" id="duration">
                       </div>
                       <div class="col-md-4">
                         <label for="inputPassword4" class="form-label">Estimasi Tanggal Kembali</label>
-                        <input type="text" name="inventoryloan_tglpengembalians" class="form-control" value="{{ old('inventoryloan_duration',$inventoriesLoan->inventoryloan_tglpengembalian) }}" id="inventoryloan_tglpengembalian" disabled >
+                        <input type="text" name="inventoryloan_esttglpengembalians" class="form-control" value="{{ old('inventoryloan_duration',$inventoriesLoan->inventoryloan_esttglpengembalian) }}" id="inventoryloan_esttglpengembalian" disabled >
                       </div>
 
                       @if($inventoriesLoan->inventoryloan_status == "Belum diproses")
@@ -108,11 +92,23 @@
                          @enderror
                       </div>
                       @endif
+                      @if($inventoriesLoan->inventoryloan_status == "Proses peminjaman")
+                      <div class="mb-3">
+                        <label for="file" class="form-label">File Berita Acara Pengembalian</label>
+                        <input type="hidden" name="oldBAP" value="{{ $inventoriesLoan->inventoryloan_filepengembalian }}">
+                        <input type="file" class="form-control @error('inventoryloan_filepengembalian') is-invalid @enderror" id="inventoryloan_filepengembalian" name="inventoryloan_filepengembalian" onchange="">
+                        @error('inventoryloan_filepengembalian')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                         @enderror
+                      </div>
+                      @endif
                       <div class="col-12">
                         <label for="inputAddress" class="form-label">Keperluan Peminjaman</label>
                         <textarea type="text" name="inventoryloan_tujuan" class="form-control"  value="" id="inventoryloan_tujuan" >{{ old('inventoryloan_tujuan',$inventoriesLoan->inventoryloan_tujuan) }}</textarea>
                       </div>
-                      <div class="col-12">
+                      <div class="col-12 inventory">
                         <div class="row mb-3">
                             <div class="col-md-8">
                                 <h1 class="h3 mb-1 inline">Daftar Barang </h1>
@@ -141,9 +137,7 @@
                         </table>
                       </div>
                       <div class="col-12 mt-3">
-                        @if($inventoriesLoan->inventoryloan_status == "Belum diproses" )
                         <button type="submit" class="btn btn-lg btn-primary float-end">Simpan Perubahan</button>
-                        @endif
                       </div>
                 </form>
             </div>
@@ -161,20 +155,16 @@
 <script type="text/javascript">
     $(function () {
         var a= 0;
-        if($('#status') == "Sudah diproses"){
-            $('form input, form select, form textarea').attr('disabled', true);
-        }
+
 
         $("#duration").keyup(function(){
-            var someDate = new Date($('input#inventoryloan_tgltransaksi').val());
+            var someDate = new Date($('input#inventoryloan_tglpeminjaman').val());
             var days = $('input#duration').val();
             someDate.setDate(someDate.getDate() + parseInt(days));
-            console.log(someDate.getMonth());
             $('input#tglKembali').val(someDate.getFullYear()+'-'+(someDate.getMonth()+1)+'-'+someDate.getDate());
-            $('input#inventoryloan_tglpengembalian').val(someDate.getDate()+'/'+(someDate.getMonth()+1)+'/'+someDate.getFullYear());
+            $('input#inventoryloan_esttglpengembalian').val(someDate.getDate()+'/'+(someDate.getMonth()+1)+'/'+someDate.getFullYear());
          });
-        $("input#inventoryloan_tgltransaksi").change(function(){
-            console.log('asd');
+        $("input#inventoryloan_tglpeminjaman").change(function(){
             $('input#duration').removeAttr('disabled');
          });
 
@@ -251,7 +241,12 @@
 
           ],
           "initComplete": function(settings, data) {
-               console.log(data);
+
+               if($('#status').val() != "Belum diproses"){
+                    $('form input, form select, form textarea').attr('readonly', true);
+                    $('input#inventoryloan_filepengembalian').attr('readonly',false);
+                    $('.inventory .badge').remove();
+                }
             }
          });
     };

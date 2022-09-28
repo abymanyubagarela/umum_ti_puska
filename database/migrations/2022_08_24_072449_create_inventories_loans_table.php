@@ -21,9 +21,11 @@ class CreateInventoriesLoansTable extends Migration
             $table->string('inventoryloan_tujuan');
             $table->string('inventoryloan_status');
             $table->string('inventoryloan_duration');
-            $table->string('inventoryloan_tgltransaksi')->nullable();
+            $table->string('inventoryloan_tglpeminjaman')->nullable();
+            $table->string('inventoryloan_esttglpengembalian')->nullable();
             $table->string('inventoryloan_tglpengembalian')->nullable();
             $table->string('inventoryloan_file')->nullable();
+            $table->string('inventoryloan_filepengembalian')->nullable();
             $table->string('inventoryloan_createdby')->nullable();
             $table->string('inventoryloan_updatedby')->nullable();
             $table->timestamps();

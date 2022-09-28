@@ -54,15 +54,16 @@
                     <div class="col-md-6">
                         <label for="inputPassword4" class="form-label">Status</label>
                         <select class="form-select" name="inventoryloan_status">
-                            <option value="Sudah diproses" {{ old('inventoryloan_status',$inventoriesLoan->inventoryloan_status) == "Sudah diproses" ? 'selected' : '' }}>Sudah diproses</option>
                             <option {{ old('inventoryloan_status',$inventoriesLoan->inventoryloan_status) == "Belum diproses" ? 'selected' : '' }} value="Belum diproses">Belum diproses</option>
+                            <option value="Proses peminjaman" {{ old('inventoryloan_status',$inventoriesLoan->inventoryloan_status) == "Proses peminjaman" ? 'selected' : '' }}>Proses Peminjaman</option>
+                            <option value="Sudah dikembalikan" {{ old('inventoryloan_status',$inventoriesLoan->inventoryloan_status) == "Sudah dikembalikan" ? 'selected' : '' }}>Sudah dikembalikan</option>
+
                         </select>
                     </div>
                     <div class="col-md-6">
                         <label for="inputPassword4" class="form-label">Jenis Transaksi</label>
                         <select class="form-select" name="inventoryloan_type">
                             <option value="Peminjaman" {{ old('inventoryloan_status',$inventoriesLoan->inventoryloan_type) == "Peminjaman" ? 'selected' : '' }}>Peminjaman</option>
-                            <option {{ old('inventoryloan_type',$inventoriesLoan->inventoryloan_type) == "Pengembalian" ? 'selected' : '' }} value="Pengembalian">Pengembalian</option>
                         </select>
                       </div>
                     <div class="col-md-6">
@@ -91,16 +92,16 @@
                       </div>
                       <div class="col-md-4">
                         <label for="inputPassword4" class="form-label">Tanggal Peminjaman</label>
-                        <input type="date" name="inventoryloan_tgltransaksi" class="form-control" value="{{ old('body',$inventoriesLoan->inventoryloan_tgltransaksi) }}" id="inventoryloan_tgltransaksi">
+                        <input type="date" name="inventoryloan_tglpeminjaman" class="form-control" value="{{ old('body',$inventoriesLoan->inventoryloan_tglpeminjaman) }}" id="inventoryloan_tglpeminjaman">
                       </div>
-                      <input type="hidden" name="inventoryloan_tglpengembalian" value="{{ old('inventoryloan_duration',$inventoriesLoan->inventoryloan_tglpengembalian) }}" id="tglKembali" />
+                      <input type="hidden" name="inventoryloan_esttglpengembalian" value="{{ old('inventoryloan_duration',$inventoriesLoan->inventoryloan_esttglpengembalian) }}" id="tglKembali" />
                       <div class="col-md-4">
                         <label for="inputPassword4" class="form-label">Durasi Peminjaman (Hari)</label>
                         <input type="text" id="duration" name="inventoryloan_duration" value="{{ old('inventoryloan_duration',$inventoriesLoan->inventoryloan_duration) }}" class="form-control" >
                       </div>
                       <div class="col-md-4">
                         <label for="inputPassword4" class="form-label">Estimasi Tanggal Kembali</label>
-                        <input type="text" name="inventoryloan_tglpengembalian" class="form-control" value="{{ old('inventoryloan_duration',$inventoriesLoan->inventoryloan_tglpengembalian) }}" id="inventoryloan_tglpengembalian" disabled >
+                        <input type="text" name="inventoryloan_esttglpengembalian" class="form-control" value="{{ old('inventoryloan_duration',$inventoriesLoan->inventoryloan_esttglpengembalian) }}" id="inventoryloan_esttglpengembalian" disabled >
                       </div>
                       <div class="mb-3">
                         <label for="file" class="form-label">File Berita Acara Serah Terima</label>
@@ -170,13 +171,13 @@
         inventoriesLoanId:{{$inventoriesLoan->id}}
         }
         $("#duration").keyup(function(){
-            var someDate = new Date($('input#inventoryloan_tgltransaksi').val());
+            var someDate = new Date($('input#inventoryloan_tglpeminjaman').val());
             var days = $('input#duration').val();
             someDate.setDate(someDate.getDate() + parseInt(days));
             $('input#tglKembali').val(someDate.getFullYear()+'-'+(someDate.getMonth()+1)+'-'+someDate.getDate());
-            $('input#inventoryloan_tglpengembalian').val(someDate.getDate()+'/'+(someDate.getMonth()+1)+'/'+someDate.getFullYear());
+            $('input#inventoryloan_esttglpengembalian').val(someDate.getDate()+'/'+(someDate.getMonth()+1)+'/'+someDate.getFullYear());
          });
-        $("input#inventoryloan_tgltransaksi").change(function(){
+        $("input#inventoryloan_tglpeminjaman").change(function(){
             console.log('asd');
             $('input#duration').removeAttr('disabled');
          });

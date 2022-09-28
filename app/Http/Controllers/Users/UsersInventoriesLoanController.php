@@ -41,20 +41,25 @@ class UsersInventoriesLoanController extends Controller
     {
         if ($request->ajax())
         {
-            $data = InventoriesLoan::with(['Accounts'])->select("*", DB::raw("DATE_FORMAT(inventoryloan_tgltransaksi, '%d %b %Y') as inventoryloan_tgltransaksi"))->where('account_id', auth()->user()->id)->latest()->get();
+            $data = InventoriesLoan::with(['Accounts'])->select("*", DB::raw("DATE_FORMAT(inventoryloan_tglpeminjaman, '%d %b %Y') as inventoryloan_tglpeminjaman"))->where('account_id', auth()->user()->id)->latest()->get();
             return DataTables::of($data)->addIndexColumn()->addColumn('action', function ($row)
             {
                 $actionBtn = '<a href="/pinjam-bmn/' . $row->id . '/edit" class="edit open_modal badge bg-success btn-sm">Detail</a> ';
                 return $actionBtn;
-            })->addColumn('inventoryloan_tglpengembalian', function ($data)
+            })->addColumn('inventoryloan_esttglpengembalian', function ($data)
             {
-                $formatedDate = strtotime($data->inventoryloan_tgltransaksi . ' +' . $data->inventoryloan_duration . ' days');
+                $formatedDate = strtotime($data->inventoryloan_tglpeminjaman . ' +' . $data->inventoryloan_duration . ' days');
                 return date('d M Y', $formatedDate);
             })->addColumn('isBast', function ($data)
             {
                 $bastLink = '<span class="inline badge bg-danger">Belum ada BAST </span>';
                 if($data->inventoryloan_file){
                     $bastLink = '<a class="inline badge bg-success" href="/storage/'.$data->inventoryloan_file.'"target="_blank" download>Download BAST</a>';
+                }
+                if(!$data->inventoryloan_filepengembalian){
+                    $bastLink = $bastLink . '<br><span class="inline badge bg-danger">Belum ada BAP </span>';
+                }else if($data->inventoryloan_filepengembalian){
+                    $bastLink =  $bastLink .'<br><a class="inline badge bg-success" href="/storage/'.$data->inventoryloan_filepengembalian.'"target="_blank" download>Download BAP</a>';
                 }
 
                 return $bastLink;
@@ -76,7 +81,7 @@ class UsersInventoriesLoanController extends Controller
     public function store(Request $request)
     {
 
-        $validatedData = $request->validate(['inventoryloan_status' => 'required|max:255', 'inventoryloan_tgltransaksi' => 'required|max:255', 'inventoryloan_duration' => 'int|required', 'inventoryloan_penanggung_jawab' => 'int|required', 'inventoryloan_tujuan' => 'required|max:255', 'inventory' => 'required', 'inventoryloan_file' => 'file|max:1024','inventoryloan_tglpengembalian' => 'date']);
+        $validatedData = $request->validate(['inventoryloan_status' => 'required|max:255', 'inventoryloan_tglpeminjaman' => 'required|max:255', 'inventoryloan_duration' => 'int|required', 'inventoryloan_penanggung_jawab' => 'int|required', 'inventoryloan_tujuan' => 'required|max:255', 'inventory' => 'required', 'inventoryloan_file' => 'file|max:1024','inventoryloan_esttglpengembalian' => 'date']);
 
         if ($request->file('inventoryloan_file'))
         {
@@ -110,8 +115,8 @@ class UsersInventoriesLoanController extends Controller
     public function edit(InventoriesLoan $inventoriesLoan)
     {
         //
-        $date = date("Y-m-d", strtotime($inventoriesLoan->inventoryloan_tgltransaksi));
-        $inventoriesLoan->inventoryloan_tgltransaksi = $date;
+        $date = date("Y-m-d", strtotime($inventoriesLoan->inventoryloan_tglpeminjaman));
+        $inventoriesLoan->inventoryloan_tglpeminjaman = $date;
         return view('frontend.inventoriesLoan.edit', ['title' => "Detail Transaksi BMN", 'inventoriesLoan' => $inventoriesLoan, 'inventories' => Inventories::all() , 'accounts' => Accounts::select('id', 'account_name')->get()
 
         ]);
@@ -120,7 +125,8 @@ class UsersInventoriesLoanController extends Controller
     public function update(Request $request, InventoriesLoan $inventoriesLoan)
     {
         //
-        $rules = ['inventoryloan_type' => 'required|max:255', 'inventoryloan_penanggung_jawab' => 'required|max:255', 'inventoryloan_tgltransaksi' => 'date|max:1024', 'inventoryloan_duration' => 'int|required', 'inventoryloan_tujuan' => 'required', 'inventoryloan_file' => 'file|max:1024','inventoryloan_tglpengembalian' => 'date'];
+
+        $rules = ['inventoryloan_type' => 'required|max:255', 'inventoryloan_penanggung_jawab' => 'required|max:255', 'inventoryloan_tglpeminjaman' => 'date|max:1024', 'inventoryloan_duration' => 'int|required', 'inventoryloan_tujuan' => 'required', 'inventoryloan_file' => 'file|max:1024','inventoryloan_esttglpengembalian' => 'date', 'inventoryloan_filepengembalian' => 'file|max:1024',];
         $validatedData = $request->validate($rules);
 
         $validatedData['account_id'] = auth()->user()->id;
@@ -132,6 +138,15 @@ class UsersInventoriesLoanController extends Controller
             }
             $validatedData['inventoryloan_file'] = $request->file('inventoryloan_file')->store('bast-files');
             TelegramBotController::messages(auth()->user()->account_name.' Telah Mengupload BAST');
+        }
+        if ($request->file('inventoryloan_filepengembalian'))
+        {
+            if ($request->oldBAP)
+            {
+                Storage::delete($request->oldBAP);
+            }
+            $validatedData['inventoryloan_filepengembalian'] = $request->file('inventoryloan_filepengembalian')->store('bap-files');
+            TelegramBotController::messages(auth()->user()->account_name.' Telah Mengupload BAP');
         }
         //insert data
         InventoriesLoan::where('id', $inventoriesLoan->id)->update($validatedData);

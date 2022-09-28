@@ -59,16 +59,16 @@
                       </div>
                       <div class="col-md-6">
                         <label for="inputPassword4" class="form-label">Tanggal Peminjaman</label>
-                        <input type="date" name="inventoryloan_tgltransaksi" class="form-control" value="{{ old('inventoryloan_tgltransaksi') }}" id="inventoryloan_tgltransaksi" required>
+                        <input type="date" name="inventoryloan_tglpeminjaman" class="form-control" value="{{ old('inventoryloan_tglpeminjaman') }}" id="inventoryloan_tglpeminjaman" required>
                       </div>
-                      <input type="hidden" name="inventoryloan_tglpengembalian" value="{{ old('inventoryloan_duration') }}" id="tglKembali" />
+                      <input type="hidden" name="inventoryloan_esttglpengembalian" value="{{ old('inventoryloan_duration') }}" id="tglKembali" />
                       <div class="col-md-6">
                         <label for="inputPassword4" class="form-label">Durasi Peminjaman (Hari)</label>
                         <input type="text" id="duration" name="inventoryloan_duration" value="{{ old('inventoryloan_duration') }}" class="form-control" id="duration" required disabled>
                       </div>
                       <div class="col-md-6">
                         <label for="inputPassword4" class="form-label">Estimasi Tanggal Kembali</label>
-                        <input type="text" name="inventoryloan_tglpengembalian" class="form-control" value="" id="inventoryloan_tglpengembalian" disabled >
+                        <input type="text" name="inventoryloan_esttglpengembalian" class="form-control" value="" id="inventoryloan_esttglpengembalian" disabled >
                       </div>
                       <div class="col-12">
                         <label for="inputAddress" class="form-label">Keperluan Peminjaman</label>
@@ -119,13 +119,13 @@
 <script type="text/javascript">
     $(function () {
         $("#duration").keyup(function(){
-            var someDate = new Date($('input#inventoryloan_tgltransaksi').val());
+            var someDate = new Date($('input#inventoryloan_tglpeminjaman').val());
             var days = $('input#duration').val();
             someDate.setDate(someDate.getDate() + parseInt(days));
             $('input#tglKembali').val(someDate.getFullYear()+'-'+(someDate.getMonth()+1)+'-'+someDate.getDate());
-            $('input#inventoryloan_tglpengembalian').val(someDate.getDate()+'/'+(someDate.getMonth()+1)+'/'+someDate.getFullYear());
+            $('input#inventoryloan_esttglpengembalian').val(someDate.getDate()+'/'+(someDate.getMonth()+1)+'/'+someDate.getFullYear());
          });
-        $("input#inventoryloan_tgltransaksi").change(function(){
+        $("input#inventoryloan_tglpeminjaman").change(function(){
             console.log('asd');
             $('input#duration').removeAttr('disabled');
          });

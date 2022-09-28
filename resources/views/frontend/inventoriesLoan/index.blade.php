@@ -19,7 +19,6 @@
                     <th>Tujuan Peminjaman</th>
                     <th>Tanggal Peminjaman</th>
                     <th>Tanggal Harus Kembali</th>
-                    <th>Tipe Transaksi</th>
                     <th>Status</th>
                     <th>File</th>
                     <th>Aksi</th>
@@ -55,9 +54,8 @@
           columns: [
               {data: 'DT_RowIndex', name: 'DT_RowIndex'},
               {data: 'inventoryloan_tujuan', name: 'inventoryloan_tujuan'},
-              {data: 'inventoryloan_tgltransaksi', name: 'inventoryloan_tglpinjam'},
-              {data: 'inventoryloan_tglpengembalian', name: 'inventoryloan_tglpengembalian'},
-              {data: 'inventoryloan_type', name: 'inventoryloan_type'},
+              {data: 'inventoryloan_tglpeminjaman', name: 'inventoryloan_tglpeminjaman'},
+              {data: 'inventoryloan_esttglpengembalian', name: 'inventoryloan_esttglpengembalian'},
               {data: 'inventoryloan_status', name: 'inventoryloan_status'},
               {data: 'isBast', name: 'isBast'},
               {

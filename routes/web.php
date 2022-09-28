@@ -79,6 +79,7 @@ Route::group(['middleware' => 'auth'], function ()
 
     // Export to Word
     Route::get('/pinjam-bmn/{inventoriesLoan}/generate-bast/', [InventoriesLoanController::class , 'generateBAST']);
+    Route::get('/pinjam-bmn/{inventoriesLoan}/generate-bap/', [InventoriesLoanController::class , 'generateBAP']);
     Route::get('/backend/inventoriesLoan/{inventoriesLoan}/generate-bast/', [InventoriesLoanController::class , 'generateBAST']);
     Route::get('/generate-bap/{inventoriesLoan}', [InventoriesLoanController::class , 'generateBAP']);
 });
