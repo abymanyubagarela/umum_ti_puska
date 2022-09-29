@@ -24,10 +24,8 @@ use App\Http\Controllers\Telegram\TelegramBotController;
 
 Route::get('/', function ()
 {
-    return view('/backend/login');
+    return view('/backend/dashboard');
 });
-
-Route::get('/telegramTest', [TelegramBotController::class , 'terbilangTest']);
 
 Route::get('/login', [LoginController::class , 'index'])->name('login');
 Route::post('/backend/login', [LoginController::class , 'authenticate']);
@@ -39,6 +37,7 @@ Route::group(['middleware' => 'auth'], function ()
     {
         return view('backend/dashboard/main');
     });
+    Route::get('/backend/getDataInventoryLoanDashboard',[InventoriesLoanController::class, 'getDataInventoryLoanDashboard']);
     Route::get('/backend/bmn/dashboard', [DashboardControllers::class , 'bmnDashboard']);
     //Inventories--------------------------------------------------------
     Route::get('/backend/inventories', [InventoriesControllers::class , 'index']);
@@ -76,6 +75,7 @@ Route::group(['middleware' => 'auth'], function ()
     Route::post('/pinjam-bmn', [UsersInventoriesLoanController::class , 'store']);
     Route::get('/pinjam-bmn/{inventoriesLoan}/edit', [UsersInventoriesLoanController::class , 'edit']);
     Route::put('/pinjam-bmn/{inventoriesLoan}', [UsersInventoriesLoanController::class , 'update']);
+    Route::delete('/pinjam-bmn/{inventoriesLoan}', [UsersInventoriesLoanController::class , 'destroy']);
 
     // Export to Word
     Route::get('/pinjam-bmn/{inventoriesLoan}/generate-bast/', [InventoriesLoanController::class , 'generateBAST']);

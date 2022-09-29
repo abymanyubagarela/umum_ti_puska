@@ -15,7 +15,7 @@
                 <div class="dropdown-menu dropdown-menu-end">
                     <form action="/logout" method="post">
                         @csrf
-                        <button type="submit" class="dropdown-item">Log out</button>
+                        <button type="submit" class="dropdown-item">Keluar</button>
                     </form>
                 </div>
             </li>

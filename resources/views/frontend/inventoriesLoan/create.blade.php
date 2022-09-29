@@ -8,7 +8,7 @@
 
 <div class="row">
     <div class="col-md-8">
-        <h1 class="h3 mb-1 inline"><strong>Daftar</strong> {{ $title }}</h1>
+        <h1 class="h3 mb-1 inline"><strong>Form Peminjaman</strong> Barang BMN</h1>
     </div>
     <div class="col-md-4">
         @if ($errors->any())

@@ -24,6 +24,8 @@ class CreateInventoriesLoansTable extends Migration
             $table->string('inventoryloan_tglpeminjaman')->nullable();
             $table->string('inventoryloan_esttglpengembalian')->nullable();
             $table->string('inventoryloan_tglpengembalian')->nullable();
+            $table->string('inventoryloan_nomorBAST')->nullable();
+            $table->string('inventoryloan_nomorBAP')->nullable();
             $table->string('inventoryloan_file')->nullable();
             $table->string('inventoryloan_filepengembalian')->nullable();
             $table->string('inventoryloan_createdby')->nullable();

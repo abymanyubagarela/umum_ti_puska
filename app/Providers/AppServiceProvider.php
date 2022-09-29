@@ -33,5 +33,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('Petugas BMN',function(Accounts $account){
             return $account->account_role === "Petugas BMN";
         });
+        Gate::define('Kasubbag Umum',function(Accounts $account){
+            return $account->account_role === "Pejabat Struktural" && $account->account_unit == "Subbagian Umum dan Teknologi Informasi";
+        });
     }
 }

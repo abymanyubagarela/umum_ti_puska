@@ -62,9 +62,14 @@ class InventoriesLoanController extends Controller
                 return date('d M Y', $formatedDate);
             })->addColumn('isBast', function ($data)
             {
-                $bastLink = '<span class="inline badge bg-danger">Belum ada BAST </span>';
+                $bastLink = '<span class="inline badge w-100  bg-danger">Belum ada BAST </span>';
                 if($data->inventoryloan_file){
-                    $bastLink = '<a class="inline badge bg-success" href="/storage/'.$data->inventoryloan_file.'"target="_blank" download>Download BAST</a>';
+                    $bastLink = '<a class="inline badge w-100 bg-success" href="/storage/'.$data->inventoryloan_file.'"target="_blank" download>Download BAST</a>';
+                }
+                if(!$data->inventoryloan_filepengembalian){
+                    $bastLink = $bastLink . '<br><span class="inline w-100 badge bg-danger">Belum ada BAP </span>';
+                }else if($data->inventoryloan_filepengembalian){
+                    $bastLink =  $bastLink .'<br><a class="inline w-100 badge bg-success" href="/storage/'.$data->inventoryloan_filepengembalian.'"target="_blank" download>Download BAP</a>';
                 }
 
                 return $bastLink;
@@ -152,10 +157,9 @@ class InventoriesLoanController extends Controller
      */
     public function update(Request $request, InventoriesLoan $inventoriesLoan)
     {
-        //
-        $rules = ['inventoryloan_status' => 'required|max:255', 'inventoryloan_type' => 'required|max:255', 'account_id' => 'required', 'inventoryloan_penanggung_jawab' => 'required|max:255', 'inventoryloan_tglpeminjaman' => 'date|max:1024', 'inventoryloan_duration' => 'int|required', 'inventoryloan_tujuan' => 'required','inventoryloan_esttglpengembalian' => 'date', 'inventoryloan_file' => 'file|max:1024'];
-        $validatedData = $request->validate($rules);
 
+        $rules = ['inventoryloan_status' => 'required|max:255', 'inventoryloan_type' => 'required|max:255', 'account_id' => 'required', 'inventoryloan_penanggung_jawab' => 'required|max:255', 'inventoryloan_tglpeminjaman' => 'date|max:1024', 'inventoryloan_duration' => 'int|required', 'inventoryloan_tujuan' => 'required','inventoryloan_esttglpengembalian' => 'date', 'inventoryloan_file' => 'file|max:1024','inventoryloan_nomorBAST' => '','inventoryloan_nomorBAP' => ''];
+        $validatedData = $request->validate($rules);
         if ($request->file('inventoryloan_file'))
         {
             if ($request->oldBAST)
@@ -219,7 +223,7 @@ class InventoriesLoanController extends Controller
         $templateProcessor->setComplexBlock('table', $table);
 
 
-        $templateProcessor->setValue('noBAST', ' ');
+        $templateProcessor->setValue('noBAST',$inventoriesLoan->inventoryloan_nomorBAST);
         $templateProcessor->setValue('days', hari($date));
         $templateProcessor->setValue('tanggal', terbilang(tanggal($date,'tanggal')));
         $templateProcessor->setValue('bulanAngka',tanggal($date,'bulan'));
@@ -274,7 +278,7 @@ class InventoriesLoanController extends Controller
         }
         $templateProcessor->setComplexBlock('table', $table);
 
-        $templateProcessor->setValue('noBAST', ' ');
+        $templateProcessor->setValue('noBAST', $inventoriesLoan->inventoryloan_nomorBAP);
         $templateProcessor->setValue('days', hari($date));
         $templateProcessor->setValue('tanggal', terbilang(tanggal($date,'tanggal')));
         $templateProcessor->setValue('bulanAngka',tanggal($date,'bulan'));
@@ -305,6 +309,11 @@ class InventoriesLoanController extends Controller
     public function exportInventoriesLoan(Request $request)
     {
         return Excel::download(new ExportInventoriesLoan($request) , 'Data Peminjaman BMN.xlsx');
+    }
+
+    public function getDataInventoryLoanDashboard(){
+        $data = InventoriesLoan::select('id', 'inventoryloan_status','inventoryloan_esttglpengembalian')->where('account_id', auth()->user()->id)->get();
+        return response()->json($data);
     }
 }
 

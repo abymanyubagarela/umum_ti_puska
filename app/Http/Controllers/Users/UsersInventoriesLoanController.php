@@ -44,7 +44,7 @@ class UsersInventoriesLoanController extends Controller
             $data = InventoriesLoan::with(['Accounts'])->select("*", DB::raw("DATE_FORMAT(inventoryloan_tglpeminjaman, '%d %b %Y') as inventoryloan_tglpeminjaman"))->where('account_id', auth()->user()->id)->latest()->get();
             return DataTables::of($data)->addIndexColumn()->addColumn('action', function ($row)
             {
-                $actionBtn = '<a href="/pinjam-bmn/' . $row->id . '/edit" class="edit open_modal badge bg-success btn-sm">Detail</a> ';
+                $actionBtn = '<a href="/pinjam-bmn/' . $row->id . '/edit" class="edit open_modal badge bg-success btn-sm">Detail</a> <button value="' . $row->id . '"  name="' . $row->account_name . '"class="delete delete-product badge bg-danger btn-sm">Delete</button>';
                 return $actionBtn;
             })->addColumn('inventoryloan_esttglpengembalian', function ($data)
             {
@@ -52,14 +52,14 @@ class UsersInventoriesLoanController extends Controller
                 return date('d M Y', $formatedDate);
             })->addColumn('isBast', function ($data)
             {
-                $bastLink = '<span class="inline badge bg-danger">Belum ada BAST </span>';
+                $bastLink = '<span class="inline badge w-100 bg-danger">Belum ada BAST </span>';
                 if($data->inventoryloan_file){
-                    $bastLink = '<a class="inline badge bg-success" href="/storage/'.$data->inventoryloan_file.'"target="_blank" download>Download BAST</a>';
+                    $bastLink = '<a class="inline badge  w-100 bg-success" href="/storage/'.$data->inventoryloan_file.'"target="_blank" download>Download BAST</a>';
                 }
                 if(!$data->inventoryloan_filepengembalian){
-                    $bastLink = $bastLink . '<br><span class="inline badge bg-danger">Belum ada BAP </span>';
+                    $bastLink = $bastLink . '<br><span class="inline w-100 badge bg-danger">Belum ada BAP </span>';
                 }else if($data->inventoryloan_filepengembalian){
-                    $bastLink =  $bastLink .'<br><a class="inline badge bg-success" href="/storage/'.$data->inventoryloan_filepengembalian.'"target="_blank" download>Download BAP</a>';
+                    $bastLink =  $bastLink .'<br><a class="inline w-100 badge bg-success" href="/storage/'.$data->inventoryloan_filepengembalian.'"target="_blank" download>Download BAP</a>';
                 }
 
                 return $bastLink;
@@ -152,6 +152,12 @@ class UsersInventoriesLoanController extends Controller
         InventoriesLoan::where('id', $inventoriesLoan->id)->update($validatedData);
 
         return redirect('/pinjam-bmn')->with('success', 'Data berhasil diubah');
+    }
+
+    public function destroy($inventoryloan_id)
+    {
+        $inventory = InventoriesLoan::destroy($inventoryloan_id);
+        return response()->json($inventory);
     }
 }
 

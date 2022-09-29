@@ -1,6 +1,6 @@
 <nav id="sidebar" class="sidebar js-sidebar">
     <div class="sidebar-content js-simplebar">
-        <a class="sidebar-brand" href="index.html">
+        <a class="sidebar-brand" href="/">
   <span class="align-middle">SIBTARA</span>
 </a>
 
@@ -25,7 +25,7 @@
                 </a>
             </li>
             @endcan
-            @canany(['Super Admin', 'Petugas BMN'])
+            @canany(['Super Admin', 'Petugas BMN','Kasubbag Umum'])
             <li class="sidebar-header">
                 Admin BMN
             </li>

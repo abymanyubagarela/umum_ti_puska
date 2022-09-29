@@ -113,13 +113,13 @@ $(document).ready(function(){
                     url: url + '/' + data_id,
                     success: function (data) {
                         $('.dataTable').DataTable().ajax.reload();
-
+                        toastr.info('Data Berhasil dihapus');
                     },
                     error: function (data) {
-                        console.log('Error:', data);
+                        toastr.info('Maaf Terjadi Kesalahan');
                     }
                 });
-                toastr.info('Data Berhasil dihapus');
+
 
             }
           })

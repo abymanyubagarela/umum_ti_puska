@@ -150,8 +150,8 @@ class InventoriesController extends Controller
     {
         if ($request->ajax())
         {
-            $doctors_slots = Inventories::select('id', 'inventory_nup', 'inventory_name', 'inventory_brand', 'inventory_description')->whereIn('id', $request->inventory_id)->get();
-            return response()->json($doctors_slots);
+            $data = Inventories::select('id', 'inventory_nup', 'inventory_name', 'inventory_brand', 'inventory_description')->whereIn('id', $request->inventory_id)->get();
+            return response()->json($data);
 
         }
     }

@@ -43,31 +43,50 @@
                 <form class="row g-3" method="post" action="/pinjam-bmn/{{ $inventoriesLoan->id }}" enctype="multipart/form-data">
                     @method('put')
                     @csrf
-
-                    <div class="col-md-4">
+                    <div class="col-md-6">
+                        <label for="inputPassword4" class="form-label">Nomor Urut BAST</label>
+                        <input type="text" name="inventoryloan_nomorBAST" value="{{ old('inventoryloan_nomorBAST',$inventoriesLoan->inventoryloan_nomorBAST) }}" class="form-control" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="inputPassword4" class="form-label">Nomor Urut BAP</label>
+                        <input type="text" name="inventoryloan_nomorBAP" value="{{ old('inventoryloan_nomorBAP',$inventoriesLoan->inventoryloan_nomorBAP) }}" class="form-control" readonly>
+                    </div>
+                    <div class="col-md-6 hidden" style="display: none">
                         <label for="inputPassword4" class="form-label">Jenis Transaksi</label>
                         <select class="form-select" name="inventoryloan_type">
                             <option value="Peminjaman" {{ old('inventoryloan_status',$inventoriesLoan->inventoryloan_type) == "Peminjaman" ? 'selected' : '' }}>Peminjaman</option>
                         </select>
                       </div>
-                      <div class="col-md-4">
+                      <div class="col-md-6">
                         <label for="inputEmail4" class="form-label">Nama Penanggung Jawab</label>
-                        <select class="select2input form-select" name="inventoryloan_penanggung_jawab" required>
-                            @foreach($accounts as $account)
-                            @if(old('category_id', $inventoriesLoan->inventoryloan_penanggung_jawab) == $account->id)
-                            <option value="{{ $account->id }}" selected>{{ $account->account_name }}</option>
-                            @else
-                            <option value="{{ $account->id }}">{{ $account->account_name }}</option>
-                            @endif
-                            @endforeach
-                          </select>
+                        @if($inventoriesLoan->inventoryloan_status != "Belum diproses")
+                      <select class="select2input form-select" name="inventoryloan_penanggung_jawab" required>
+                                @foreach($accounts as $account)
+                                @if(old('category_id', $inventoriesLoan->inventoryloan_penanggung_jawab) == $account->id)
+                                <option selected value="{{ $account->id }}" selected>{{ $account->account_name }}</option>
+                                @else
+                                <option disabled value="{{ $account->id }}">{{ $account->account_name }}</option>
+                                @endif
+                                @endforeach
+                            </select>
+                        @else
+                            <select class="select2input form-select" name="inventoryloan_penanggung_jawab" required>
+                                @foreach($accounts as $account)
+                                @if(old('category_id', $inventoriesLoan->inventoryloan_penanggung_jawab) == $account->id)
+                                <option value="{{ $account->id }}" selected>{{ $account->account_name }}</option>
+                                @else
+                                <option value="{{ $account->id }}">{{ $account->account_name }}</option>
+                                @endif
+                                @endforeach
+                            </select>
+                        @endif
                       </div>
-                      <div class="col-md-4">
+                      <div class="col-md-6">
                         <label for="inputPassword4" class="form-label">Status</label>
                         <input id="status" name="inventoryloan_status" class="form-control" type="text" value="{{ old('inventoryloan_status',$inventoriesLoan->inventoryloan_status)}}" readonly>
                     </div>
                       <div class="col-md-4">
-                        <label for="inputPassword4" class="form-label">Tanggal Transaksi</label>
+                        <label for="inputPassword4" class="form-label">Tanggal Peminjaman</label>
                         <input type="date" name="inventoryloan_tglpeminjaman" class="form-control" value="{{ old('body',$inventoriesLoan->inventoryloan_tglpeminjaman) }}" id="inventoryloan_tglpeminjaman">
                       </div>
                       <input type="hidden" name="inventoryloan_esttglpengembalian" value="{{ old('inventoryloan_duration',$inventoriesLoan->inventoryloan_esttglpengembalian) }}" id="tglKembali" />

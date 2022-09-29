@@ -49,3 +49,6 @@ table .action{
 button.badge{
     border: none;
 }
+.badge{
+    cursor: pointer;
+}

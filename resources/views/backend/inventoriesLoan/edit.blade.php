@@ -52,6 +52,14 @@
                     @method('put')
                     @csrf
                     <div class="col-md-6">
+                        <label for="inputPassword4" class="form-label">Nomor BAST</label>
+                        <input type="text" name="inventoryloan_nomorBAST" id="inventoryloan_nomorBAST" value="{{ old('inventoryloan_nomorBAST',$inventoriesLoan->inventoryloan_nomorBAST) }}" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="inputPassword4" class="form-label">Nomor BAP</label>
+                        <input type="text" name="inventoryloan_nomorBAP" id="inventoryloan_nomorBAP" value="{{ old('inventoryloan_nomorBAP',$inventoriesLoan->inventoryloan_nomorBAP) }}" class="form-control">
+                    </div>
+                    <div class="col-md-6">
                         <label for="inputPassword4" class="form-label">Status</label>
                         <select class="form-select" name="inventoryloan_status">
                             <option {{ old('inventoryloan_status',$inventoriesLoan->inventoryloan_status) == "Belum diproses" ? 'selected' : '' }} value="Belum diproses">Belum diproses</option>
@@ -169,6 +177,12 @@
     $(function () {
         var param={
         inventoriesLoanId:{{$inventoriesLoan->id}}
+        }
+        if(!$('#inventoryloan_nomorBAP').val()){
+            !$('#inventoryloan_nomorBAP').val("nomor/BAST -P.BMN/XIX.TJS/bulanAngka/tahunAngka")
+        }
+        if(!$('#inventoryloan_nomorBAST').val()){
+            !$('#inventoryloan_nomorBAST').val("noBAST/BAST BMN/XIX.TJS/bulanAngka/tahunAngka")
         }
         $("#duration").keyup(function(){
             var someDate = new Date($('input#inventoryloan_tglpeminjaman').val());

@@ -10,7 +10,7 @@
 	<meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
 	<link rel="preconnect" href="https://fonts.gstatic.com">
 	<link rel="shortcut icon" href="img/icons/icon-48x48.png" />
-	<title>Dashboard Kaltara</title>
+	<title>Sistem Informasi BPK Kaltara</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 	<link href="/css/app.css" rel="stylesheet">
 	<link href="/css/style.css" rel="stylesheet">
@@ -32,7 +32,8 @@
 			<main class="content">
 				<div class="container-fluid p-0">
 					@yield('container')
-			</main>
+                </div>
+                </main>
 			<footer class="footer">
 				<div class="container-fluid">
 					<div class="row text-muted">
