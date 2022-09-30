@@ -34,72 +34,22 @@ use App\Http\Controllers\Telegram\TelegramBotController;
 
 class InventoriesLoanController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
         $data = ['title' => "Data Transaksi BMN", 'date' => date('m/d/Y') ];
-
         return view('backend.inventoriesLoan.index', $data);
     }
 
-    public function getDataInventoriesLoan(Request $request)
-    {
-        if ($request->ajax())
-        {
-            $data = InventoriesLoan::with(['Accounts'])->select("*", DB::raw("DATE_FORMAT(inventoryloan_tglpeminjaman, '%d %b %Y') as inventoryloan_tglpeminjaman"))->latest()->get();
-            return DataTables::of($data)->addIndexColumn()->addColumn('action', function ($row)
-            {
-                $actionBtn = '<a href="/backend/inventoriesLoan/' . $row->id . '/edit" class="edit open_modal badge bg-success btn-sm">Detail</a> ';
-                return $actionBtn;
-            })->addColumn('inventoryloan_esttglpengembalian', function ($data)
-            {
-                $formatedDate = strtotime($data->inventoryloan_tglpeminjaman . ' +' . $data->inventoryloan_duration . ' days');
-                return date('d M Y', $formatedDate);
-            })->addColumn('isBast', function ($data)
-            {
-                $bastLink = '<span class="inline badge w-100  bg-danger">Belum ada BAST </span>';
-                if($data->inventoryloan_file){
-                    $bastLink = '<a class="inline badge w-100 bg-success" href="/storage/'.$data->inventoryloan_file.'"target="_blank" download>Download BAST</a>';
-                }
-                if(!$data->inventoryloan_filepengembalian){
-                    $bastLink = $bastLink . '<br><span class="inline w-100 badge bg-danger">Belum ada BAP </span>';
-                }else if($data->inventoryloan_filepengembalian){
-                    $bastLink =  $bastLink .'<br><a class="inline w-100 badge bg-success" href="/storage/'.$data->inventoryloan_filepengembalian.'"target="_blank" download>Download BAP</a>';
-                }
-
-                return $bastLink;
-            })->rawColumns(['action','isBast'])->make(true);
-        }
-
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        //
         return view('backend.inventoriesLoan.create', ['title' => "Detail Transaksi BMN", 'inventories' => Inventories::where('inventory_isborrowed', 0)->where('inventory_condition','baik') , 'accounts' => Accounts::all()
         ]);
 
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreInventoriesLoanRequest  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        $validatedData = $request->validate(['inventoryloan_status' => 'required|max:255', 'inventoryloan_type' => 'required|max:255', 'inventoryloan_tglpeminjaman' => 'required|max:255', 'inventoryloan_duration' => 'int|required', 'inventoryloan_tujuan' => 'required|max:255', 'account_id' => 'required|max:255', 'inventoryloan_esttglpengembalian' => 'date','inventoryloan_penanggung_jawab' => 'required|max:255', 'inventory' => 'required'
+        $validatedData = $request->validate(['inventoryloan_status' => 'required|max:255', 'inventoryloan_type' => 'required|max:255', 'inventoryloan_tglpeminjaman' => 'required|max:255', 'inventoryloan_duration' => 'int|required', 'inventoryloan_tujuan' => 'required|max:255', 'account_id' => 'required|max:255', 'inventoryloan_esttglpengembalian' => 'date','inventoryloan_penanggung_jawab' => 'required|max:255', 'inventory' => 'required','inventoryloan_tglpengembalian' => ''
         ]);
 
         $inventoryIds = $validatedData['inventory'];
@@ -122,43 +72,21 @@ class InventoriesLoanController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\InventoriesLoan  $inventoriesLoan
-     * @return \Illuminate\Http\Response
-     */
     public function show(InventoriesLoan $inventoriesLoan)
     {
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\InventoriesLoan  $inventoriesLoan
-     * @return \Illuminate\Http\Response
-     */
     public function edit(InventoriesLoan $inventoriesLoan)
     {
-        //
         $date = date("Y-m-d", strtotime($inventoriesLoan->inventoryloan_tglpeminjaman));
         $inventoriesLoan->inventoryloan_tglpeminjaman = $date;
         return view('backend.inventoriesLoan.edit', ['title' => "Detail Transaksi BMN", 'inventoriesLoan' => $inventoriesLoan, 'inventories' => Inventories::where('inventory_isborrowed', 0)->where('inventory_condition','baik') , 'accounts' => Accounts::all()
-        // 'inventoriesLoanDetails' => InventoriesLoanDetails::with(['Inventories'])->where('inventoryloan_id',$inventoriesLoan->id)->get()
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateInventoriesLoanRequest  $request
-     * @param  \App\Models\InventoriesLoan  $inventoriesLoan
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, InventoriesLoan $inventoriesLoan)
     {
-
-        $rules = ['inventoryloan_status' => 'required|max:255', 'inventoryloan_type' => 'required|max:255', 'account_id' => 'required', 'inventoryloan_penanggung_jawab' => 'required|max:255', 'inventoryloan_tglpeminjaman' => 'date|max:1024', 'inventoryloan_duration' => 'int|required', 'inventoryloan_tujuan' => 'required','inventoryloan_esttglpengembalian' => 'date', 'inventoryloan_file' => 'file|max:1024','inventoryloan_nomorBAST' => '','inventoryloan_nomorBAP' => ''];
+        $rules = ['inventoryloan_status' => 'required|max:255', 'inventoryloan_type' => 'required|max:255', 'account_id' => 'required', 'inventoryloan_penanggung_jawab' => 'required|max:255', 'inventoryloan_tglpeminjaman' => 'date|max:1024', 'inventoryloan_duration' => 'int|required', 'inventoryloan_tujuan' => 'required','inventoryloan_esttglpengembalian' => 'date', 'inventoryloan_file' => 'file|max:1024','inventoryloan_nomorBAST' => '','inventoryloan_nomorBAP' => '','inventoryloan_tglpengembalian' => ''];
         $validatedData = $request->validate($rules);
         if ($request->file('inventoryloan_file'))
         {
@@ -175,26 +103,20 @@ class InventoriesLoanController extends Controller
         if($validatedData['inventoryloan_status'] == "Sudah diproses"){
              Log::channel('pinjamBMN')->info(auth()->user()->account_name.'Melakukan Update Data : '.json_encode($validatedData));
         }
+
         return redirect('/backend/inventoriesLoan')->with('success', 'Data berhasil diubah');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\InventoriesLoan  $inventoriesLoan
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(InventoriesLoan $inventoriesLoan)
     {
-        //
         if ($inventoriesLoan->inventoryloan_file)
         {
             Storage::delete($inventoriesLoan->inventoryloan_file);
         }
+        InventoriesLoanDetails::where('inventoryloan_id', '=', $inventoriesLoan->id)->destroy();
         InventoriesLoan::destroy($inventoriesLoan->id);
-
     }
-
+    // FOR EXPORT DATA
     public function generateBAST(InventoriesLoan $inventoriesLoan)
     {
         $templateProcessor = new TemplateProcessor(public_path().'/template/templateBASTPeminjamanFix.docx');
@@ -221,7 +143,6 @@ class InventoriesLoanController extends Controller
             $table->addCell(150)->addText($inventory->inventories->inventory_description);
         }
         $templateProcessor->setComplexBlock('table', $table);
-
 
         $templateProcessor->setValue('noBAST',$inventoriesLoan->inventoryloan_nomorBAST);
         $templateProcessor->setValue('days', hari($date));
@@ -306,14 +227,51 @@ class InventoriesLoanController extends Controller
         return response()->download('storage/bap-template/' . $inventoriesLoan->id . '.docx');
     }
 
+    public function reportBMNIndex()
+    {
+        return view('backend.inventoriesLoan.exportIndex');
+    }
+
     public function exportInventoriesLoan(Request $request)
     {
         return Excel::download(new ExportInventoriesLoan($request) , 'Data Peminjaman BMN.xlsx');
     }
 
+    ///FOR DASHBOARD
     public function getDataInventoryLoanDashboard(){
         $data = InventoriesLoan::select('id', 'inventoryloan_status','inventoryloan_esttglpengembalian')->where('account_id', auth()->user()->id)->get();
         return response()->json($data);
+    }
+
+    public function getDataInventoriesLoan(Request $request)
+    {
+        if ($request->ajax())
+        {
+            $data = InventoriesLoan::with(['Accounts'])->select("*", DB::raw("DATE_FORMAT(inventoryloan_tglpeminjaman, '%d %b %Y') as inventoryloan_tglpeminjaman"))->latest()->get();
+            return DataTables::of($data)->addIndexColumn()->addColumn('action', function ($row)
+            {
+                $actionBtn = '<a href="/backend/inventoriesLoan/' . $row->id . '/edit" class="edit open_modal badge bg-success btn-sm">Detail</a> ';
+                return $actionBtn;
+            })->addColumn('inventoryloan_esttglpengembalian', function ($data)
+            {
+                $formatedDate = strtotime($data->inventoryloan_tglpeminjaman . ' +' . $data->inventoryloan_duration . ' days');
+                return date('d M Y', $formatedDate);
+            })->addColumn('isBast', function ($data)
+            {
+                $bastLink = '<span class="inline badge w-100  bg-danger">Belum ada BAST </span>';
+                if($data->inventoryloan_file){
+                    $bastLink = '<a class="inline badge w-100 bg-success" href="/storage/'.$data->inventoryloan_file.'"target="_blank" download>Download BAST</a>';
+                }
+                if(!$data->inventoryloan_filepengembalian){
+                    $bastLink = $bastLink . '<br><span class="inline w-100 badge bg-danger">Belum ada BAP </span>';
+                }else if($data->inventoryloan_filepengembalian){
+                    $bastLink =  $bastLink .'<br><a class="inline w-100 badge bg-success" href="/storage/'.$data->inventoryloan_filepengembalian.'"target="_blank" download>Download BAP</a>';
+                }
+
+                return $bastLink;
+            })->rawColumns(['action','isBast'])->make(true);
+        }
+
     }
 }
 

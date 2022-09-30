@@ -44,6 +44,11 @@
                  <i class="align-middle" data-feather="clipboard"></i> <span class="align-middle">Peminjaman BMN</span>
                 </a>
             </li>
+            <li class="sidebar-item loan {{ Request::is('backend/bmn-reports*') ? 'active full' : ' ' }}">
+                <a class="sidebar-link " href="/backend/bmn-reports">
+                 <i class="align-middle" data-feather="clipboard"></i> <span class="align-middle">Report BMN</span>
+                </a>
+            </li>
             @endcanany
 
         </ul>

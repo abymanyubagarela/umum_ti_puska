@@ -1,31 +1,16 @@
 <?php
-/**
- * Class and Function List:
- * Function list:
- * - index()
- * - authenticate()
- * - logout()
- * - userIndex()
- * - userAuthenticate()
- * Classes list:
- * - LoginController extends Controller
- */
 namespace App\Http\Controllers;
 
-use App\Models\Logins;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
     public function index()
     {
+        if(auth()->user()->id){
+            return redirect('backend/dashboard');
+        };
         return view('backend/login');
     }
 

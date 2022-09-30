@@ -100,6 +100,7 @@
       </div>
     </div>
 </div>
+<input type="hidden" id="urlDataTable" value="{{ route('account.list') }}">
 @endsection
 
 @section('custom-script')
@@ -107,6 +108,11 @@
 <script type="text/javascript">
 
     $(function () {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+            }
+        })
         getDataTable()
         $('.select2inputModals').select2({
             dropdownParent: $('#myModals')
@@ -171,7 +177,10 @@
           processing: true,
           serverSide: true,
           responsive: true,
-          ajax: "{{ route('account.list') }}",
+          ajax: {
+            url: $('#urlDataTable').val(),
+            method: 'POST'
+          },
           columns: [
               {data: 'DT_RowIndex', name: 'DT_RowIndex'},
               {data: 'account_name', name: 'account_name'},

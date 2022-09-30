@@ -28,6 +28,9 @@ $(document).ready(function(){
                 Object.keys(data).forEach((element) => {
                     $('#'+element).val(data[element]);
                 });
+                $('input').removeClass('is-invalid');
+                $('.invalid-feedback').remove();
+
                 $('#myModal').modal('show');
             },
             error: function (data) {
@@ -40,7 +43,6 @@ $(document).ready(function(){
 
     //create new product / update existing product ***************************
     $("#btn-save").click(function (e) {
-
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
@@ -66,9 +68,8 @@ $(document).ready(function(){
             data: formData,
             dataType: 'json',
             success: function (data) {
-
-
                 $('#frmProducts').trigger("reset");
+
                 $('#myModal').modal('hide')
                 $('.dataTable').DataTable().ajax.reload();
                 toastr.success('Data berhasil diubah');

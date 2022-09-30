@@ -1,18 +1,4 @@
 <?php
-/**
-* Class and Function List:
-* Function list:
-* - index()
-* - getDataInventoriesLoan()
-* - (()
-* - (()
-* - create()
-* - store()
-* - edit()
-* - update()
-* Classes list:
-* - UsersInventoriesLoanController extends Controller
-*/
 namespace App\Http\Controllers\Users;
 
 use App\Models\Accounts;
@@ -28,13 +14,102 @@ use App\Http\Controllers\Telegram\TelegramBotController;
 
 class UsersInventoriesLoanController extends Controller
 {
-    //
     public function index()
     {
-        //
         $data = ['title' => "Data Transaksi BMN", 'date' => date('m/d/Y') ];
-
         return view('frontend.inventoriesLoan.index', $data);
+    }
+
+
+    public function create()
+    {
+        return view('frontend.inventoriesLoan.create', [
+            'title' => "Detail Transaksi BMN",
+            'inventories' => Inventories::all() ,
+            'accounts' => Accounts::all()
+        ]);
+
+    }
+
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate(['inventoryloan_status' => 'required|max:255', 'inventoryloan_tglpeminjaman' => 'required|max:255', 'inventoryloan_duration' => 'int|required', 'inventoryloan_penanggung_jawab' => 'int|required', 'inventoryloan_tujuan' => 'required|max:255', 'inventory' => 'required', 'inventoryloan_file' => 'file|max:1024','inventoryloan_esttglpengembalian' => 'date']);
+        if ($request->file('inventoryloan_file'))
+        {
+            $validatedData['inventoryloan_file'] = $request->file('inventoryloan_file')->store('bast-files');
+        }
+
+        $inventoryIds = $validatedData['inventory'];
+        $validatedData['inventoryloan_status'] = "Belum diproses";
+        $validatedData['inventoryloan_type'] = "Peminjaman";
+        $validatedData['account_id'] = auth()->user()->id;
+
+        unset($validatedData['inventory']);
+
+        $id = InventoriesLoan::create($validatedData)->id;
+        $datas = [];
+        $inventories = [];
+        $isBorrowed = $validatedData['inventoryloan_type'] = "Peminjaman" ? 1 : 0;
+
+        foreach ($inventoryIds as $inventory_id => $value)
+        {
+            array_push($datas, ['inventory_id' => $value, 'inventoryloan_id' => $id]);
+            array_push($inventories, ['inventory_id' => $value]);
+        }
+
+        InventoriesLoanDetails::insert($datas);
+        Inventories::whereIn('id', $inventories)->update(['inventory_isborrowed' => $isBorrowed]);
+        TelegramBotController::messages(auth()->user()->account_name.' Telah Membuat Form Peminjaman Barang');
+
+        return redirect('pinjam-bmn/')->with('success', 'Data berhasil di tambahkan');
+    }
+
+    public function edit(InventoriesLoan $inventoriesLoan)
+    {
+        $date = date("Y-m-d", strtotime($inventoriesLoan->inventoryloan_tglpeminjaman));
+        $inventoriesLoan->inventoryloan_tglpeminjaman = $date;
+        return view('frontend.inventoriesLoan.edit',
+        [
+            'title' => "Detail Transaksi BMN",
+            'inventoriesLoan' => $inventoriesLoan,
+            'inventories' => Inventories::all() ,
+            'accounts' => Accounts::select('id', 'account_name')->get()
+        ]);
+    }
+
+    public function update(Request $request, InventoriesLoan $inventoriesLoan)
+    {
+        $rules = ['inventoryloan_type' => 'required|max:255', 'inventoryloan_penanggung_jawab' => 'required|max:255', 'inventoryloan_tglpeminjaman' => 'date|max:1024', 'inventoryloan_duration' => 'int|required', 'inventoryloan_tujuan' => 'required', 'inventoryloan_file' => 'file|max:1024','inventoryloan_esttglpengembalian' => 'date', 'inventoryloan_filepengembalian' => 'file|max:1024',];
+        $validatedData = $request->validate($rules);
+        $validatedData['account_id'] = auth()->user()->id;
+        if ($request->file('inventoryloan_file'))
+        {
+            if ($request->oldBAST)
+            {
+                Storage::delete($request->oldBAST);
+            }
+            $validatedData['inventoryloan_file'] = $request->file('inventoryloan_file')->store('bast-files');
+            TelegramBotController::messages(auth()->user()->account_name.' Telah Mengupload BAST');
+        }
+        if ($request->file('inventoryloan_filepengembalian'))
+        {
+            if ($request->oldBAP)
+            {
+                Storage::delete($request->oldBAP);
+            }
+            $validatedData['inventoryloan_filepengembalian'] = $request->file('inventoryloan_filepengembalian')->store('bap-files');
+            TelegramBotController::messages(auth()->user()->account_name.' Telah Mengupload BAP');
+        }
+        //insert data
+        InventoriesLoan::where('id', $inventoriesLoan->id)->update($validatedData);
+        return redirect('/pinjam-bmn')->with('success', 'Data berhasil diubah');
+    }
+
+    public function destroy($inventoryloan_id)
+    {
+        InventoriesLoanDetails::where('inventoryloan_id', '=', $inventoryloan_id)->delete();
+        $inventory = InventoriesLoan::destroy($inventoryloan_id);
+        return response()->json($inventory);
     }
 
     public function getDataInventoriesLoan(Request $request)
@@ -65,99 +140,6 @@ class UsersInventoriesLoanController extends Controller
                 return $bastLink;
             })->rawColumns(['action','isBast'])->make(true);
         }
-
-    }
-
-    public function create()
-    {
-        //
-        return view('frontend.inventoriesLoan.create', ['title' => "Detail Transaksi BMN", 'inventories' => Inventories::all() , 'accounts' => Accounts::all()
-
-        // 'inventoriesLoanDetails' => InventoriesLoanDetails::with(['Inventories'])->where('inventoryloan_id',$inventoriesLoan->id)->get()
-        ]);
-
-    }
-
-    public function store(Request $request)
-    {
-
-        $validatedData = $request->validate(['inventoryloan_status' => 'required|max:255', 'inventoryloan_tglpeminjaman' => 'required|max:255', 'inventoryloan_duration' => 'int|required', 'inventoryloan_penanggung_jawab' => 'int|required', 'inventoryloan_tujuan' => 'required|max:255', 'inventory' => 'required', 'inventoryloan_file' => 'file|max:1024','inventoryloan_esttglpengembalian' => 'date']);
-
-        if ($request->file('inventoryloan_file'))
-        {
-            $validatedData['inventoryloan_file'] = $request->file('inventoryloan_file')->store('bast-files');
-        }
-
-        $inventoryIds = $validatedData['inventory'];
-        $validatedData['inventoryloan_status'] = "Belum diproses";
-        $validatedData['inventoryloan_type'] = "Peminjaman";
-        $validatedData['account_id'] = auth()->user()->id;
-        unset($validatedData['inventory']);
-        $id = InventoriesLoan::create($validatedData)->id;
-
-        $datas = [];
-        $inventories = [];
-        $isBorrowed = $validatedData['inventoryloan_type'] = "Peminjaman" ? 1 : 0;
-        foreach ($inventoryIds as $inventory_id => $value)
-        {
-            array_push($datas, ['inventory_id' => $value, 'inventoryloan_id' => $id]);
-            array_push($inventories, ['inventory_id' => $value]);
-        }
-        InventoriesLoanDetails::insert($datas);
-        Inventories::whereIn('id', $inventories)->update(['inventory_isborrowed' => $isBorrowed]);
-
-        TelegramBotController::messages(auth()->user()->account_name.' Telah Membuat Form Peminjaman Barang');
-
-        return redirect('pinjam-bmn/')->with('success', 'Data berhasil di tambahkan');
-
-    }
-
-    public function edit(InventoriesLoan $inventoriesLoan)
-    {
-        //
-        $date = date("Y-m-d", strtotime($inventoriesLoan->inventoryloan_tglpeminjaman));
-        $inventoriesLoan->inventoryloan_tglpeminjaman = $date;
-        return view('frontend.inventoriesLoan.edit', ['title' => "Detail Transaksi BMN", 'inventoriesLoan' => $inventoriesLoan, 'inventories' => Inventories::all() , 'accounts' => Accounts::select('id', 'account_name')->get()
-
-        ]);
-    }
-
-    public function update(Request $request, InventoriesLoan $inventoriesLoan)
-    {
-        //
-
-        $rules = ['inventoryloan_type' => 'required|max:255', 'inventoryloan_penanggung_jawab' => 'required|max:255', 'inventoryloan_tglpeminjaman' => 'date|max:1024', 'inventoryloan_duration' => 'int|required', 'inventoryloan_tujuan' => 'required', 'inventoryloan_file' => 'file|max:1024','inventoryloan_esttglpengembalian' => 'date', 'inventoryloan_filepengembalian' => 'file|max:1024',];
-        $validatedData = $request->validate($rules);
-
-        $validatedData['account_id'] = auth()->user()->id;
-        if ($request->file('inventoryloan_file'))
-        {
-            if ($request->oldBAST)
-            {
-                Storage::delete($request->oldBAST);
-            }
-            $validatedData['inventoryloan_file'] = $request->file('inventoryloan_file')->store('bast-files');
-            TelegramBotController::messages(auth()->user()->account_name.' Telah Mengupload BAST');
-        }
-        if ($request->file('inventoryloan_filepengembalian'))
-        {
-            if ($request->oldBAP)
-            {
-                Storage::delete($request->oldBAP);
-            }
-            $validatedData['inventoryloan_filepengembalian'] = $request->file('inventoryloan_filepengembalian')->store('bap-files');
-            TelegramBotController::messages(auth()->user()->account_name.' Telah Mengupload BAP');
-        }
-        //insert data
-        InventoriesLoan::where('id', $inventoriesLoan->id)->update($validatedData);
-
-        return redirect('/pinjam-bmn')->with('success', 'Data berhasil diubah');
-    }
-
-    public function destroy($inventoryloan_id)
-    {
-        $inventory = InventoriesLoan::destroy($inventoryloan_id);
-        return response()->json($inventory);
     }
 }
 

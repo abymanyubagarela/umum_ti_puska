@@ -23,7 +23,7 @@ class InventoriesLoanDetails extends Model
     protected $fillable = ['inventory_id', 'inventoryloan_id'];
     public function InventoriesLoan()
     {
-        return $this->belongsTo(InventoriesLoan::class);
+        return $this->belongsTo(InventoriesLoan::class,'inventoryloan_id');
     }
 
     public function Inventories()

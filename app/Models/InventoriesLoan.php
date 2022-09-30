@@ -33,7 +33,7 @@ class InventoriesLoan extends Model
         return $this->belongsTo(Accounts::class , 'inventoryloan_penanggung_jawab');
     }
 
-    public function invetoriesLoanDetails()
+    public function InvetoriesLoanDetails()
     {
         return $this->hasMany(InventoriesLoanDetails::class);
     }

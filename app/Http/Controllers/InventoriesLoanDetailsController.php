@@ -1,19 +1,5 @@
 <?php
-/**
-* Class and Function List:
-* Function list:
-* - getDataTableInventoriesLoanDetails()
-* - (()
-* - index()
-* - create()
-* - store()
-* - show()
-* - edit()
-* - update()
-* - destroy()
-* Classes list:
-* - InventoriesLoanDetailsController extends Controller
-*/
+
 namespace App\Http\Controllers;
 
 use App\Models\Inventories;
@@ -38,34 +24,17 @@ class InventoriesLoanDetailsController extends Controller
         }
 
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
 
     public function index()
     {
 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        //
 
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreInventoriesLoanDetailsRequest  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         //
@@ -77,49 +46,24 @@ class InventoriesLoanDetailsController extends Controller
         return $id;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\InventoriesLoanDetails  $inventoriesLoanDetails
-     * @return \Illuminate\Http\Response
-     */
     public function show(InventoriesLoanDetails $inventoriesLoanDetails)
     {
         //
 
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\InventoriesLoanDetails  $inventoriesLoanDetails
-     * @return \Illuminate\Http\Response
-     */
     public function edit(InventoriesLoanDetails $inventoriesLoanDetails)
     {
         //
 
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateInventoriesLoanDetailsRequest  $request
-     * @param  \App\Models\InventoriesLoanDetails  $inventoriesLoanDetails
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, InventoriesLoanDetails $inventoriesLoanDetails)
     {
         //
 
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\InventoriesLoanDetails  $inventoriesLoanDetails
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($inventoriesLoanDetails_id)
     {
         $id = InventoriesLoanDetails::select('inventory_id')->where('id', $inventoriesLoanDetails_id)->get();
@@ -127,6 +71,7 @@ class InventoriesLoanDetailsController extends Controller
             'inventory_isborrowed' => 0
         ));
         $inventoriesLoanDetails = InventoriesLoanDetails::destroy($inventoriesLoanDetails_id);
+
         return $inventoriesLoanDetails;
     }
 }

@@ -29,7 +29,7 @@
         </table>
     </div>
 </div>
-
+<input type="hidden" id="urlDataTable" value="{!!url("pinjam-bmn/getdata")!!}">
 
 @endsection
 
@@ -39,6 +39,11 @@
 <script src="{{asset('js/ajaxcrud.js')}}"></script>
 <script type="text/javascript">
     $(function () {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+            }
+        })
         getDataTable()
 
 
@@ -50,7 +55,10 @@
           processing: true,
           serverSide: true,
           responsive: true,
-          ajax: "{{ route('UserInventoriesLoan.list') }}",
+          ajax: {
+            url: $('#urlDataTable').val(),
+            method: 'POST'
+          },
           columns: [
               {data: 'DT_RowIndex', name: 'DT_RowIndex'},
               {data: 'inventoryloan_tujuan', name: 'inventoryloan_tujuan'},

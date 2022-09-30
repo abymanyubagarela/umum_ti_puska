@@ -14,10 +14,11 @@ class ExportInventories implements FromCollection, WithHeadings
     */
 
     protected $request;
-
+    // Get Parameter $request as construct from Controller
     function __construct($request) {
         $this->request = $request;
     }
+
     public function collection()
     {
         $query = Inventories::query();

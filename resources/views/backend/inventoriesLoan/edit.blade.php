@@ -12,26 +12,18 @@
 
     </div>
     <div class="col-md-4">
-            {{-- <div class="form-group mb-3">
-                <label for="inputDetail" class="col-sm-3 control-label">NUP</label>
-                <input type="text" class="form-control inputData" id="inventory_nup" name="inventory_nup" placeholder="nup" value="">
-            </div> --}}
-            {{-- <div class="form-group mb-3">
-                <label for="inputDetail" class="col-sm-3 mb-2 control-label">Kondisi</label>
-                <select class="form-select inputData" aria-label="Default select example" id="inventory_condition" name="inventory_condition">
-                    <option value="all">Semua</option>
-                    <option value="baik">Baik</option>
-                    <option value="rusak">Rusak</option>
-                </select>
-            </div> --}}
-            <div class="text-end">
+        <div class="text-end">
             @if($inventoriesLoan->inventoryloan_file)
-                <a class="inline badge bg-success" href="{{ asset('storage'). '/' . $inventoriesLoan->inventoryloan_file }}" target="_blank" download>Download BAST</a>
+                <a class="inline btn btn-success" href="{{ asset('storage'). '/' . $inventoriesLoan->inventoryloan_file }}" target="_blank" download>Download BAST</a>
             @else
-            <a href="{{ 'generate-bast'}}". class="inline btn btn-success">Cetak Template BAST</a>
+            <a href="{{ 'generate-bast'}}". class="inline btn btn-secondary">Cetak Template BAST</a>
+            @endif
+            @if($inventoriesLoan->inventoryloan_filepengembalian)
+                <a class="inline btn btn-success" href="{{ asset('storage'). '/' . $inventoriesLoan->inventoryloan_file }}" target="_blank" download>Download BAST</a>
+            @else
+            <a href="{{ 'generate-bap'}}". class="inline btn btn-secondary">Cetak Template BAP</a>
             @endif
             </div>
-
     </div>
 </div>
 <div class="row">
@@ -39,7 +31,7 @@
         <div class="container-form-export container-form-additional mb-4"  >
             <div class="row ">
                 @if ($errors->any())
-                <div class="alert alert-danger">
+                <div class="alert alert-danger col-md-12">
                     <ul>
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
@@ -102,24 +94,22 @@
                         <label for="inputPassword4" class="form-label">Tanggal Peminjaman</label>
                         <input type="date" name="inventoryloan_tglpeminjaman" class="form-control" value="{{ old('body',$inventoriesLoan->inventoryloan_tglpeminjaman) }}" id="inventoryloan_tglpeminjaman">
                       </div>
-                      <input type="hidden" name="inventoryloan_esttglpengembalian" value="{{ old('inventoryloan_duration',$inventoriesLoan->inventoryloan_esttglpengembalian) }}" id="tglKembali" />
+                      <input type="hidden" name="inventoryloan_esttglpengembalian" value="{{ old('inventoryloan_esttglpengembalian',$inventoriesLoan->inventoryloan_esttglpengembalian) }}" id="tglKembali" />
                       <div class="col-md-4">
                         <label for="inputPassword4" class="form-label">Durasi Peminjaman (Hari)</label>
                         <input type="text" id="duration" name="inventoryloan_duration" value="{{ old('inventoryloan_duration',$inventoriesLoan->inventoryloan_duration) }}" class="form-control" >
                       </div>
                       <div class="col-md-4">
                         <label for="inputPassword4" class="form-label">Estimasi Tanggal Kembali</label>
-                        <input type="text" name="inventoryloan_esttglpengembalian" class="form-control" value="{{ old('inventoryloan_duration',$inventoriesLoan->inventoryloan_esttglpengembalian) }}" id="inventoryloan_esttglpengembalian" disabled >
+                        <input type="date" name="inventoryloan_esttglpengembalian" class="form-control" value="{{ old('inventoryloan_esttglpengembalian',$inventoriesLoan->inventoryloan_esttglpengembalian) }}" id="inventoryloan_esttglpengembalian" disabled >
                       </div>
-                      <div class="mb-3">
+                      <div class="col-md-4">
+                        <label for="inputPassword4" class="form-label">Tanggal Pengembalian</label>
+                        <input type="date" name="inventoryloan_tglpengembalian" class="form-control" value="{{ old('inventoryloan_tglpengembalian',$inventoriesLoan->inventoryloan_tglpengembalian) }}" >
+                      </div>
+                      <div class="mb-3 col-md-4">
                         <label for="file" class="form-label">File Berita Acara Serah Terima</label>
-
                         <input type="hidden" name="oldBAST" value="{{ $inventoriesLoan->inventoryloan_file }}">
-                        {{-- @if ($post->image)
-                        <img src="{{ asset('storage'). '/' . $post->image }}" class="img-preview img-fluid mb-3 col-sm-5 d-block" alt="">
-                        @else
-                        <img class="img-preview img-fluid mb-3 col-sm-5" alt="">
-                        @endif --}}
                         <input type="file" class="form-control @error('inventoryloan_file') is-invalid @enderror" id="inventoryloan_file" name="inventoryloan_file" onchange="">
                         @error('inventoryloan_file')
                             <div class="invalid-feedback">
@@ -127,6 +117,16 @@
                             </div>
                          @enderror
                     </div>
+                    <div class="mb-3 col-md-4">
+                        <label for="file" class="form-label">File Berita Acara Pengembalian</label>
+                        <input type="hidden" name="oldBAP" value="{{ $inventoriesLoan->inventoryloan_filepengembalian }}">
+                        <input type="file" class="form-control @error('inventoryloan_filepengembalian') is-invalid @enderror" id="inventoryloan_filepengembalian" name="inventoryloan_filepengembalian" onchange="">
+                        @error('inventoryloan_filepengembalian')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                         @enderror
+                      </div>
                       <div class="col-12">
                         <label for="inputAddress" class="form-label">Keperluan Peminjaman</label>
                         <textarea type="text" name="inventoryloan_tujuan" class="form-control"  value="" id="inventoryloan_tujuan" >{{ old('inventoryloan_tujuan',$inventoriesLoan->inventoryloan_tujuan) }}</textarea>
@@ -185,16 +185,34 @@
             !$('#inventoryloan_nomorBAST').val("noBAST/BAST BMN/XIX.TJS/bulanAngka/tahunAngka")
         }
         $("#duration").keyup(function(){
-            var someDate = new Date($('input#inventoryloan_tglpeminjaman').val());
             var days = $('input#duration').val();
-            someDate.setDate(someDate.getDate() + parseInt(days));
-            $('input#tglKembali').val(someDate.getFullYear()+'-'+(someDate.getMonth()+1)+'-'+someDate.getDate());
-            $('input#inventoryloan_esttglpengembalian').val(someDate.getDate()+'/'+(someDate.getMonth()+1)+'/'+someDate.getFullYear());
+            var today = new Date($('input#inventoryloan_tglpeminjaman').val());
+            today.setDate(today.getDate() + parseInt(days));
+            var dd = today.getDate();
+            var mm = today.getMonth()+1;
+            var yyyy = today.getFullYear();
+            if(dd<10) {
+                dd='0'+dd
+            }
+
+            if(mm<10) {
+                mm='0'+mm
+            }
+            var created = yyyy+'-'+mm+'-'+dd;
+            $('input#tglKembali').val(created);
+            $('input#inventoryloan_esttglpengembalian').val(created);
          });
         $("input#inventoryloan_tglpeminjaman").change(function(){
             console.log('asd');
             $('input#duration').removeAttr('disabled');
          });
+
+        $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                }
+            })
+
         getDataTable(param)
         $(document).on('click','.delete-product',function(){
         var data_id = $(this).attr('value');
@@ -208,11 +226,6 @@
           }).then((result) => {
             if (result.isConfirmed) {
                 console.log(data_id);
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                    }
-                })
                 $.ajax({
                     type: "POST",
                     data: {
@@ -235,6 +248,11 @@
     });
 
     function getDataTable(param={}){
+        $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                }
+            })
         var table = $('.yajra-datatable').DataTable({
           processing: true,
           serverSide: true,
@@ -244,7 +262,7 @@
           lengthChange: false,
           ajax: {
             url :  "/backend/inventoriesLoanDetails/get-datatable/{{$inventoriesLoan->id}}",
-            type: 'get',
+            method: 'POST',
             data: param,
           },
           columns: [

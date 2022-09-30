@@ -3,7 +3,7 @@
 <body class="inventory-management main-master">
 @endsection
 @section('container')
-
+<input type="hidden" id="urlDataTable" value="{{ route('InventoriesLoan.list') }}">
 <meta name="_token" content="{!! csrf_token() !!}" />
 <input id="url" type="hidden" value="{{ \Request::url() }}">
 <h1 class="h3 mb-1"><strong>Daftar</strong> {{ $title }}</h1>
@@ -74,18 +74,26 @@
 <script src="{{asset('js/ajaxcrud.js')}}"></script>
 <script type="text/javascript">
     $(function () {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+            }
+        })
         getDataTable()
-
 
     });
 
 
     function getDataTable(){
+
         var table = $('.yajra-datatable').DataTable({
           processing: true,
           serverSide: true,
           responsive: true,
-          ajax: "{{ route('InventoriesLoan.list') }}",
+          ajax: {
+            url:  $('#urlDataTable').val(),
+            method: 'post',
+          },
           columns: [
               {data: 'DT_RowIndex', name: 'DT_RowIndex'},
               {data: 'accounts.account_name', name: 'accounts.account_name'},

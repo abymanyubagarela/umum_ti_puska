@@ -55,7 +55,6 @@
                 inventory_id: $(this).attr('value'),
                 inventoryloan_id: $('#inventoriesLoanInput').val()
             }
-            console.log( formData)
             $.ajax({
                 type: "POST",
                 url: "/backend/inventoriesLoanDetails/",
@@ -93,11 +92,19 @@
 
 
     function getDataTableModal(){
+        $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                }
+            })
           var table = $('.yajra-datatable-modal').DataTable({
           processing: true,
           serverSide: true,
           responsive: true,
-          ajax: "{{ route('inventories.listloan') }}",
+          ajax: {
+            url : '{{ route('inventories.listloan') }}',
+            method: 'POST'
+          },
           columns: [
               {data: 'DT_RowIndex', name: 'DT_RowIndex'},
               {data: 'inventory_nup', name: 'inventory_nup'},

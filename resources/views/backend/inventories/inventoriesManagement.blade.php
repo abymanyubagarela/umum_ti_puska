@@ -62,7 +62,7 @@
         </table>
     </div>
 </div>
-
+<input type="hidden" id="urlDataTable" value="{{ route('inventories.list') }}">
 
 @include('backend.layouts.crudModal')
 
@@ -73,6 +73,11 @@
 <script src="{{asset('js/ajaxcrud.js')}}"></script>
 <script type="text/javascript">
     $(function () {
+        $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                }
+            })
         getDataTable()
 
     });
@@ -83,7 +88,10 @@
           processing: true,
           serverSide: true,
           responsive: true,
-          ajax: "{{ route('inventories.list') }}",
+          ajax: {
+            url : $('#urlDataTable').val(),
+            method: "POST"
+          },
           columns: [
               {data: 'DT_RowIndex', name: 'DT_RowIndex'},
               {data: 'inventory_nup', name: 'inventory_nup'},

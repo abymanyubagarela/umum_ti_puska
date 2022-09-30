@@ -4,6 +4,7 @@
 @endsection
 @section('container')
 
+
 <meta name="_token" content="{!! csrf_token() !!}" />
 
 <div class="row">

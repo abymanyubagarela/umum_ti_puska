@@ -1,15 +1,17 @@
 <?php
-use Illuminate\Support\Facades\Route;
+use App\Models\InventoriesLoan;
 
+use Illuminate\Support\Facades\Route;
+use App\Models\InventoriesLoanDetails;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AccountsController;
+
 use App\Http\Controllers\DashboardControllers;
 use App\Http\Controllers\InventoriesLoanController;
-
+use App\Http\Controllers\Telegram\TelegramBotController;
 use App\Http\Controllers\InventoriesLoanDetailsController;
 use App\Http\Controllers\Users\UsersInventoriesLoanController;
 use App\Http\Controllers\InventoriesController as InventoriesControllers;
-use App\Http\Controllers\Telegram\TelegramBotController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,27 +24,32 @@ use App\Http\Controllers\Telegram\TelegramBotController;
 |
 */
 
-Route::get('/', function ()
-{
-    return view('/backend/dashboard');
-});
+Route::get('/', [LoginController::class , 'index']);
 
 Route::get('/login', [LoginController::class , 'index'])->name('login');
 Route::post('/backend/login', [LoginController::class , 'authenticate']);
 Route::post('/logout', [LoginController::class , 'logout']);
+Route::get('/test', function ()
+    {
+        return view('backend.inventoriesLoan.export', [
+            'inventoriesLoanDetails' => InventoriesLoanDetails::with(['inventoriesLoan.inventoryloan_penanggung_jawabs','Inventories'])->orderBy('inventoryloan_id','asc')->get(),
+            'dateMin' => '2022-09-22',
+            'dateMax' => '2022-09-23',
+        ]);
+    });
 
 Route::group(['middleware' => 'auth'], function ()
 {
     Route::get('/backend/dashboard', function ()
     {
         return view('backend/dashboard/main');
-    });
+    })->name('dashboard');
     Route::get('/backend/getDataInventoryLoanDashboard',[InventoriesLoanController::class, 'getDataInventoryLoanDashboard']);
     Route::get('/backend/bmn/dashboard', [DashboardControllers::class , 'bmnDashboard']);
     //Inventories--------------------------------------------------------
     Route::get('/backend/inventories', [InventoriesControllers::class , 'index']);
-    Route::get('backend/inventories/get-datatable', [InventoriesControllers::class , 'getDataTableInventories'])->name('inventories.list');
-    Route::get('backend/inventories/get-datatableInventory', [InventoriesControllers::class , 'getDataTableInventoriesLoan'])->name('inventories.listloan');
+    Route::post('backend/inventories/get-datatable', [InventoriesControllers::class , 'getDataTableInventories'])->name('inventories.list');
+    Route::post('backend/inventories/get-datatableInventory', [InventoriesControllers::class , 'getDataTableInventoriesLoan'])->name('inventories.listloan');
     Route::post('/backend/inventories/import-inventories', [InventoriesControllers::class , 'importInventories'])->name('import-inventories');
     Route::post('/backend/inventories/export-inventories', [InventoriesControllers::class , 'exportInventories'])->name('export-inventories');
     Route::post('/backend/inventories/showData', [InventoriesControllers::class , 'showData']);
@@ -50,7 +57,7 @@ Route::group(['middleware' => 'auth'], function ()
     // Accounts
     Route::post('/backend/accounts/import-accounts', [AccountsController::class , 'importAccounts'])->name('import-accounts');
     Route::post('/backend/accounts/export-accounts', [AccountsController::class , 'exportAccounts'])->name('export-accounts');
-    Route::get('backend/accounts/get-datatable', [AccountsController::class , 'getDataTableAccounts'])->name('account.list');
+    Route::post('backend/accounts/get-datatable', [AccountsController::class , 'getDataTableAccounts'])->name('account.list');
     Route::post('backend/accounts/passwordUpdate/{id}', [AccountsController::class , 'passwordUpdate']);
     Route::post('/backend/accounts/gantiPassword', [AccountsController::class , 'passwordUpdateUser'])->name('change-user-password');
 
@@ -59,10 +66,10 @@ Route::group(['middleware' => 'auth'], function ()
     Route::post('/backend/inventoriesLoan/export-accounts', [InventoriesLoanController::class , 'exportInventoriesLoan'])->name('export-InventoriesLoan');
     Route::post('/backend/inventoriesLoan/import-bmntransactiondetil', [InventoriesLoanController::class , 'importInventoriesLoanDetail'])->name('import-InventoriesLoanDetail');
     Route::post('/backend/inventoriesLoan/export-bmntransactiondetil', [InventoriesLoanController::class , 'exportInventoriesLoanDetail'])->name('export-InventoriesLoanDetail');
-    Route::get('backend/inventoriesLoan/get-datatable', [InventoriesLoanController::class , 'getDataInventoriesLoan'])->name('InventoriesLoan.list');
+    Route::post('backend/inventoriesLoan/get-datatable', [InventoriesLoanController::class , 'getDataInventoriesLoan'])->name('InventoriesLoan.list');
 
     // BMN Details
-    Route::get('backend/inventoriesLoanDetails/get-datatable/{inventoriesLoanDetails}', [InventoriesLoanDetailsController::class , 'getDataTableInventoriesLoanDetails']);
+    Route::post('backend/inventoriesLoanDetails/get-datatable/{inventoriesLoanDetails}', [InventoriesLoanDetailsController::class , 'getDataTableInventoriesLoanDetails']);
 
     Route::resource('/backend/inventoriesLoan', InventoriesLoanController::class);
     Route::resource('/backend/inventoriesLoanDetails', InventoriesLoanDetailsController::class);
@@ -71,7 +78,7 @@ Route::group(['middleware' => 'auth'], function ()
 
     Route::get('/pinjam-bmn', [UsersInventoriesLoanController::class , 'index']);
     Route::get('/pinjam-bmn/create', [UsersInventoriesLoanController::class , 'create']);
-    Route::get('/pinjam-bmn/getdata', [UsersInventoriesLoanController::class , 'getDataInventoriesLoan'])->name('UserInventoriesLoan.list');
+    Route::post('/pinjam-bmn/getdata', [UsersInventoriesLoanController::class , 'getDataInventoriesLoan'])->name('UserInventoriesLoan.list');
     Route::post('/pinjam-bmn', [UsersInventoriesLoanController::class , 'store']);
     Route::get('/pinjam-bmn/{inventoriesLoan}/edit', [UsersInventoriesLoanController::class , 'edit']);
     Route::put('/pinjam-bmn/{inventoriesLoan}', [UsersInventoriesLoanController::class , 'update']);
@@ -81,6 +88,11 @@ Route::group(['middleware' => 'auth'], function ()
     Route::get('/pinjam-bmn/{inventoriesLoan}/generate-bast/', [InventoriesLoanController::class , 'generateBAST']);
     Route::get('/pinjam-bmn/{inventoriesLoan}/generate-bap/', [InventoriesLoanController::class , 'generateBAP']);
     Route::get('/backend/inventoriesLoan/{inventoriesLoan}/generate-bast/', [InventoriesLoanController::class , 'generateBAST']);
+    Route::get('/backend/inventoriesLoan/{inventoriesLoan}/generate-bap/', [InventoriesLoanController::class , 'generateBAP']);
     Route::get('/generate-bap/{inventoriesLoan}', [InventoriesLoanController::class , 'generateBAP']);
+
+    // Report BMN
+    Route::get('/backend/bmn-reports',[InventoriesLoanController::class,'reportBMNIndex']);
+    Route::post('/backend/bmn-reports/export',[InventoriesLoanController::class,'exportInventoriesLoan'])->name('exportInventoriesLoan');
 });
 

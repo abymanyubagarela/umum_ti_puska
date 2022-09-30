@@ -10,7 +10,6 @@ use App\Models\InventoriesLoanDetails;
 
 class DashboardControllers extends Controller
 {
-    //
     public function bmnDashboard()
     {
         $data = [

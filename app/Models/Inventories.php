@@ -1,13 +1,4 @@
 <?php
-/**
-* Class and Function List:
-* Function list:
-* - getTemplateFormData()
-* - InvetoriesLoanDetails()
-* Classes list:
-* - Inventories extends Model
-* - ,
-*/
 namespace App\Models;
 
 use App\Models\InventoriesLoanDetails;

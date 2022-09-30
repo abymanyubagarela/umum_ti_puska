@@ -174,8 +174,6 @@
 <script type="text/javascript">
     $(function () {
         var a= 0;
-
-
         $("#duration").keyup(function(){
             var someDate = new Date($('input#inventoryloan_tglpeminjaman').val());
             var days = $('input#duration').val();
@@ -190,7 +188,15 @@
         var param={
              inventoriesLoanId:{{$inventoriesLoan->id}}
         }
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+            }
+        })
+
         getDataTable(param)
+
         $(document).on('click','.delete-product',function(){
         var data_id = $(this).attr('value');
         Swal.fire({
@@ -240,7 +246,7 @@
           lengthChange: false,
           ajax: {
             url :  "/backend/inventoriesLoanDetails/get-datatable/{{$inventoriesLoan->id}}",
-            type: 'get',
+            type: 'POST',
             data: param,
           },
           columns: [

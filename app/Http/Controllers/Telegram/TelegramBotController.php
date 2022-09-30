@@ -8,7 +8,6 @@ use Telegram\Bot\Laravel\Facades\Telegram;
 
 class TelegramBotController extends Controller
 {
-    //
     public function messages($messages)
     {
         Telegram::sendMessage([
@@ -17,8 +16,4 @@ class TelegramBotController extends Controller
             'text' => $messages
         ]);
     }
-
-
-
-
 }
