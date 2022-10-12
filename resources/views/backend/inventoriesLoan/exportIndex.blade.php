@@ -13,6 +13,9 @@
 </div>
 <div class="row mt-3">
     <div class="card p-2">
+            @if($errors->any())
+                <div class="alert alert-danger">{{$errors->first()}}</div>
+            @endif
             <h4 for="inputDetail" class="col-sm-3 control-label">Peminjaman mulai tanggal</h4>
         <div class="form-group mb-3 col-md-12">
             <form action="{{ route('exportInventoriesLoan') }}" method="POST" class="row" enctype="multipart/form-data">

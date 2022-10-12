@@ -325,7 +325,9 @@ class InventoriesLoanController extends Controller
             }
             $zip->close();
         }
-
+        if(!file_exists(public_path($fileName))){
+            return back()->withErrors(['error' => 'Tidak ada file di tanggal tersebut']);
+        };
         return response()->download(public_path($fileName));
     }
 }
