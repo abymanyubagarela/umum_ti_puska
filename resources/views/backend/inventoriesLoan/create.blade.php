@@ -76,23 +76,28 @@
                             @endforeach
                           </select>
                       </div>
-                      <div class="col-md-6">
+                      <div class="col-md-4">
                         <label for="inputPassword4" class="form-label">Tanggal Peminjaman</label>
                         <input type="date" name="inventoryloan_tglpeminjaman" class="form-control" value="{{ old('inventoryloan_tglpeminjaman') }}" id="inventoryloan_tglpeminjaman" required>
                       </div>
                       <input type="hidden" name="inventoryloan_esttglpengembalian" value="{{ old('inventoryloan_duration') }}" id="tglKembali" />
-                      <div class="col-md-6">
+                      <div class="col-md-4">
                         <label for="inputPassword4" class="form-label">Durasi Peminjaman (Hari)</label>
                         <input type="text" name="inventoryloan_duration" value="{{ old('inventoryloan_duration') }}" class="form-control" id="duration" required>
                       </div>
-                      <div class="col-md-6">
+                      <div class="col-md-4">
                         <label for="inputPassword4" class="form-label">Estimasi Tanggal Kembali</label>
                         <input type="text" name="inventoryloan_esttglpengembalian" class="form-control" value="" id="inventoryloan_esttglpengembalian" disabled >
                       </div>
                       <div class="col-12">
                         <label for="inputAddress" class="form-label">Keperluan Peminjaman</label>
-                        <textarea type="text" name="inventoryloan_tujuan" class="form-control"  value="" id="inventoryloan_tujuan" required>{{ old('inventoryloan_tujuan') }}</textarea>
-                      </div>
+                        <select id="keperluan" class="form-select" name="inventoryloan_tujuan">
+                            <option value="Pemeriksaan" {{ old('inventoryloan_tujuan') == "Peminjaman" ? 'selected' : '' }}>Pemeriksaan</option>
+                            <option value="Keperluan Kerja" {{ old('inventoryloan_tujuan') == "Keperluan Kerja" ? 'selected' : '' }}>Keperluan Kerja</option>
+                            <option id="kondisiTertentu" value="{{ old('inventoryloan_tujuan')}}" {{ old('inventoryloan_tujuan') != "Peminjaman" && "Keperluan Kerja" ? 'selected' : '' }}>Peminjaman Dengan Kondisi Tertentu</option>
+                        </select>
+                        <input class="editOption form-control" value="{{ old('inventoryloan_tujuan')}}" style="display:none; top:-33px; position: relative;width:87%;border-right:0px"/>
+                    </div>
                       <div class="col-12">
                         <div class="row mb-3">
                             <div class="col-md-8">
@@ -137,6 +142,26 @@
 
 <script type="text/javascript">
     $(function () {
+        var initialText = $('#kondisiTertentu').val();
+
+
+        $('#keperluan').change(function(){
+            var selected = $('option:selected', this).attr('id');
+            var optionText = $('#kondisiTertentu').text();
+
+            if(selected == "kondisiTertentu"){
+                $('.editOption').show();
+
+                $('.editOption').keyup(function(){
+                    var editText = $('.editOption').val();
+                    $('#kondisiTertentu').val(editText);
+                    $('#kondisiTertentu').html(editText);
+                });
+            }else{
+                $('.editOption').hide();
+            }
+        });
+
         $("#duration").keyup(function(){
             var someDate = new Date($('input#inventoryloan_tglpeminjaman').val());
             var days = $('input#duration').val();

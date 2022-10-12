@@ -29,14 +29,8 @@ Route::get('/', [LoginController::class , 'index']);
 Route::get('/login', [LoginController::class , 'index'])->name('login');
 Route::post('/backend/login', [LoginController::class , 'authenticate']);
 Route::post('/logout', [LoginController::class , 'logout']);
-Route::get('/test', function ()
-    {
-        return view('backend.inventoriesLoan.export', [
-            'inventoriesLoanDetails' => InventoriesLoanDetails::with(['inventoriesLoan.inventoryloan_penanggung_jawabs','Inventories'])->orderBy('inventoryloan_id','asc')->get(),
-            'dateMin' => '2022-09-22',
-            'dateMax' => '2022-09-23',
-        ]);
-    });
+Route::get('/tes', [InventoriesLoanController::class , 'ZipArchiveExample']);
+
 
 Route::group(['middleware' => 'auth'], function ()
 {
@@ -94,5 +88,6 @@ Route::group(['middleware' => 'auth'], function ()
     // Report BMN
     Route::get('/backend/bmn-reports',[InventoriesLoanController::class,'reportBMNIndex']);
     Route::post('/backend/bmn-reports/export',[InventoriesLoanController::class,'exportInventoriesLoan'])->name('exportInventoriesLoan');
+    Route::post('/backend/bmn-reports/exportLoanFile',[InventoriesLoanController::class,'ZipArchiveInventoriesLoan'])->name('exportInventoriesLoanFile');
 });
 

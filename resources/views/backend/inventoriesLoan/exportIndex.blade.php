@@ -26,7 +26,24 @@
                 <input type="date" class="form-control inputData" id="sampaiTanggal" name="dateNext" placeholder="nup" value="">
             </div>
             <div class="col-md-2 sm-12 align-self-end">
-                <button type="submit" class="btn btn-success ">Export To Excel</button>
+                <button type="submit" class="btn btn-success w-100 ">Export To Excel</button>
+            </div>
+            </form>
+        </div>
+        <h4 for="inputDetail" class="col-sm-3 control-label">Download File BAST dan BAP</h4>
+        <div class="form-group mb-3 col-md-12">
+            <form action="{{ route('exportInventoriesLoanFile') }}" method="POST" class="row" enctype="multipart/form-data">
+                @csrf
+            <div class="col-md-5 sm-12">
+                <label for="inputDetail" class="col-sm-3 control-label">Dari Tanggal</label>
+                <input type="date" class="form-control inputData" id="dariTanggal" name="dateFrom" placeholder="nup" value="">
+            </div>
+            <div class="col-md-5 sm-12">
+                <label for="inputDetail" class="col-sm-3 control-label">Sampai Tanggal</label>
+                <input type="date" class="form-control inputData" id="sampaiTanggal" name="dateNext" placeholder="nup" value="">
+            </div>
+            <div class="col-md-2 sm-12 align-self-end">
+                <button type="submit" class="btn btn-success w-100">Download ZIP</button>
             </div>
             </form>
         </div>

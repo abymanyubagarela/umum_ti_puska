@@ -150,5 +150,14 @@ return [
     'attributes' => [
         'newpassword' => 'Password Baru',
         'newpassword_confirm' => 'Konfirmasi Password Baru',
+        'inventoryloan_file' => 'Dokumen BAST',
+        'inventoryloan_filepengembalian' => 'Dokumen BAP',
+        'inventoryloan_duration' => 'Durasi Peminjaman',
+        'inventoryloan_tglpengembalian' => 'Tanggal Pengembalian',
+        'inventory_name' => 'Nama Barang',
+        'inventory_description' => 'Deksripsi / Kelengkapan',
+        'inventory_condition' => 'Kondisi',
+        'inventory_nup' => 'NUP',
+        'inventory_brand' => 'Merk',
     ],
 ];

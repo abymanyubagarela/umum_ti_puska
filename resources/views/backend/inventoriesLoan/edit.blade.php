@@ -101,14 +101,10 @@
                       </div>
                       <div class="col-md-4">
                         <label for="inputPassword4" class="form-label">Estimasi Tanggal Kembali</label>
-                        <input type="date" name="inventoryloan_esttglpengembalian" class="form-control" value="{{ old('inventoryloan_esttglpengembalian',$inventoriesLoan->inventoryloan_esttglpengembalian) }}" id="inventoryloan_esttglpengembalian" disabled >
+                        <input type="text" name="inventoryloan_esttglpengembalians" class="form-control" value="{{ old('inventoryloan_esttglpengembalian',$inventoriesLoan->inventoryloan_esttglpengembalian) }}" id="inventoryloan_esttglpengembalian" disabled >
                       </div>
-                      <div class="col-md-4">
-                        <label for="inputPassword4" class="form-label">Tanggal Pengembalian</label>
-                        <input type="date" name="inventoryloan_tglpengembalian" class="form-control" value="{{ old('inventoryloan_tglpengembalian',$inventoriesLoan->inventoryloan_tglpengembalian) }}" >
-                      </div>
-                      <div class="mb-3 col-md-4">
-                        <label for="file" class="form-label">File Berita Acara Serah Terima</label>
+                      <div class="mb-3 col-md-6">
+                        <label for="file" class="form-label">File Berita Acara Serah Terima (pdf)</label>
                         <input type="hidden" name="oldBAST" value="{{ $inventoriesLoan->inventoryloan_file }}">
                         <input type="file" class="form-control @error('inventoryloan_file') is-invalid @enderror" id="inventoryloan_file" name="inventoryloan_file" onchange="">
                         @error('inventoryloan_file')
@@ -117,8 +113,8 @@
                             </div>
                          @enderror
                     </div>
-                    <div class="mb-3 col-md-4">
-                        <label for="file" class="form-label">File Berita Acara Pengembalian</label>
+                    <div class="mb-3 col-md-6">
+                        <label for="file" class="form-label">File Berita Acara Pengembalian (pdf)</label>
                         <input type="hidden" name="oldBAP" value="{{ $inventoriesLoan->inventoryloan_filepengembalian }}">
                         <input type="file" class="form-control @error('inventoryloan_filepengembalian') is-invalid @enderror" id="inventoryloan_filepengembalian" name="inventoryloan_filepengembalian" onchange="">
                         @error('inventoryloan_filepengembalian')
@@ -129,7 +125,12 @@
                       </div>
                       <div class="col-12">
                         <label for="inputAddress" class="form-label">Keperluan Peminjaman</label>
-                        <textarea type="text" name="inventoryloan_tujuan" class="form-control"  value="" id="inventoryloan_tujuan" >{{ old('inventoryloan_tujuan',$inventoriesLoan->inventoryloan_tujuan) }}</textarea>
+                        <select id="keperluan" class="form-select" name="inventoryloan_tujuan">
+                            <option value="Pemeriksaan" {{ old('inventoryloan_tujuan',$inventoriesLoan->inventoryloan_tujuan) == "Pemeriksaan" ? 'selected' : '' }}>Pemeriksaan</option>
+                            <option value="Keperluan Kerja" {{ old('inventoryloan_tujuan',$inventoriesLoan->inventoryloan_tujuan) == "Keperluan Kerja" ? 'selected' : '' }}>Keperluan Kerja</option>
+                            <option id="kondisiTertentu" value="{{ old('inventoryloan_tujuan',$inventoriesLoan->inventoryloan_tujuan)}}" {{ old('inventoryloan_tujuan',$inventoriesLoan->inventoryloan_tujuan) !==  "Keperluan Kerja" ? 'selected' : '' }}>Peminjaman Dengan Kondisi Tertentu</option>
+                        </select>
+                        <input class="editOption form-control" value="{{ old('inventoryloan_tujuan',$inventoriesLoan->inventoryloan_tujuan)}}" style="display:none; top:-33px; position: relative;width:87%;border-right:0px"/>
                       </div>
                       <div class="col-12">
                         <div class="row mb-3">
@@ -175,16 +176,61 @@
 
 <script type="text/javascript">
     $(function () {
-        var param={
-        inventoriesLoanId:{{$inventoriesLoan->id}}
+        $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                }
+         })
+
+         var param={
+          inventoriesLoanId:{{$inventoriesLoan->id}}
         }
+        getDataTable(param)
+
+        // Select Keperluan
+        var initialText = $('#kondisiTertentu').val();
+        $('#kondisiTertentu').val(initialText);
+            if($("#kondisiTertentu:selected")){
+                $('.editOption').show();
+                $('.editOption').keyup(function(){
+                    var editText = $('.editOption').val();
+                    $('#kondisiTertentu').val(editText);
+                    $('#kondisiTertentu').html(editText);
+               });
+        }
+
+        $('#keperluan').change(function(){
+            var selected = $('option:selected', this).attr('id');
+            var optionText = $('#kondisiTertentu').text();
+
+            if(selected == "kondisiTertentu"){
+                $('.editOption').show();
+
+                $('.editOption').keyup(function(){
+                    var editText = $('.editOption').val();
+                    $('#kondisiTertentu').val(editText);
+                    $('#kondisiTertentu').html(editText);
+                });
+            }else{
+                $('.editOption').hide();
+            }
+        });
+
+        // ends Select Keperluan
+
+
         if(!$('#inventoryloan_nomorBAP').val()){
-            !$('#inventoryloan_nomorBAP').val("nomor/BAST -P.BMN/XIX.TJS/bulanAngka/tahunAngka")
+            $('#inventoryloan_nomorBAP').attr("value","nomor/BAST -P.BMN/XIX.TJS/bulanAngka/tahunAngka")
         }
         if(!$('#inventoryloan_nomorBAST').val()){
-            !$('#inventoryloan_nomorBAST').val("noBAST/BAST BMN/XIX.TJS/bulanAngka/tahunAngka")
+            $('#inventoryloan_nomorBAST').attr("value","noBAST/BAST BMN/XIX.TJS/bulanAngka/tahunAngka")
         }
-        $("#duration").keyup(function(){
+
+        $("input#inventoryloan_tglpeminjaman").change(function(){
+            $('input#duration').removeAttr('disabled');
+         });
+
+         $('input#inventoryloan_tglpeminjaman').change(function(){
             var days = $('input#duration').val();
             var today = new Date($('input#inventoryloan_tglpeminjaman').val());
             today.setDate(today.getDate() + parseInt(days));
@@ -201,19 +247,26 @@
             var created = yyyy+'-'+mm+'-'+dd;
             $('input#tglKembali').val(created);
             $('input#inventoryloan_esttglpengembalian').val(created);
-         });
-        $("input#inventoryloan_tglpeminjaman").change(function(){
-            console.log('asd');
-            $('input#duration').removeAttr('disabled');
+
+            var getBAST = $('#inventoryloan_nomorBAST').val().split('/');
+            var getBAP = $('#inventoryloan_nomorBAP').val().split('/');
+            getBAST[3] = $('input#inventoryloan_tglpeminjaman').val().split('-')[1]
+            getBAST[4] = $('input#inventoryloan_tglpeminjaman').val().split('-')[0]
+            getBAP[3] = $('input#tglKembali').val().split('-')[1]
+            getBAP[4] = $('input#tglKembali').val().split('-')[0]
+
+            $('input#inventoryloan_nomorBAST').val(getBAST.join('/'));
+            $('input#inventoryloan_nomorBAP').val(getBAP.join('/'));
+
+        });
+
+        $("#duration").keyup(function(){
+            $('input#inventoryloan_tglpeminjaman').trigger('change');
          });
 
-        $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                }
-            })
 
-        getDataTable(param)
+
+        // AJAX Delete
         $(document).on('click','.delete-product',function(){
         var data_id = $(this).attr('value');
         Swal.fire({
@@ -225,7 +278,6 @@
             confirmButtonText: 'Yes, delete it!'
           }).then((result) => {
             if (result.isConfirmed) {
-                console.log(data_id);
                 $.ajax({
                     type: "POST",
                     data: {
@@ -240,19 +292,11 @@
                         console.log('Error:', data);
                     }
                 });
-
-
             }
           })
-
     });
 
     function getDataTable(param={}){
-        $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                }
-            })
         var table = $('.yajra-datatable').DataTable({
           processing: true,
           serverSide: true,
@@ -278,11 +322,8 @@
                   orderable: true,
                   searchable: true
               }
-
-
           ],
           "initComplete": function(settings, data) {
-               console.log(data);
             }
          });
     };

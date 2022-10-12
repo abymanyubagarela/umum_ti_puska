@@ -8,10 +8,12 @@ class LoginController extends Controller
 {
     public function index()
     {
-        if(auth()->user()->id){
+        if(Auth::check()){
             return redirect('backend/dashboard');
         };
         return view('backend/login');
+
+
     }
 
     public function authenticate(Request $request)

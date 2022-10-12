@@ -16,12 +16,14 @@
 */
 namespace App\Http\Controllers;
 
+use ZipArchive;
 use App\Models\Accounts;
 use App\Models\Inventories;
 use Illuminate\Http\Request;
 use App\Models\InventoriesLoan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpWord\Element\Table;
 use App\Exports\ExportInventoriesLoan;
@@ -30,6 +32,7 @@ use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpWord\TemplateProcessor;
 use Yajra\DataTables\Facades\DataTables;
 use PhpOffice\PhpWord\SimpleType\TblWidth;
+use App\Exports\ExportInventoriesLoanCollection;
 use App\Http\Controllers\Telegram\TelegramBotController;
 
 class InventoriesLoanController extends Controller
@@ -42,7 +45,9 @@ class InventoriesLoanController extends Controller
 
     public function create()
     {
-        return view('backend.inventoriesLoan.create', ['title' => "Detail Transaksi BMN", 'inventories' => Inventories::where('inventory_isborrowed', 0)->where('inventory_condition','baik') , 'accounts' => Accounts::all()
+        return view('backend.inventoriesLoan.create', ['title' => "Detail Transaksi BMN",
+        'inventories' => Inventories::where('inventory_isborrowed', 0)->where('inventory_condition','baik') , 'accounts' => Accounts::all(),
+        'inventoriesLoan' => InventoriesLoan::all()
         ]);
 
     }
@@ -50,7 +55,7 @@ class InventoriesLoanController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate(['inventoryloan_status' => 'required|max:255', 'inventoryloan_type' => 'required|max:255', 'inventoryloan_tglpeminjaman' => 'required|max:255', 'inventoryloan_duration' => 'int|required', 'inventoryloan_tujuan' => 'required|max:255', 'account_id' => 'required|max:255', 'inventoryloan_esttglpengembalian' => 'date','inventoryloan_penanggung_jawab' => 'required|max:255', 'inventory' => 'required','inventoryloan_tglpengembalian' => ''
-        ]);
+    ]);
 
         $inventoryIds = $validatedData['inventory'];
         unset($validatedData['inventory']);
@@ -86,18 +91,37 @@ class InventoriesLoanController extends Controller
 
     public function update(Request $request, InventoriesLoan $inventoriesLoan)
     {
-        $rules = ['inventoryloan_status' => 'required|max:255', 'inventoryloan_type' => 'required|max:255', 'account_id' => 'required', 'inventoryloan_penanggung_jawab' => 'required|max:255', 'inventoryloan_tglpeminjaman' => 'date|max:1024', 'inventoryloan_duration' => 'int|required', 'inventoryloan_tujuan' => 'required','inventoryloan_esttglpengembalian' => 'date', 'inventoryloan_file' => 'file|max:1024','inventoryloan_nomorBAST' => '','inventoryloan_nomorBAP' => '','inventoryloan_tglpengembalian' => ''];
+        $rules = ['inventoryloan_status' => 'required|max:255', 'inventoryloan_type' => 'required|max:255', 'account_id' => 'required', 'inventoryloan_penanggung_jawab' => 'required|max:255', 'inventoryloan_tglpeminjaman' => 'date|max:1024', 'inventoryloan_duration' => 'int|required', 'inventoryloan_tujuan' => 'required','inventoryloan_esttglpengembalian' => 'date', 'inventoryloan_file' => 'file|max:1024|mimes:pdf', 'inventoryloan_filepengembalian' => 'file|max:1024|mimes:pdf','inventoryloan_nomorBAST' => '','inventoryloan_nomorBAP' => '','inventoryloan_tglpengembalian' => ''];
         $validatedData = $request->validate($rules);
+        $symbol= [".","/"];
         if ($request->file('inventoryloan_file'))
         {
             if ($request->oldBAST)
             {
                 Storage::delete($request->oldBAST);
             }
-            $validatedData['inventoryloan_file'] = $request->file('inventoryloan_file')->store('bast-files');
+            $bastName= str_replace($symbol,'-',$request->inventoryloan_nomorBAST);
+
+            $validatedData['inventoryloan_file'] = Storage::putFileAs('bast-files', $request->file('inventoryloan_file'), $bastName.'.pdf');
             Log::channel('pinjamBMN')->info(auth()->user()->account_name.' Mengupload BAST di inventoryloan ID = '. $inventoriesLoan->id);
+            TelegramBotController::messages(auth()->user()->account_name.' Telah Mengupload BAST');
+
+            $validatedData['inventoryloan_updatedby'] = auth()->user()->account_role;
         }
-        $validatedData['inventoryloan_updatedby'] = auth()->user()->id;
+        if ($request->file('inventoryloan_filepengembalian'))
+        {
+            if ($request->oldBAP)
+            {
+                Storage::delete($request->oldBAP);
+            }
+            $bapName= str_replace($symbol,'-',$request->inventoryloan_nomorBAP);
+            $validatedData['inventoryloan_tglpengembalian'] = date('Y-m-d');
+            $validatedData['inventoryloan_filepengembalian'] = Storage::putFileAs('bap-files', $request->file('inventoryloan_filepengembalian'), $bapName.'.pdf'
+            );
+            TelegramBotController::messages(auth()->user()->account_name.' Telah Mengupload BAP');
+            $validatedData['inventoryloan_updatedby'] = auth()->user()->account_role;
+        }
+
         //insert data
         InventoriesLoan::where('id', $inventoriesLoan->id)->update($validatedData);
         if($validatedData['inventoryloan_status'] == "Sudah diproses"){
@@ -125,6 +149,15 @@ class InventoriesLoanController extends Controller
         $table = new Table(['borderSize' => 12, 'borderColor' => 'black', 'width' => 5000, 'unit' => TblWidth::PERCENT]);
         $inventories = InventoriesLoanDetails::with('Inventories')->where('inventoryloan_id', $inventoriesLoan->id)->get();
         $date = $inventoriesLoan->inventoryloan_esttglpengembalian;
+
+        if($inventoriesLoan->inventoryloan_tujuan == "Pemeriksaan"){
+        $deskripsi = "Berita Acara Serah Terima ini dibuat asli dan ditandatangani oleh Pihak Pertama dan Pihak Kedua, serta belaku selama ". $inventoriesLoan->inventoryloan_duration." hari sejak BAST ini dibuat sehingga Pihak Kedua berkewajiban untuk mengembalikan BMN tersebut sebelum tanggal ". $inventoriesLoan->inventoryloan_esttglpengembalian. "Selama Selama waktu penyerahan Pihak Kedua bertanggungjawab penuh atas BMN tersebut dan diketahui oleh Kepala Subbagian Umum dan TI, dan mempunyai kekuatan hukum yang sama pada kedua belah pihak." ;}
+        else if ($inventoriesLoan->inventoryloan_tujuan == "Keperluan Kerja"){
+        $deskripsi = "Berita Acara Serah Terima ini dibuat asli dan ditandatangani oleh Pihak Pertama dan Pihak Kedua, serta belaku selama Pihak Kedua masih menggunakan barang di atas." ;
+        } else {
+            $deskripsi ="Berita Acara Serah Terima ini dibuat asli dan ditandatangani oleh Pihak Pertama dan Pihak Kedua, serta belaku sampai ".$inventoriesLoan->inventoryloan_tujuan." telah selesai dilaksanakan." ;
+        }
+
         $a = 0;
         $table->addRow();
         $table->addCell(150)->addText('No');
@@ -163,6 +196,7 @@ class InventoriesLoanController extends Controller
         $templateProcessor->setValue('kasubbagUmNIP', $kasubag[0]->account_nip_bkn);
         $templateProcessor->setValue('peminjam',$inventoriesLoan->accounts->account_name );
         $templateProcessor->setValue('peminjamNIP', $inventoriesLoan->accounts->account_nip_bkn);
+        $templateProcessor->setValue('deskripsi', $deskripsi);
 
         if (Storage::exists('bast-template/' . $inventoriesLoan->id . '.docx'))
         {
@@ -272,6 +306,27 @@ class InventoriesLoanController extends Controller
             })->rawColumns(['action','isBast'])->make(true);
         }
 
+    }
+
+    public function ZipArchiveInventoriesLoan(Request $request)
+    {
+        $zip = new ZipArchive;
+        $fileName = date('Y-m-d').'.zip';
+        $datas =InventoriesLoan::where('inventories_loans.inventoryloan_tglpeminjaman', '>=', $request['dateFrom'])->where('inventories_loans.inventoryloan_tglpeminjaman', '<=', $request['dateNext'])->get();
+        if ($zip->open(public_path($fileName), ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE)
+        {
+            foreach ($datas as $data) {
+                if($data->inventoryloan_file){
+                    $zip->addFile('storage/'.$data->inventoryloan_file);
+                }
+                if($data->inventoryloan_filepengembalian){
+                $zip->addFile('storage/'.$data->inventoryloan_filepengembalian);
+                }
+            }
+            $zip->close();
+        }
+
+        return response()->download(public_path($fileName));
     }
 }
 

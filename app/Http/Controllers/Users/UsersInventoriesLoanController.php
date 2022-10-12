@@ -33,7 +33,8 @@ class UsersInventoriesLoanController extends Controller
 
     public function store(Request $request)
     {
-        $validatedData = $request->validate(['inventoryloan_status' => 'required|max:255', 'inventoryloan_tglpeminjaman' => 'required|max:255', 'inventoryloan_duration' => 'int|required', 'inventoryloan_penanggung_jawab' => 'int|required', 'inventoryloan_tujuan' => 'required|max:255', 'inventory' => 'required', 'inventoryloan_file' => 'file|max:1024','inventoryloan_esttglpengembalian' => 'date']);
+        $validatedData = $request->validate(['inventoryloan_status' => 'required|max:255', 'inventoryloan_tglpeminjaman' => 'required|max:255', 'inventoryloan_duration' => 'int|required', 'inventoryloan_tujuan' => 'required|max:255', 'inventoryloan_esttglpengembalian' => 'date','inventoryloan_penanggung_jawab' => 'required|max:255', 'inventory' => 'required','inventoryloan_tglpengembalian' => ''
+    ]);
         if ($request->file('inventoryloan_file'))
         {
             $validatedData['inventoryloan_file'] = $request->file('inventoryloan_file')->store('bast-files');
@@ -68,18 +69,20 @@ class UsersInventoriesLoanController extends Controller
     {
         $date = date("Y-m-d", strtotime($inventoriesLoan->inventoryloan_tglpeminjaman));
         $inventoriesLoan->inventoryloan_tglpeminjaman = $date;
+        $adminAlreadyUpload = InventoriesLoan::select('inventoryloan_updatedby')->where('id', $inventoriesLoan->id)->get();
         return view('frontend.inventoriesLoan.edit',
         [
             'title' => "Detail Transaksi BMN",
             'inventoriesLoan' => $inventoriesLoan,
             'inventories' => Inventories::all() ,
-            'accounts' => Accounts::select('id', 'account_name')->get()
+            'accounts' => Accounts::select('id', 'account_name')->get(),
+            'adminAlreadyUpload' => $adminAlreadyUpload[0]->inventoryloan_updatedby
         ]);
     }
 
     public function update(Request $request, InventoriesLoan $inventoriesLoan)
     {
-        $rules = ['inventoryloan_type' => 'required|max:255', 'inventoryloan_penanggung_jawab' => 'required|max:255', 'inventoryloan_tglpeminjaman' => 'date|max:1024', 'inventoryloan_duration' => 'int|required', 'inventoryloan_tujuan' => 'required', 'inventoryloan_file' => 'file|max:1024','inventoryloan_esttglpengembalian' => 'date', 'inventoryloan_filepengembalian' => 'file|max:1024',];
+        $rules = ['inventoryloan_status' => 'required|max:255', 'inventoryloan_type' => 'required|max:255', 'inventoryloan_penanggung_jawab' => 'required|max:255', 'inventoryloan_tglpeminjaman' => 'date|max:1024', 'inventoryloan_duration' => 'int|required', 'inventoryloan_tujuan' => 'required','inventoryloan_esttglpengembalian' => 'date', 'inventoryloan_file' => 'file|max:1024|mimes:pdf', 'inventoryloan_filepengembalian' => 'file|max:1024|mimes:pdf','inventoryloan_nomorBAST' => '','inventoryloan_nomorBAP' => '','inventoryloan_tglpengembalian' => ''];
         $validatedData = $request->validate($rules);
         $validatedData['account_id'] = auth()->user()->id;
         if ($request->file('inventoryloan_file'))
@@ -99,6 +102,8 @@ class UsersInventoriesLoanController extends Controller
             }
             $validatedData['inventoryloan_filepengembalian'] = $request->file('inventoryloan_filepengembalian')->store('bap-files');
             TelegramBotController::messages(auth()->user()->account_name.' Telah Mengupload BAP');
+
+
         }
         //insert data
         InventoriesLoan::where('id', $inventoriesLoan->id)->update($validatedData);

@@ -73,8 +73,13 @@
                       </div>
                       <div class="col-12">
                         <label for="inputAddress" class="form-label">Keperluan Peminjaman</label>
-                        <textarea type="text" name="inventoryloan_tujuan" class="form-control"  value="" id="inventoryloan_tujuan" required>{{ old('inventoryloan_tujuan') }}</textarea>
-                      </div>
+                        <select id="keperluan" class="form-select" name="inventoryloan_tujuan">
+                            <option value="Pemeriksaan" >Pemeriksaan</option>
+                            <option value="Keperluan Kerja" >Keperluan Kerja</option>
+                            <option id="kondisiTertentu" value="{{ old('inventoryloan_tujuan')}}" >Peminjaman Dengan Kondisi Tertentu</option>
+                        </select>
+                        <input class="editOption form-control" value="{{ old('inventoryloan_tujuan')}}" style="display:none; top:-33px; position: relative;width:87%;border-right:0px"/>
+                    </div>
                       <div class="col-12">
                         <div class="row mb-3">
                             <div class="col-md-8">
@@ -119,6 +124,25 @@
 
 <script type="text/javascript">
     $(function () {
+        var initialText = $('#kondisiTertentu').val();
+
+        $('#keperluan').change(function(){
+            var selected = $('option:selected', this).attr('id');
+            var optionText = $('#kondisiTertentu').text();
+
+            if(selected == "kondisiTertentu"){
+                $('.editOption').show();
+
+                $('.editOption').keyup(function(){
+                    var editText = $('.editOption').val();
+                    $('#kondisiTertentu').val(editText);
+                    $('#kondisiTertentu').html(editText);
+                });
+            }else{
+                $('.editOption').hide();
+            }
+        });
+
         $("#duration").keyup(function(){
             var someDate = new Date($('input#inventoryloan_tglpeminjaman').val());
             var days = $('input#duration').val();
