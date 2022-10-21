@@ -112,6 +112,17 @@ class UsersInventoriesLoanController extends Controller
 
     public function destroy($inventoryloan_id)
     {
+        $inventories_file = InventoriesLoan::find($inventoryloan_id);
+        $inventories_fileBAST = $inventories_file->inventoryloan_file;
+        $inventories_fileBAP = $inventories_file->inventoryloan_filepengembalian;
+        if ($inventories_fileBAST)
+        {
+            Storage::delete($inventories_fileBAST);
+        }
+        if ($inventories_fileBAP)
+        {
+            Storage::delete($inventories_fileBAP);
+        }
         InventoriesLoanDetails::where('inventoryloan_id', '=', $inventoryloan_id)->delete();
         $inventory = InventoriesLoan::destroy($inventoryloan_id);
         return response()->json($inventory);
@@ -124,7 +135,11 @@ class UsersInventoriesLoanController extends Controller
             $data = InventoriesLoan::with(['Accounts'])->select("*", DB::raw("DATE_FORMAT(inventoryloan_tglpeminjaman, '%d %b %Y') as inventoryloan_tglpeminjaman"))->where('account_id', auth()->user()->id)->latest()->get();
             return DataTables::of($data)->addIndexColumn()->addColumn('action', function ($row)
             {
+                if($row->inventoryloan_status == "Belum diproses"){
                 $actionBtn = '<a href="/pinjam-bmn/' . $row->id . '/edit" class="edit open_modal badge bg-success btn-sm">Detail</a> <button value="' . $row->id . '"  name="' . $row->account_name . '"class="delete delete-product badge bg-danger btn-sm">Delete</button>';
+                } else{
+                $actionBtn = '<a href="/pinjam-bmn/' . $row->id . '/edit" class="edit open_modal badge bg-success btn-sm">Detail</a>';
+                }
                 return $actionBtn;
             })->addColumn('inventoryloan_esttglpengembalian', function ($data)
             {

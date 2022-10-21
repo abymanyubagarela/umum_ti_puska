@@ -29,6 +29,7 @@ class CreateAccountsTable extends Migration
             $table->string('account_tmt')->nullable();
             $table->string('account_pendidikan')->nullable();
             $table->string('account_agama')->nullable();
+            $table->string('account_ttd')->nullable();
             $table->string('password')->nullable();
             $table->timestamps();
         });

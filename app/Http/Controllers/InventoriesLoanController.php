@@ -131,20 +131,28 @@ class InventoriesLoanController extends Controller
         return redirect('/backend/inventoriesLoan')->with('success', 'Data berhasil diubah');
     }
 
-    public function destroy(InventoriesLoan $inventoriesLoan)
+    public function destroy($inventoryloan_id)
     {
-        if ($inventoriesLoan->inventoryloan_file)
+        $inventories_file = InventoriesLoan::find($inventoryloan_id);
+        $inventories_fileBAST = $inventories_file->inventoryloan_file;
+        $inventories_fileBAP = $inventories_file->inventoryloan_filepengembalian;
+        if ($inventories_fileBAST)
         {
-            Storage::delete($inventoriesLoan->inventoryloan_file);
+            Storage::delete($inventories_fileBAST);
         }
-        InventoriesLoanDetails::where('inventoryloan_id', '=', $inventoriesLoan->id)->destroy();
-        InventoriesLoan::destroy($inventoriesLoan->id);
+        if ($inventories_fileBAP)
+        {
+            Storage::delete($inventories_fileBAP);
+        }
+        InventoriesLoanDetails::where('inventoryloan_id', '=', $inventoryloan_id)->delete();
+        $inventory = InventoriesLoan::destroy($inventoryloan_id);
+        return response()->json($inventory);
     }
     // FOR EXPORT DATA
     public function generateBAST(InventoriesLoan $inventoriesLoan)
     {
         $templateProcessor = new TemplateProcessor(public_path().'/template/templateBASTPeminjamanFix.docx');
-        $kasubag = Accounts::select('account_name','account_nip_bkn')->where('account_role', 'Pejabat Struktural')->where('account_unit','Subbagian Umum dan Teknologi Informasi')->get();
+        $kasubag = Accounts::select('account_name','account_nip_bkn')->where('account_jabatan', 'Kepala Subbagian')->where('account_unit','Subbagian Umum dan Teknologi Informasi')->get();
         $petugasBMN = Accounts::select('account_name','account_nip_bkn')->where('account_role', 'Petugas BMN')->get();
         $table = new Table(['borderSize' => 12, 'borderColor' => 'black', 'width' => 5000, 'unit' => TblWidth::PERCENT]);
         $inventories = InventoriesLoanDetails::with('Inventories')->where('inventoryloan_id', $inventoriesLoan->id)->get();
@@ -209,7 +217,7 @@ class InventoriesLoanController extends Controller
     public function generateBAP(InventoriesLoan $inventoriesLoan)
     {
         $templateProcessor = new TemplateProcessor(public_path().'/template/templateBAPPeminjamanFix.docx');
-        $kasubag = Accounts::select('account_name','account_nip_bkn')->where('account_role', 'Pejabat Struktural')->where('account_unit','Subbagian Umum dan Teknologi Informasi')->get();
+        $kasubag = Accounts::select('account_name','account_nip_bkn')->where('account_jabatan', 'Kepala Subbagian')->where('account_unit','Subbagian Umum dan Teknologi Informasi')->get();
         $petugasBMN = Accounts::select('account_name','account_nip_bkn')->where('account_role', 'Petugas BMN')->get();
         $table = new Table(['borderSize' => 12, 'borderColor' => 'black', 'width' => 5000, 'unit' => TblWidth::PERCENT]);
         $inventories = InventoriesLoanDetails::with('Inventories')->where('inventoryloan_id', $inventoriesLoan->id)->get();
@@ -284,7 +292,11 @@ class InventoriesLoanController extends Controller
             $data = InventoriesLoan::with(['Accounts'])->select("*", DB::raw("DATE_FORMAT(inventoryloan_tglpeminjaman, '%d %b %Y') as inventoryloan_tglpeminjaman"))->latest()->get();
             return DataTables::of($data)->addIndexColumn()->addColumn('action', function ($row)
             {
-                $actionBtn = '<a href="/backend/inventoriesLoan/' . $row->id . '/edit" class="edit open_modal badge bg-success btn-sm">Detail</a> ';
+                if($row->inventoryloan_status == "Belum diproses"){
+                    $actionBtn = '<a href="/backend/inventoriesLoan/' . $row->id . '/edit" class="edit open_modal badge bg-success btn-sm">Detail</a> <button value="' . $row->id . '"  name="' . $row->account_name . '"class="delete delete-product badge bg-danger btn-sm">Delete</button>';
+                    } else{
+                    $actionBtn = '<a href="/backend/inventoriesLoan/' . $row->id . '/edit" class="edit open_modal badge bg-success btn-sm">Detail</a>';
+                    }
                 return $actionBtn;
             })->addColumn('inventoryloan_esttglpengembalian', function ($data)
             {

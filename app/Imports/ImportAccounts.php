@@ -4,8 +4,9 @@ namespace App\Imports;
 
 use App\Models\Accounts;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithStartRow;
 
-class ImportAccounts implements ToModel
+class ImportAccounts implements ToModel,WithStartRow
 {
     /**
     * @param array $row
@@ -20,14 +21,19 @@ class ImportAccounts implements ToModel
             'account_nip_bpk' => $row[1],
             'account_nip_bkn' => $row[2],
             'account_email' => $row[3],
-            'account_unit' => $row[4],
-            'account_role' => $row[5],
-            'account_tmt' => $row[6],
+            'account_unit' => $row[5],
+            'account_role' => $row[6],
             'account_status' => $row[7],
-            'account_golongan' => $row[8],
-            'account_jabatan' => $row[9],
-            'account_pendidikan' => $row[10],
-            'account_agama' => $row[11],
+            'account_golongan' => $row[9],
+            'account_jabatan' => $row[10],
+            'account_tmt' => $row[11],
+            'account_pendidikan' => $row[12],
+            'account_agama' => $row[13],
         ]);
+    }
+
+    public function startRow(): int
+    {
+        return 2;
     }
 }

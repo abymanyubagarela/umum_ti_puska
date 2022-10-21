@@ -20,43 +20,43 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(10)->create();
         Accounts::create([
             'account_name' => 'Syahri Ramadhani',
-            'account_nip_bpk' => '240011451',
-            'account_nip_bkn' => '199801252022031001',
+            'account_nip_bpk' => '2400114512',
+            'account_nip_bkn' => '1998012520220310021',
             'account_email' => 'syahri.ramadhani@bpk.go.id',
             'account_unit' => 'umum',
             'account_role' => 'Super Admin',
             'password' =>  bcrypt('password')
         ]);
-        Accounts::create([
-            'account_name' => 'Miftahul Rasyid Abdul Khair',
-            'account_nip_bpk' => '24001122451',
-            'account_nip_bkn' => '199802012018121002',
-            'account_email' => 'syahri.ramadhani@bpk.go.id',
-            'account_unit' => 'umum',
-            'account_role' => 'Petugas BMN',
-            'password' =>  bcrypt('password')
-        ]);
-        Accounts::create([
-            'account_name' => 'Dwi Ferdiansyah',
-            'account_nip_bpk' => '2400114521',
-            'account_nip_bkn' => '198103152008081001',
-            'account_email' => 'syahri.ramadhani@bpk.go.id',
-            'account_unit' => 'Subbagian Umum dan Teknologi Informasi',
-            'account_role' => 'Pejabat Struktural',
-            'password' =>  bcrypt('password')
-        ]);
+        // Accounts::create([
+        //     'account_name' => 'Miftahul Rasyid Abdul Khair',
+        //     'account_nip_bpk' => '24001122451',
+        //     'account_nip_bkn' => '199802012018121002',
+        //     'account_email' => 'syahri.ramadhani@bpk.go.id',
+        //     'account_unit' => 'umum',
+        //     'account_role' => 'Petugas BMN',
+        //     'password' =>  bcrypt('password')
+        // ]);
+        // Accounts::create([
+        //     'account_name' => 'Dwi Ferdiansyah',
+        //     'account_nip_bpk' => '2400114521',
+        //     'account_nip_bkn' => '198103152008081001',
+        //     'account_email' => 'syahri.ramadhani@bpk.go.id',
+        //     'account_unit' => 'Subbagian Umum dan Teknologi Informasi',
+        //     'account_role' => 'Pejabat Struktural',
+        //     'password' =>  bcrypt('password')
+        // ]);
 
-        Inventories::create([
-            'inventory_name' => 'inventories',
-            'inventory_description' => ' Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ullam sequi at velit est aut dicta dolorem nobis dolorum impedit facere.',
-            'inventory_condition' => 'baik',
-            'inventory_nup' => 'test',
-            'inventory_brand' => 'Epson',
-        ]);
+        // Inventories::create([
+        //     'inventory_name' => 'inventories',
+        //     'inventory_description' => ' Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ullam sequi at velit est aut dicta dolorem nobis dolorum impedit facere.',
+        //     'inventory_condition' => 'baik',
+        //     'inventory_nup' => 'test',
+        //     'inventory_brand' => 'Epson',
+        // ]);
 
-        Accounts::factory(200)->create();
-        Inventories::factory(200)->create();
-        InventoriesLoan::factory(10)->create();
-        InventoriesLoanDetails::factory(50)->create();
+        // Accounts::factory(200)->create();
+        // Inventories::factory(200)->create();
+        // InventoriesLoan::factory(10)->create();
+        // InventoriesLoanDetails::factory(50)->create();
     }
 }

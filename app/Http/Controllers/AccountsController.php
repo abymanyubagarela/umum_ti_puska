@@ -49,7 +49,21 @@ class AccountsController extends Controller
 
     public function store(StoreAccountsRequest $request)
     {
-        $validatedData = $request->validate(['account_name' => 'required|max:255', 'account_nip_bpk' => 'required|max:255', 'account_nip_bkn' => 'required', 'account_email' => 'max:255', 'account_unit' => 'max:255|required', 'account_role' => 'max:255|required', 'account_tmt' => 'max:255', 'account_status' => 'max:255', 'account_golongan' => 'max:255', 'account_jabatan' => 'max:255', 'account_pendidikan' => 'max:255', 'account_agama' => 'max:255','account_handphone' => 'numeric|digits_between:8,15' ]);
+        // Validasi Simpan Data
+        $validatedData = $request->validate([
+            'account_name' => 'required|max:128',
+            'account_nip_bpk' => 'required|unique:accounts',
+            'account_nip_bkn' => 'required|unique:accounts',
+            'account_email' => 'max:64|email',
+            'account_unit' => 'max:64|required',
+            'account_role' => 'max:48|required',
+            'account_tmt' => 'max:20',
+            'account_status' => 'max:16',
+            'account_golongan' => 'max:10',
+            'account_jabatan' => 'max:64',
+            'account_pendidikan' => 'max:12',
+            'account_agama' => 'max:24',
+            'account_handphone' => 'numeric|digits_between:8,15' ]);
 
         Accounts::create($validatedData);
         if ($request->input('more'))
@@ -77,8 +91,21 @@ class AccountsController extends Controller
     public function update(UpdateAccountsRequest $request, $account_id)
     {
 
-        //
-        $rules = ['account_name' => 'required|max:255', 'account_nip_bpk' => 'required|max:255', 'account_nip_bkn' => 'required', 'account_email' => 'max:255', 'account_unit' => 'max:255|required', 'account_role' => 'max:255|required', 'account_tmt' => 'max:255', 'account_status' => 'max:255', 'account_golongan' => 'max:255', 'account_jabatan' => 'max:255', 'account_pendidikan' => 'max:255', 'account_agama' => 'max:255', 'account_handphone' => 'numeric|digits_between:8,15', ];
+        //Validate Update Data
+        $rules = [
+        'account_name' => 'required|max:128',
+        'account_nip_bpk' => 'required',
+        'account_nip_bkn' => 'required',
+        'account_email' => 'max:64|email',
+        'account_unit' => 'max:64|required',
+        'account_role' => 'max:48|required',
+        'account_tmt' => 'max:20',
+        'account_status' => 'max:16',
+        'account_golongan' => 'max:10',
+        'account_jabatan' => 'max:64',
+        'account_pendidikan' => 'max:12',
+        'account_agama' => 'max:24',
+        'account_handphone' => 'numeric|digits_between:8,15', ];
 
         $updated = $request->validate($rules);
         Accounts::where('id', $account_id)->update($updated);
@@ -86,6 +113,7 @@ class AccountsController extends Controller
     }
     public function passwordUpdate(Request $request, $account_id)
     {
+        // validated password Update
         $rules = ['password' => 'required|max:255', ];
 
         $updated = $request->validate($rules);
@@ -96,7 +124,9 @@ class AccountsController extends Controller
     }
     public function passwordUpdateUser(Request $request)
     {
+        // Validate Password Update from User
         $rules = ['oldpassword' => 'current_password', 'newpassword' => 'required|min:6|confirmed'];
+
         $updated = $request->validate($rules);
         $updated['password'] = bcrypt($updated['newpassword']);
         Accounts::where('id', auth()->user()->id)->update(array(

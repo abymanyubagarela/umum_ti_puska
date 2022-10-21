@@ -55,6 +55,7 @@
                         <label for="inputPassword4" class="form-label">Status</label>
                         <select class="form-select" name="inventoryloan_status">
                             <option {{ old('inventoryloan_status',$inventoriesLoan->inventoryloan_status) == "Belum diproses" ? 'selected' : '' }} value="Belum diproses">Belum diproses</option>
+                            <option {{ old('inventoryloan_status',$inventoriesLoan->inventoryloan_status) == "Peminjaman divalidasi" ? 'selected' : '' }} value="Peminjaman divalidasi">Peminjaman divalidasi</option>
                             <option value="Proses peminjaman" {{ old('inventoryloan_status',$inventoriesLoan->inventoryloan_status) == "Proses peminjaman" ? 'selected' : '' }}>Proses Peminjaman</option>
                             <option value="Sudah dikembalikan" {{ old('inventoryloan_status',$inventoriesLoan->inventoryloan_status) == "Sudah dikembalikan" ? 'selected' : '' }}>Sudah dikembalikan</option>
 

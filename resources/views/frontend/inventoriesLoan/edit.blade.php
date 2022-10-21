@@ -15,12 +15,14 @@
             <div class="text-end">
             @if($inventoriesLoan->inventoryloan_file)
                 <a class="inline btn btn-success" href="{{ asset('storage'). '/' . $inventoriesLoan->inventoryloan_file }}" target="_blank" download>Download BAST</a>
-            @else
+            @endif
+            @if($inventoriesLoan->inventoryloan_status == "Peminjaman divalidasi")
             <a href="{{ 'generate-bast'}}". class="inline btn btn-secondary">Cetak Template BAST</a>
             @endif
             @if($inventoriesLoan->inventoryloan_filepengembalian)
                 <a class="inline btn btn-success" href="{{ asset('storage'). '/' . $inventoriesLoan->inventoryloan_filepengembalian }}" target="_blank" download>Download BAP</a>
-            @else
+            @endif
+            @if($inventoriesLoan->inventoryloan_status == "Proses peminjaman")
             <a href="{{ 'generate-bap'}}". class="inline btn btn-secondary">Cetak Template BAP</a>
             @endif
             </div>

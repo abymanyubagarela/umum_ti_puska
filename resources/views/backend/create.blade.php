@@ -5,9 +5,18 @@
 <meta name="_token" content="{!! csrf_token() !!}" />
 {{-- <input id="url" type="hidden" value="{{ \Request::url() }}"> --}}
 <h1 class="h3 mb-3"><strong>Tambah </strong>{{ $title }} </h1>
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
 <div class="row">
     <div class="container  ms-2">
-        <form method="post" action="/backend/{{ Request::segment(2) }}/" class="mb-5" enctype="multipart/form-data">
+        <form method="post" action="/backend/{{ Request::segment(2) }}/" class="mb-5" enctype="multipart/form-data" novalidate>
             @csrf
             <div class="col-md-8 col-sm-12">
             <div class="form-data">
@@ -41,9 +50,10 @@
                 @endforeach
             </div>
             <div class="form-data-place">
+                <button type="submit" class="btn btn-primary float-end ms-2" name="save" value="back">Simpan {{ $title }} dan Kembali</button>
+                <button type="submit" class="btn btn-secondary float-end ms-2" name="more" value="more">Simpan {{ $title }} dan Input Lagi</button>
             </div>
-            <button type="submit" class="btn btn-primary float-end ms-2" name="save" value="back">Simpan {{ $title }} dan Kembali</button>
-            <button type="submit" class="btn btn-secondary float-end ms-2" name="more" value="more">Simpan {{ $title }} dan Input Lagi</button>
+
             {{-- <div class="btn btn-secondary float-end addData">Tambah {{ $title }} Lagi</div> --}}
         </form>
     </div>
