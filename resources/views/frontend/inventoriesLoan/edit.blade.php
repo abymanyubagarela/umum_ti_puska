@@ -16,13 +16,13 @@
             @if($inventoriesLoan->inventoryloan_file)
                 <a class="inline btn btn-success" href="{{ asset('storage'). '/' . $inventoriesLoan->inventoryloan_file }}" target="_blank" download>Download BAST</a>
             @endif
-            @if($inventoriesLoan->inventoryloan_status == "Peminjaman divalidasi")
+            @if($inventoriesLoan->inventoryloan_status == "Peminjaman divalidasi" && !$inventoriesLoan->inventoryloan_file)
             <a href="{{ 'generate-bast'}}". class="inline btn btn-secondary">Cetak Template BAST</a>
             @endif
             @if($inventoriesLoan->inventoryloan_filepengembalian)
                 <a class="inline btn btn-success" href="{{ asset('storage'). '/' . $inventoriesLoan->inventoryloan_filepengembalian }}" target="_blank" download>Download BAP</a>
             @endif
-            @if($inventoriesLoan->inventoryloan_status == "Proses peminjaman")
+            @if($inventoriesLoan->inventoryloan_status == "Proses peminjaman"  && !$inventoriesLoan->inventoryloan_filepengembalian)
             <a href="{{ 'generate-bap'}}". class="inline btn btn-secondary">Cetak Template BAP</a>
             @endif
             </div>
@@ -62,7 +62,7 @@
                       <div class="col-md-6">
                         <label for="inputEmail4" class="form-label">Nama Penanggung Jawab</label>
                         @if($inventoriesLoan->inventoryloan_status != "Belum diproses")
-                      <select class="select2input form-select" name="inventoryloan_penanggung_jawab" required>
+                             <select class="select2input form-select" name="inventoryloan_penanggung_jawab" required>
                                 @foreach($accounts as $account)
                                 @if(old('category_id', $inventoriesLoan->inventoryloan_penanggung_jawab) == $account->id)
                                 <option selected value="{{ $account->id }}" selected>{{ $account->account_name }}</option>
@@ -101,7 +101,7 @@
                         <input type="text" name="inventoryloan_esttglpengembalians" class="form-control" value="{{ old('inventoryloan_esttglpengembalian',$inventoriesLoan->inventoryloan_esttglpengembalian) }}" id="inventoryloan_esttglpengembalian" disabled >
                       </div>
 
-                      @if($inventoriesLoan->inventoryloan_status == "Belum diproses")
+                      @if($inventoriesLoan->inventoryloan_status == "Peminjaman divalidasi")
                          @if(!$adminAlreadyUpload)
                         <div class="mb-3">
                             <label for="file" class="form-label">File Berita Acara Serah Terima (pdf)</label>
@@ -129,12 +129,19 @@
                       @endif
                       <div class="col-12">
                         <label for="inputAddress" class="form-label">Keperluan Peminjaman</label>
+                        @if($inventoriesLoan->inventoryloan_status != "Belum diproses")
                         <select id="keperluan" class="form-select" name="inventoryloan_tujuan">
-                            <option value="Pemeriksaan" {{ old('inventoryloan_tujuan',$inventoriesLoan->inventoryloan_tujuan) == "Peminjaman" ? 'selected' : '' }}>Pemeriksaan</option>
-                            <option value="Keperluan Kerja" {{ old('inventoryloan_tujuan',$inventoriesLoan->inventoryloan_tujuan) == "Keperluan Kerja" ? 'selected' : '' }}>Keperluan Kerja</option>
-                            <option id="kondisiTertentu" value="{{ old('inventoryloan_tujuan',$inventoriesLoan->inventoryloan_tujuan)}}" {{ old('inventoryloan_tujuan',$inventoriesLoan->inventoryloan_tujuan) != "Peminjaman" && "Keperluan Kerja" ? 'selected' : '' }}>Peminjaman Dengan Kondisi Tertentu</option>
+                            <option value="{{$inventoriesLoan->inventoryloan_tujuan}}" >{{ $inventoriesLoan->inventoryloan_tujuan}}</option>
                         </select>
-                        <input class="editOption form-control" value="{{ old('inventoryloan_tujuan',$inventoriesLoan->inventoryloan_tujuan)}}" style="display:none; top:-33px; position: relative;width:87%;border-right:0px"/>
+                   @else
+                   <select id="keperluan" class="form-select" name="inventoryloan_tujuan">
+                    <option value="Pemeriksaan" {{ old('inventoryloan_tujuan',$inventoriesLoan->inventoryloan_tujuan) == "Peminjaman" ? 'selected' : '' }}>Pemeriksaan</option>
+                    <option value="Keperluan Kerja" {{ old('inventoryloan_tujuan',$inventoriesLoan->inventoryloan_tujuan) == "Keperluan Kerja" ? 'selected' : '' }}>Keperluan Kerja</option>
+                    <option id="kondisiTertentu" value="{{ old('inventoryloan_tujuan',$inventoriesLoan->inventoryloan_tujuan)}}" {{ old('inventoryloan_tujuan',$inventoriesLoan->inventoryloan_tujuan) != "Peminjaman" && "Keperluan Kerja" ? 'selected' : '' }}>Peminjaman Dengan Kondisi Tertentu</option>
+                </select>
+                <input class="editOption form-control" value="{{ old('inventoryloan_tujuan',$inventoriesLoan->inventoryloan_tujuan)}}" style="display:none; top:-33px; position: relative;width:87%;border-right:0px"/>
+                   @endif
+
                     </div>
                       <div class="col-12 inventory">
                         <div class="row mb-3">
@@ -297,8 +304,12 @@
 
                if($('#status').val() != "Belum diproses"){
                     $('form input, form select, form textarea').attr('readonly', true);
+                    // $('form select').attr('disabled', true);
                     $('input#inventoryloan_filepengembalian').attr('readonly',false);
                     $('.inventory .badge').remove();
+                }
+               if($('#status').val() == "Peminjaman divalidasi"){
+                    $('input#inventoryloan_file').attr('readonly',false);
                 }
             }
          });

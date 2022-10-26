@@ -22,13 +22,6 @@ class CreateAccountsTable extends Migration
             $table->string('account_handphone')->nullable();
             $table->string('account_unit');
             $table->string('account_role');
-            $table->string('account_status')->nullable();
-            $table->string('account_pangkat')->nullable();
-            $table->string('account_golongan')->nullable();
-            $table->string('account_jabatan')->nullable();
-            $table->string('account_tmt')->nullable();
-            $table->string('account_pendidikan')->nullable();
-            $table->string('account_agama')->nullable();
             $table->string('account_ttd')->nullable();
             $table->string('password')->nullable();
             $table->timestamps();

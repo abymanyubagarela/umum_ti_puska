@@ -19,7 +19,7 @@
             <a href="{{ 'generate-bast'}}". class="inline btn btn-secondary">Cetak Template BAST</a>
             @endif
             @if($inventoriesLoan->inventoryloan_filepengembalian)
-                <a class="inline btn btn-success" href="{{ asset('storage'). '/' . $inventoriesLoan->inventoryloan_file }}" target="_blank" download>Download BAST</a>
+                <a class="inline btn btn-success" href="{{ asset('storage'). '/' . $inventoriesLoan->inventoryloan_file }}" target="_blank" download>Download BAP</a>
             @else
             <a href="{{ 'generate-bap'}}". class="inline btn btn-secondary">Cetak Template BAP</a>
             @endif
@@ -219,12 +219,11 @@
 
         // ends Select Keperluan
 
-
         if(!$('#inventoryloan_nomorBAP').val()){
-            $('#inventoryloan_nomorBAP').attr("value","nomor/BAST -P.BMN/XIX.TJS/bulanAngka/tahunAngka")
+            $('#inventoryloan_nomorBAP').attr("value","nomor/BAST -P.BMN/XIX.TJS/"+$('input#inventoryloan_esttglpengembalian').val().split('-')[1]+"/"+$('input#inventoryloan_esttglpengembalian').val().split('-')[0])
         }
         if(!$('#inventoryloan_nomorBAST').val()){
-            $('#inventoryloan_nomorBAST').attr("value","noBAST/BAST BMN/XIX.TJS/bulanAngka/tahunAngka")
+            $('#inventoryloan_nomorBAST').attr("value","noBAST/BAST BMN/XIX.TJS/"+$('input#inventoryloan_tglpeminjaman').val().split('-')[1]+"/"+$('input#inventoryloan_tglpeminjaman').val().split('-')[0])
         }
 
         $("input#inventoryloan_tglpeminjaman").change(function(){
