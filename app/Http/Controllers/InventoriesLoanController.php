@@ -166,7 +166,7 @@ class InventoriesLoanController extends Controller
         $petugasBMN = Accounts::select('account_name','account_nip_bkn')->where('account_role', 'Petugas BMN')->get();
         $table = new Table(['borderSize' => 12, 'borderColor' => 'black', 'width' => 5000, 'unit' => TblWidth::PERCENT]);
         $inventories = InventoriesLoanDetails::with('Inventories')->where('inventoryloan_id', $inventoriesLoan->id)->get();
-        $date = $inventoriesLoan->inventoryloan_esttglpengembalian;
+        $date = $inventoriesLoan->inventoryloan_tglpeminjaman;
 
         if($inventoriesLoan->inventoryloan_tujuan == "Pemeriksaan"){
         $deskripsi = "Berita Acara Serah Terima ini dibuat asli dan ditandatangani oleh Pihak Pertama dan Pihak Kedua, serta belaku selama ". $inventoriesLoan->inventoryloan_duration." hari sejak BAST ini dibuat sehingga Pihak Kedua berkewajiban untuk mengembalikan BMN tersebut sebelum tanggal ". $inventoriesLoan->inventoryloan_esttglpengembalian. "Selama Selama waktu penyerahan Pihak Kedua bertanggungjawab penuh atas BMN tersebut dan diketahui oleh Kepala Subbagian Umum dan TI, dan mempunyai kekuatan hukum yang sama pada kedua belah pihak." ;}
