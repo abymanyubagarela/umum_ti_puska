@@ -54,8 +54,18 @@ class InventoriesLoanController extends Controller
 
     public function store(Request $request)
     {
-        $validatedData = $request->validate(['inventoryloan_status' => 'required|max:255', 'inventoryloan_type' => 'required|max:255', 'inventoryloan_tglpeminjaman' => 'required|max:255', 'inventoryloan_duration' => 'int|required', 'inventoryloan_tujuan' => 'required|max:255', 'account_id' => 'required|max:255', 'inventoryloan_esttglpengembalian' => 'date','inventoryloan_penanggung_jawab' => 'required|max:255', 'inventory' => 'required','inventoryloan_tglpengembalian' => ''
-    ]);
+        $validatedData = $request->validate([
+            'inventoryloan_status' => 'required|max:48',
+             'inventoryloan_type' => 'required|max:48',
+             'inventoryloan_tglpeminjaman' => 'required|date',
+             'inventoryloan_duration' => 'int|required',
+             'inventoryloan_tujuan' => 'required',
+             'account_id' => 'required|max:48',
+             'inventoryloan_esttglpengembalian' => 'nullable|date',
+             'inventoryloan_penanggung_jawab' => 'required|max:48',
+             'inventory' => 'required',
+             'inventoryloan_tglpengembalian' => 'nullable|date'
+        ]);
 
         $inventoryIds = $validatedData['inventory'];
         unset($validatedData['inventory']);

@@ -83,7 +83,18 @@ class UsersInventoriesLoanController extends Controller
     public function update(Request $request, InventoriesLoan $inventoriesLoan)
     {
         // dd($request);
-        $rules = ['inventoryloan_status' => 'required|max:255','inventoryloan_penanggung_jawab' => 'required|max:255', 'inventoryloan_tglpeminjaman' => 'date|max:1024', 'inventoryloan_duration' => 'int|required', 'inventoryloan_tujuan' => 'required','inventoryloan_esttglpengembalian' => 'date', 'inventoryloan_file' => 'file|max:1024|mimes:pdf', 'inventoryloan_filepengembalian' => 'file|max:1024|mimes:pdf','inventoryloan_nomorBAST' => '','inventoryloan_nomorBAP' => '','inventoryloan_tglpengembalian' => ''];
+        $rules = [
+            'inventoryloan_status' => 'required|max:48',
+            'inventoryloan_penanggung_jawab' => 'required|max:48',
+            'inventoryloan_tglpeminjaman' => 'date',
+            'inventoryloan_duration' => 'int|required',
+            'inventoryloan_tujuan' => 'required',
+            'inventoryloan_esttglpengembalian' => 'date',
+            'inventoryloan_file' => 'file|max:1024|mimes:pdf',
+            'inventoryloan_filepengembalian' => 'file|max:1024|mimes:pdf',
+            'inventoryloan_nomorBAST' => 'max:48|nullable',
+            'inventoryloan_nomorBAP' => 'max:48|nullable',
+            'inventoryloan_tglpengembalian' => 'date|nullable'];
         $validatedData = $request->validate($rules);
         $validatedData['account_id'] = auth()->user()->id;
         if ($request->file('inventoryloan_file'))

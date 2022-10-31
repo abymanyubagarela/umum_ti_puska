@@ -41,7 +41,7 @@
                     </ul>
                 </div>
                  @endif
-                <form class="row g-3" method="post" action="/backend/inventoriesLoan/" enctype="multipart/form-data">
+                <form class="row g-3" method="post" action="/backend/inventoriesLoan/" enctype="multipart/form-data" >
                     @method('post')
                     @csrf
                     <input type="hidden" name="inventoryloan_status" value="Belum diproses"/>

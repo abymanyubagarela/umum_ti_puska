@@ -15,6 +15,7 @@ class InventoriesLoanDetailsController extends Controller
         $inventoriesLoanIds = $request->inventoriesLoanId;
         if ($request->ajax())
         {
+
             $data = InventoriesLoanDetails::with(['Inventories'])->where('inventoryloan_id', $inventoriesLoanIds)->get();
             return DataTables::of($data)->addIndexColumn()->addColumn('action', function ($row)
             {

@@ -40,7 +40,7 @@
                 </div>
                  @endif
                 <input type="hidden" id="inventoriesLoanInput" value="{{ $inventoriesLoan->id }}"/>
-                <form class="row g-3" method="post" action="/backend/inventoriesLoan/{{ $inventoriesLoan->id }}" enctype="multipart/form-data">
+                <form class="row g-3" method="post" action="/backend/inventoriesLoan/{{ $inventoriesLoan->id }}" enctype="multipart/form-data" >
                     @method('put')
                     @csrf
                     <div class="col-md-6">

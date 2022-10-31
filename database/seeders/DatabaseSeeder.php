@@ -18,15 +18,15 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // \App\Models\User::factory(10)->create();
-        Accounts::create([
-            'account_name' => 'Syahri Ramadhani',
-            'account_nip_bpk' => '2400114512',
-            'account_nip_bkn' => '1998012520220310021',
-            'account_email' => 'syahri.ramadhani@bpk.go.id',
-            'account_unit' => 'umum',
-            'account_role' => 'Super Admin',
-            'password' =>  bcrypt('password')
-        ]);
+        // Accounts::create([
+        //     'account_name' => 'Syahri Ramadhani',
+        //     'account_nip_bpk' => '2400114512',
+        //     'account_nip_bkn' => '1998012520220310021',
+        //     'account_email' => 'syahri.ramadhani@bpk.go.id',
+        //     'account_unit' => 'umum',
+        //     'account_role' => 'Super Admin',
+        //     'password' =>  bcrypt('password')
+        // ]);
         // Accounts::create([
         //     'account_name' => 'Miftahul Rasyid Abdul Khair',
         //     'account_nip_bpk' => '24001122451',
@@ -46,17 +46,9 @@ class DatabaseSeeder extends Seeder
         //     'password' =>  bcrypt('password')
         // ]);
 
-        // Inventories::create([
-        //     'inventory_name' => 'inventories',
-        //     'inventory_description' => ' Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ullam sequi at velit est aut dicta dolorem nobis dolorum impedit facere.',
-        //     'inventory_condition' => 'baik',
-        //     'inventory_nup' => 'test',
-        //     'inventory_brand' => 'Epson',
-        // ]);
-
         // Accounts::factory(200)->create();
         // Inventories::factory(200)->create();
-        // InventoriesLoan::factory(10)->create();
-        // InventoriesLoanDetails::factory(50)->create();
+        InventoriesLoan::factory(50)->create();
+        InventoriesLoanDetails::factory(100)->create();
     }
 }

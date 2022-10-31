@@ -41,8 +41,8 @@ class InventoriesController extends Controller
 
     public function store(StoreInventoriesRequest $request)
     {
-        $validatedData = $request->validate(['inventory_name' => 'required|max:255',
-        'inventory_nup' => 'required|max:255|unique:inventories',
+        $validatedData = $request->validate(['inventory_name' => 'required|max:64',
+        'inventory_nup' => 'required|max:25|unique:inventories',
         'inventory_description' => 'required',
         'inventory_condition' => 'nullable|max:25',
         'inventory_brand' => 'nullable|max:25']);
