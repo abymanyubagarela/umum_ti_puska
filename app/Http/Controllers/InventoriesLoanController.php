@@ -169,11 +169,11 @@ class InventoriesLoanController extends Controller
         $date = $inventoriesLoan->inventoryloan_tglpeminjaman;
 
         if($inventoriesLoan->inventoryloan_tujuan == "Pemeriksaan"){
-        $deskripsi = "Berita Acara Serah Terima ini dibuat asli dan ditandatangani oleh Pihak Pertama dan Pihak Kedua, serta belaku selama ". $inventoriesLoan->inventoryloan_duration." hari sejak BAST ini dibuat sehingga Pihak Kedua berkewajiban untuk mengembalikan BMN tersebut sebelum tanggal ". $inventoriesLoan->inventoryloan_esttglpengembalian. "Selama Selama waktu penyerahan Pihak Kedua bertanggungjawab penuh atas BMN tersebut dan diketahui oleh Kepala Subbagian Umum dan TI, dan mempunyai kekuatan hukum yang sama pada kedua belah pihak." ;}
+        $deskripsi = "Berita Acara Serah Terima ini dibuat asli dan ditandatangani oleh Pihak Pertama dan Pihak Kedua, serta berlaku selama ". $inventoriesLoan->inventoryloan_duration." hari sejak BAST ini dibuat sehingga Pihak Kedua berkewajiban untuk mengembalikan BMN tersebut sebelum tanggal ". $inventoriesLoan->inventoryloan_esttglpengembalian. "Selama Selama waktu penyerahan Pihak Kedua bertanggungjawab penuh atas BMN tersebut dan diketahui oleh Kepala Subbagian Umum dan TI, dan mempunyai kekuatan hukum yang sama pada kedua belah pihak." ;}
         else if ($inventoriesLoan->inventoryloan_tujuan == "Keperluan Kerja"){
-        $deskripsi = "Berita Acara Serah Terima ini dibuat asli dan ditandatangani oleh Pihak Pertama dan Pihak Kedua, serta belaku selama Pihak Kedua masih menggunakan barang di atas." ;
+        $deskripsi = "Berita Acara Serah Terima ini dibuat asli dan ditandatangani oleh Pihak Pertama dan Pihak Kedua, serta berlaku selama Pihak Kedua masih menggunakan barang di atas." ;
         } else {
-            $deskripsi ="Berita Acara Serah Terima ini dibuat asli dan ditandatangani oleh Pihak Pertama dan Pihak Kedua, serta belaku sampai ".$inventoriesLoan->inventoryloan_tujuan." telah selesai dilaksanakan." ;
+            $deskripsi ="Berita Acara Serah Terima ini dibuat asli dan ditandatangani oleh Pihak Pertama dan Pihak Kedua, serta berlaku sampai ".$inventoriesLoan->inventoryloan_tujuan." telah selesai dilaksanakan." ;
         }
 
         $a = 0;
