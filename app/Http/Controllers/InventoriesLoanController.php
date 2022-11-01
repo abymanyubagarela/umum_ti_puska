@@ -154,6 +154,15 @@ class InventoriesLoanController extends Controller
         {
             Storage::delete($inventories_fileBAP);
         }
+
+        $inventoryDetails = InventoriesLoanDetails::where('inventoryloan_id', '=', $inventoryloan_id)->get();
+        foreach($inventoryDetails as $inventoryDetail){
+            $inventory_id = $inventoryDetail->inventory_id;
+            Inventories::where('id', $inventory_id)->update(array(
+                'inventory_isborrowed' => 0
+            ));
+        }
+
         InventoriesLoanDetails::where('inventoryloan_id', '=', $inventoryloan_id)->delete();
         $inventory = InventoriesLoan::destroy($inventoryloan_id);
         return response()->json($inventory);
