@@ -15,6 +15,11 @@
                  <i class="align-middle" data-feather="clipboard"></i> <span class="align-middle">Pinjam BMN</span>
                 </a>
             </li>
+            <li class="sidebar-item {{ Request::is('kerusakan-bm*') ? 'active' : ' ' }}">
+                <a class="sidebar-link " href="/pinjam-bmn">
+                 <i class="align-middle" data-feather="clipboard"></i> <span class="align-middle">Kerusakan BMN</span>
+                </a>
+            </li>
             @can('Super Admin')
             <li class="sidebar-header">
                 Super Admin
@@ -49,6 +54,38 @@
                  <i class="align-middle" data-feather="clipboard"></i> <span class="align-middle">Report BMN</span>
                 </a>
             </li>
+            @endcanany
+
+            @canany(['Super Admin', 'Petugas Ruangan','Kasubbag Umum'])
+            <li class="sidebar-header">
+                Admin Ruangan
+            </li>
+            <li class="sidebar-item {{ Request::is('backend/rooms/dashb*') ? 'active' : ' ' }}">
+                <a class="sidebar-link " href="/backend/rooms/dashboard">
+                 <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard Ruangan</span>
+                </a>
+            </li>
+            <li class="sidebar-item inventory {{ Request::is('backend/rooms*') ? 'active' : ' ' }}">
+                <a class="sidebar-link " href="/backend/rooms/">
+                 <i class="align-middle" data-feather="package"></i> <span class="align-middle">Data Ruangan</span>
+                </a>
+            </li>            
+            @endcanany
+
+            @canany(['Super Admin', 'Petugas BMN','Kasubbag Umum'])
+            <li class="sidebar-header">
+                Admin Kerusakan BMN
+            </li>
+            <li class="sidebar-item {{ Request::is('backend/inventoriesCrash/dashb*') ? 'active' : ' ' }}">
+                <a class="sidebar-link " href="/backend/inventoriesCrash/dashboard">
+                 <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard Kerusakan</span>
+                </a>
+            </li>
+            <li class="sidebar-item inventory {{ Request::is('backend/inventoriesCrash*') ? 'active' : ' ' }}">
+                <a class="sidebar-link " href="/backend/inventoriesCrash/">
+                 <i class="align-middle" data-feather="package"></i> <span class="align-middle">Data Kerusakan</span>
+                </a>
+            </li>            
             @endcanany
 
         </ul>

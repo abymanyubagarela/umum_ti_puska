@@ -12,6 +12,9 @@ use App\Http\Controllers\Telegram\TelegramBotController;
 use App\Http\Controllers\InventoriesLoanDetailsController;
 use App\Http\Controllers\Users\UsersInventoriesLoanController;
 use App\Http\Controllers\InventoriesController as InventoriesControllers;
+use App\Http\Controllers\InventoriesCrashController;
+use App\Http\Controllers\RoomController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -89,5 +92,20 @@ Route::group(['middleware' => 'auth'], function ()
     Route::get('/backend/bmn-reports',[InventoriesLoanController::class,'reportBMNIndex']);
     Route::post('/backend/bmn-reports/export',[InventoriesLoanController::class,'exportInventoriesLoan'])->name('exportInventoriesLoan');
     Route::post('/backend/bmn-reports/exportLoanFile',[InventoriesLoanController::class,'ZipArchiveInventoriesLoan'])->name('exportInventoriesLoanFile');
+
+    ############################## KERUSAKAN BMN ##############################
+
+    Route::resource('/backend/inventoriesCrash', InventoriesCrashController::class);
+    Route::post('backend/inventoriesCrash/get-datatable', [InventoriesCrashController::class , 'getDataTableProperty'])->name('inventoriesCrash.list');
+
+    ############################## KERUSAKAN BMN ##############################
+
+    ############################## Peminjaman Ruangan ##############################
+
+    Route::resource('/backend/rooms', RoomController::class);
+    Route::post('backend/rooms/get-datatable', [RoomController::class , 'getDataTableRooms'])->name('rooms.list');
+    
+    ############################## Peminjaman Ruangan ##############################
+
 });
 

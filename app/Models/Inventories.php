@@ -21,5 +21,12 @@ class Inventories extends Model
         return $this->hasMany(InventoriesLoanDetails::class , 'id', 'inventory_id');
     }
 
+    public static function InvetoriesSelectOption()
+    {
+        return Inventories::all('id','inventory_name','inventory_nup')->toArray();
+    }
+
+    
+
 }
 
