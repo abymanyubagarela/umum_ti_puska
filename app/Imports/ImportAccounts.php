@@ -29,6 +29,7 @@ class ImportAccounts implements ToModel,WithStartRow
             'account_tmt' => $row[11],
             'account_pendidikan' => $row[12],
             'account_agama' => $row[13],
+            'password'=> $row[14]
         ]);
     }
 
