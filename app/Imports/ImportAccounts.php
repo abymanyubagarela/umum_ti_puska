@@ -23,12 +23,6 @@ class ImportAccounts implements ToModel,WithStartRow
             'account_email' => $row[3],
             'account_unit' => $row[5],
             'account_role' => $row[6],
-            'account_status' => $row[7],
-            'account_golongan' => $row[9],
-            'account_jabatan' => $row[10],
-            'account_tmt' => $row[11],
-            'account_pendidikan' => $row[12],
-            'account_agama' => $row[13],
             'password'=> $row[14]
         ]);
     }
