@@ -107,6 +107,32 @@
                 </a>
             </li>       
             @endcanany
+
+            @canany(['Super Admin', 'Petugas Kendaraan','Kasubbag Umum'])
+            <li class="sidebar-header">
+                Admin Peminjaman Kendaraan
+            </li>
+            <li class="sidebar-item {{ \Route::currentRouteName() == 'inventoriesCrash.dashboard' ? 'active' : ' ' }}">
+                <a class="sidebar-link " href="#">
+                 <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard Kendaraan</span>
+                </a>
+            </li>
+            <li class="sidebar-item inventory {{ Request::is('backend/rooms*') ? 'active' : ' ' }}">
+                <a class="sidebar-link " href="/backend/rooms/">
+                 <i class="align-middle" data-feather="package"></i> <span class="align-middle">Data Kendaraan</span>
+                </a>
+            </li>  
+            <li class="sidebar-item inventory {{ \Route::currentRouteName() == 'inventoriesCrash.index' ? 'active' : ' ' }}">
+                <a class="sidebar-link " href="/backend/inventoriesCrash/">
+                 <i class="align-middle" data-feather="package"></i> <span class="align-middle">Kerusakan BMN</span>
+                </a>
+            </li> 
+             <li class="sidebar-item {{ \Route::currentRouteName() == 'inventoriesCrash.report' ? 'active' : ' ' }}">
+                <a class="sidebar-link " href="/backend/kerusakan-reports">
+                 <i class="align-middle" data-feather="clipboard"></i> <span class="align-middle">Report Kerusakan</span>
+                </a>
+            </li>       
+            @endcanany
         </ul>
 
     </div>
