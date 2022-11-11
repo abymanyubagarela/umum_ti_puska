@@ -3,14 +3,14 @@
 <body class="inventory-management main-master">
 @endsection
 @section('container')
-<input type="hidden" id="urlDataTable" value="{{ route('inventoriesCrash.list') }}">
+<input type="hidden" id="urlDataTable" value="{{ route('UserCrash.list') }}">
 <meta name="_token" content="{!! csrf_token() !!}" />
 <input id="url" type="hidden" value="{{ \Request::url() }}">
 <h1 class="h3 mb-1"><strong>Daftar</strong> {{ $title }}</h1>
 <div class="row">
     <div class="container mt-4">
         <div class="col-md-12  text-start mb-4">
-            <a href="/backend/inventoriesCrash/create"><div class="btn btn-primary mr-3">Tambah Data </div></a>
+            <a href="/kerusakan-bmn/create"><div class="btn btn-primary mr-3">Tambah Data </div></a>
         </div>
         
         <table class="table table-bordered yajra-datatable mt-3">

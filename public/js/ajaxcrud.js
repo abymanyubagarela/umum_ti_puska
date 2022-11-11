@@ -23,7 +23,6 @@ $(document).ready(function(){
             type: "GET",
             url: url + '/' + product_id +'/edit',
             success: function (data) {
-                console.log(data);
                 $('#product_id').val(data.id);
                 Object.keys(data).forEach((element) => {
                     $('#'+element).val(data[element]);

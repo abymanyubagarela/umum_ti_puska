@@ -16,7 +16,7 @@
     @endif
 <div class="row">
     <div class="container  ms-2">
-        <form method="post" action="/backend/{{ Request::segment(2) }}/" class="mb-5" enctype="multipart/form-data" novalidate>
+        <form class="row g-3" method="post" action="/kerusakan-bmn" enctype="multipart/form-data">
             @csrf
             <div class="col-md-8 col-sm-12">
             <div class="form-data">
@@ -34,12 +34,6 @@
                             <select class="form-select inputData select2input @error($data['name']) is-invalid @enderror" aria-label="Default select example" id="{{ $data['name'] }}" name="{{ $data['name'] }}" {{ $data['required'] ? 'required' : ' ' }}>
                                 @foreach($data["children"] as $selectValue)
                                     <option value="{{ $selectValue['id'] }}">{{ $selectValue['inventory_name'] }} - {{ $selectValue['inventory_nup'] }}</option>
-                                @endforeach
-                            </select>
-                        @elseif($data["type"] == 'select' && $data['name'] == 'id_pegawai')
-                            <select class="form-select inputData select2input @error($data['name']) is-invalid @enderror" aria-label="Default select example" id="{{ $data['name'] }}" name="{{ $data['name'] }}" {{ $data['required'] ? 'required' : ' ' }}>
-                                @foreach($data["children"] as $selectValue)
-                                    <option value="{{ $selectValue['id'] }}">{{ $selectValue['account_nip_bpk'] }} - {{ $selectValue['account_name'] }}</option>
                                 @endforeach
                             </select>
                         @elseif($data["type"] == 'select' && $data['name'] == 'id_ruangan')

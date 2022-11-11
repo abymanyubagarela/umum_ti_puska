@@ -3,26 +3,22 @@
 <body class="inventory-management main-master">
 @endsection
 @section('container')
-<input type="hidden" id="urlDataTable" value="{{ route('inventoriesCrash.list') }}">
+
 <meta name="_token" content="{!! csrf_token() !!}" />
 <input id="url" type="hidden" value="{{ \Request::url() }}">
-<h1 class="h3 mb-1"><strong>Daftar</strong> {{ $title }}</h1>
+<h1 class="h3 mb-1"><strong>Daftar</strong> {{ $title }} </h1>
 <div class="row">
     <div class="container mt-4">
         <div class="col-md-12  text-start mb-4">
-            <a href="/backend/inventoriesCrash/create"><div class="btn btn-primary mr-3">Tambah Data </div></a>
+            <a href="/backend/equipments/create"><div class="btn btn-primary mr-3">Tambah Data </div></a>
         </div>
-        
+       
         <table class="table table-bordered yajra-datatable mt-3">
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>Nama Pengguna</th>
-                    <th>Nama Barang</th>
-                    <th>Lokasi Ruangan</th>
-                    <th>Kerusakan</th>
-                    <th>Photo</th>
-                    <th>Status</th>
+                    <th>Nama</th>
+                    <th>Keterangan</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -31,6 +27,10 @@
         </table>
     </div>
 </div>
+<input type="hidden" id="urlDataTable" value="{{ route('equipments.list') }}">
+
+@include('backend.layouts.crudModal')
+
 
 @endsection
 
@@ -39,33 +39,28 @@
 <script type="text/javascript">
     $(function () {
         $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-            }
-        })
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                }
+            })
         getDataTable()
 
     });
 
 
     function getDataTable(){
-
         var table = $('.yajra-datatable').DataTable({
           processing: true,
           serverSide: true,
           responsive: true,
           ajax: {
-            url:  $('#urlDataTable').val(),
-            method: 'post',
+            url : $('#urlDataTable').val(),
+            method: "POST"
           },
           columns: [
               {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-              {data: 'accounts.account_name', name: 'accounts.account_name'},
-              {data: 'inventories.inventory_name', name: 'inventories.inventory_name'},
-              {data: 'rooms.name', name: 'rooms.name'},
-              {data: 'detail_kerusakan', name: 'detail_kerusakan'},
-              {data: 'photo', name: 'photo'},
-              {data: 'status', name: 'status'},
+              {data: 'name', name: 'name'},
+              {data: 'keterangan', name: 'keterangan'},
               {
                   data: 'action',
                   name: 'action',
@@ -73,14 +68,11 @@
                   orderable: true,
                   searchable: true
               }
-          ],
-          columnDefs: [
-                { responsivePriority: 3, targets: -2 },
-                { responsivePriority: 2, targets: -1 }
-            ]
+          ]
          });
     };
-    
+
+
   </script>
 
 @if(session()->has('success'))

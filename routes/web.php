@@ -14,6 +14,11 @@ use App\Http\Controllers\Users\UsersInventoriesLoanController;
 use App\Http\Controllers\InventoriesController as InventoriesControllers;
 use App\Http\Controllers\InventoriesCrashController;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\Users\UserCrashController;
+use App\Http\Controllers\RoomLoanController;
+use App\Http\Controllers\RoomLoanDetailsController;
+use App\Http\Controllers\Users\UsersRoomLoanController;
+use App\Http\Controllers\EquipmentController;
 
 
 /*
@@ -94,18 +99,40 @@ Route::group(['middleware' => 'auth'], function ()
     Route::post('/backend/bmn-reports/exportLoanFile',[InventoriesLoanController::class,'ZipArchiveInventoriesLoan'])->name('exportInventoriesLoanFile');
 
     ############################## KERUSAKAN BMN ##############################
+    
+    Route::get('/backend/kerusakan-bmn/dashboard', [InventoriesCrashController::class , 'dashboardView'])->name('inventoriesCrash.dashboard');
 
     Route::resource('/backend/inventoriesCrash', InventoriesCrashController::class);
     Route::post('backend/inventoriesCrash/get-datatable', [InventoriesCrashController::class , 'getDataTableProperty'])->name('inventoriesCrash.list');
+    Route::get('/backend/kerusakan-reports',[InventoriesCrashController::class,'reportIndex'])->name('inventoriesCrash.report');
+    Route::post('/backend/inventoriesCrash/export-reports', [InventoriesCrashController::class , 'exportReport'])->name('inventoriesCrash.export');
 
-    ############################## KERUSAKAN BMN ##############################
+    Route::resource('/kerusakan-bmn/', UserCrashController::class);
+    Route::get('/kerusakan-bmn/{userCrash}/edit', [UserCrashController::class , 'edit']);
+    Route::put('/kerusakan-bmn/{userCrash}', [UserCrashController::class , 'update']);
+    Route::delete('/kerusakan-bmn/{userCrash}', [UserCrashController::class , 'destroy']);
+    Route::post('kerusakan-bmn/get-datatable', [UserCrashController::class , 'getDataTableProperty'])->name('UserCrash.list');
 
     ############################## Peminjaman Ruangan ##############################
 
     Route::resource('/backend/rooms', RoomController::class);
     Route::post('backend/rooms/get-datatable', [RoomController::class , 'getDataTableRooms'])->name('rooms.list');
     
-    ############################## Peminjaman Ruangan ##############################
+    Route::resource('/backend/roomLoan', RoomLoanController::class);
+    Route::post('backend/roomLoan/get-datatable', [RoomLoanController::class , 'getDataTableProperty'])->name('roomLoan.list');
 
+    Route::resource('/backend/roomLoanDetails', RoomLoanDetailsController::class);
+    Route::post('backend/roomLoanDetails/get-datatable/{request}', [RoomLoanDetailsController::class , 'getDataTableProperty']);
+
+    Route::resource('/pinjam-ruang/', UsersRoomLoanController::class);
+    Route::get('/pinjam-ruang/{roomLoan}/edit', [UsersRoomLoanController::class , 'edit']);
+    Route::put('/pinjam-ruang/{roomLoan}', [UsersRoomLoanController::class , 'update']);
+    Route::delete('/pinjam-ruang/{roomLoan}', [UsersRoomLoanController::class , 'destroy']);
+    Route::post('pinjam-ruang/get-datatable', [UsersRoomLoanController::class , 'getDataTableProperty'])->name('userRoom.list');
+    
+    ############################## Equipment ##############################
+    Route::resource('/backend/equipments', EquipmentController::class);
+    Route::post('backend/equipments/get-datatable', [EquipmentController::class , 'getDataTable'])->name('equipments.list');
+    Route::post('backend/equipments/get-equipments', [EquipmentController::class , 'getDataTableEquipment'])->name('equipments.detail');
 });
 

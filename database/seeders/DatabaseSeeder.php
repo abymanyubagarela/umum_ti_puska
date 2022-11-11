@@ -28,12 +28,12 @@ class DatabaseSeeder extends Seeder
             'password' =>  bcrypt('password')
         ]);
         Accounts::create([
-            'account_name' => 'Miftahul Rasyid Abdul Khair',
-            'account_nip_bpk' => '24001122451',
-            'account_nip_bkn' => '199802012018121002',
-            'account_email' => 'syahri.ramadhani@bpk.go.id',
+            'account_name' => 'Abimanyu Bagarela Anjaya Putra',
+            'account_nip_bpk' => '240010317',
+            'account_nip_bkn' => '199506102020121001',
+            'account_email' => 'abimanyu.putra@bpk.go.id',
             'account_unit' => 'umum',
-            'account_role' => 'Petugas BMN',
+            'account_role' => 'Super Admin',
             'password' =>  bcrypt('password')
         ]);
         Accounts::create([

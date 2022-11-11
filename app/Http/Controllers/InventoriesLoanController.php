@@ -101,7 +101,9 @@ class InventoriesLoanController extends Controller
 
     public function update(Request $request, InventoriesLoan $inventoriesLoan)
     {
-        $rules = ['inventoryloan_status' => 'required|max:255', 'inventoryloan_type' => 'required|max:255', 'account_id' => 'required', 'inventoryloan_penanggung_jawab' => 'required|max:255', 'inventoryloan_tglpeminjaman' => 'date|max:1024', 'inventoryloan_duration' => 'int|required', 'inventoryloan_tujuan' => 'required','inventoryloan_esttglpengembalian' => 'date', 'inventoryloan_file' => 'file|max:1024|mimes:pdf', 'inventoryloan_filepengembalian' => 'file|max:1024|mimes:pdf','inventoryloan_nomorBAST' => '','inventoryloan_nomorBAP' => '','inventoryloan_tglpengembalian' => ''];
+        $rules = ['inventoryloan_status' => 'required|max:255', 'inventoryloan_type' => 'required|max:255', 'account_id' => 'required', 'inventoryloan_penanggung_jawab' => 'required|max:255', 'inventoryloan_tglpeminjaman' => 'date|max:1024', 'inventoryloan_duration' => 'int|required', 'inventoryloan_tujuan' => 'required','inventoryloan_esttglpengembalian' => 'date', 
+        'inventoryloan_file' => 'file|max:1024|mimes:pdf', 
+        'inventoryloan_filepengembalian' => 'file|max:1024|mimes:pdf','inventoryloan_nomorBAST' => '','inventoryloan_nomorBAP' => '','inventoryloan_tglpengembalian' => ''];
         $validatedData = $request->validate($rules);
         $symbol= [".","/"];
         if ($request->file('inventoryloan_file'))

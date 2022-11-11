@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Users;
 
 use App\Models\InventoriesCrash;
 use App\Models\Accounts;
@@ -12,21 +12,20 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\DataTables;
-use Maatwebsite\Excel\Facades\Excel;
-use PhpOffice\PhpWord\Element\Table;
-use App\Exports\ExportInventoriesCrash;
+use App\Http\Controllers\Controller;
 
-class InventoriesCrashController extends Controller
+
+class UserCrashController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
-        $data = [
-            'title' => "Data Kerusakan BMN", 
-            'date' => date('m/d/Y') , 
-            'dataCreate' => InventoriesCrash::getTemplateFormData(),
-        ];
-
-        return view('backend.inventoriesCrash.index', $data);
+        $data = ['title' => "Data Kerusakan BMN", 'date' => date('m/d/Y') ];
+        return view('frontend.userCrash.index', $data);
     }
 
     /**
@@ -42,7 +41,7 @@ class InventoriesCrashController extends Controller
             'dataCreate' => InventoriesCrash::getTemplateFormData()
         ];  
 
-        return view('backend.inventoriesCrash.create', $data);
+        return view('frontend.userCrash.create', $data);
     }
 
     /**
@@ -55,7 +54,6 @@ class InventoriesCrashController extends Controller
     {
         
         $validatedData = $request->validate([
-            'id_pegawai' => 'required',
             'id_barang' => 'required',
             'id_ruangan' => 'required',
             'detail_ruangan' => 'required',
@@ -63,14 +61,16 @@ class InventoriesCrashController extends Controller
             'detail_foto' => 'file|max:1024|image', 
         ]);
 
+        $validatedData['id_pegawai'] = Auth::user()->id;
+
         if ($request->file('detail_foto'))
         {
-            $validatedData['detail_foto']  = Storage::putFile('kerusakan-files', $request->file('detail_foto'));
+            $validatedData['detail_foto']  = Storage::putFile('kerusakan-files',$request->file('detail_foto'));
         }
         
         InventoriesCrash::create($validatedData);
 
-        return redirect('/backend/inventoriesCrash')->with('success', 'Data berhasil di tambahkan');
+        return redirect('/kerusakan-bmn')->with('success', 'Data berhasil di tambahkan');
     }
 
     /**
@@ -90,20 +90,20 @@ class InventoriesCrashController extends Controller
      * @param  \App\Models\InventoriesCrash  $InventoriesCrash
      * @return \Illuminate\Http\Response
      */
-    public function edit(InventoriesCrash $inventoriesCrash)
+    public function edit(InventoriesCrash $userCrash)
     {
         
         $data = [
             'title' => "Data Kerusakan BMN", 
             'date' => date('m/d/Y'), 
             'dataCreate' => InventoriesCrash::getTemplateFormData(),
-            'inventoriesCrash' => $inventoriesCrash,
+            'inventoriesCrash' => $userCrash,
             'accounts' => Accounts::all(),
             'inventories' => Inventories::all(),
             'rooms' => Room::all(),
         ];  
 
-        return view('backend.inventoriesCrash.edit', $data);
+        return view('frontend.userCrash.edit', $data);
     }
 
     /**
@@ -115,14 +115,13 @@ class InventoriesCrashController extends Controller
      */
     public function update(UpdateInventoriesCrashRequest $request, $id)
     {
+        
         $validatedData = $request->validate([
-            'id_pegawai' => 'required',
             'id_barang' => 'required',
             'id_ruangan' => 'required',
             'detail_ruangan' => 'required',
             'detail_kerusakan' => 'required',
             'detail_foto' => 'file|max:1024|image', 
-            'status' => 'required', 
         ]);
         
         if ($request->file('detail_foto'))
@@ -137,13 +136,13 @@ class InventoriesCrashController extends Controller
         
         InventoriesCrash::where('id', $id)->update($validatedData);
 
-        return redirect('/backend/inventoriesCrash')->with('success', 'Data berhasil diubah');
+        return redirect('/kerusakan-bmn')->with('success', 'Data berhasil diubah');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\InventoriesCrash  $InventoriesCrash
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -160,11 +159,17 @@ class InventoriesCrashController extends Controller
             $data = InventoriesCrash::with(['Accounts'])
             ->with(['Inventories'])
             ->with(['Rooms'])
+            ->where('id_pegawai', Auth::user()->id)
             ->latest()->get();
             
             return DataTables::of($data)->addIndexColumn()->addColumn('action', function ($row)
             {
-                $actionBtn = '<a href="/backend/inventoriesCrash/' . $row->id . '/edit" class="edit open_modal badge bg-success btn-sm">Edit</a> <button value="' . $row->id . '"  name="' . $row->inventory_name . '"class="delete delete-product badge bg-danger ">Delete</button>';
+                $actionBtn = '<a href="/kerusakan-bmn/' . $row->id . '/edit" class="edit open_modal badge bg-success btn-sm">Edit</a> <button value="' . $row->id . '"  name="' . $row->inventory_name . '"class="delete delete-product badge bg-danger ">Delete</button>';
+                
+
+                if( $row->status == 2) {
+                    $actionBtn = "<span class='inline badge w-100  bg-success'> Selesai </span>";
+                }
 
                 return $actionBtn;
 
@@ -183,35 +188,12 @@ class InventoriesCrashController extends Controller
                 
                 if(!empty($data->detail_foto)) {
                     $photo = '<span class="inline badge w-100  bg-warning"> 
-                        <a href="'.asset('storage'). '/'.$data->detail_foto.'" target="_blank"> Photo </a> 
+                        <a href="'.storage_path().'/app/'.$data->detail_foto.'" target="_blank"> Photo </a> 
                     </span>';
                 }
                 
                 return $photo;
             })->rawColumns(['action','status','photo'])->make(true);
         }
-    }
-
-    public function dashboardView()
-    {
-        
-        $data = [
-            'title' => "Data Kerusakan BMN",
-            'date' => date('m/d/Y') ,
-            'inventory_proses' => InventoriesCrash::select('id')->where('status', 1)->count(),
-            'inventory_done' => InventoriesCrash::select('id')->where('status', 2)->count(),
-        ];
-
-        return view('backend.inventoriesCrash.dashboard', $data);
-    }
-
-    public function reportIndex()
-    {
-        return view('backend.inventoriesCrash.report');
-    }
-
-    public function exportReport(Request $request)
-    {
-        return Excel::download(new ExportInventoriesCrash($request) , 'Data Kerusakan BMN.xlsx');
     }
 }

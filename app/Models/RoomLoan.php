@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class InventoriesCrash extends Model
+class RoomLoan extends Model
 {
     use HasFactory;
-    
+
     protected $guarded = [];
 
     public static function getTemplateFormData()

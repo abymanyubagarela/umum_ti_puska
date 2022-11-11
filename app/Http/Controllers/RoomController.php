@@ -126,7 +126,8 @@ class RoomController extends Controller
 
             return DataTables::of($data)->addIndexColumn()->addColumn('action', function ($row)
             {
-                $actionBtn = '<button value="' . $row->id . '" class="edit open_modal badge bg-success ">Edit</button> <button value="' . $row->id . '"  name="' . $row->inventory_name . '"class="delete delete-product badge bg-danger ">Delete</button>';
+                $actionBtn = '<button value="' . $row->id . '" class="edit open_modal badge bg-success ">Edit</button>
+                 <button value="' . $row->id . '"class="delete delete-product badge bg-danger ">Delete</button>';
 
                 return $actionBtn;
 
