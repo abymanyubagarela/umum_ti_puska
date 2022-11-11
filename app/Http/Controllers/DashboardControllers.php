@@ -16,7 +16,10 @@ class DashboardControllers extends Controller
             'title' => "Data BMN",
             'date' => date('m/d/Y') ,
             'inventory' => Inventories::select('id','inventory_condition','inventory_isborrowed')->get(),
-            'inventoryLoan' => InventoriesLoan::select('inventoryloan_status')->get()];
+            'inventoryBorrowed' => Inventories::where('inventory_isborrowed',0)->count(),
+            'inventoryLoan' => InventoriesLoan::select('inventoryloan_status')->get(),
+            'inventoryLoanBelumProses' => InventoriesLoan::where('inventoryloan_status','Belum diproses')->count(),
+        ];
 
         return view('backend/dashboard/bmn', $data);
     }

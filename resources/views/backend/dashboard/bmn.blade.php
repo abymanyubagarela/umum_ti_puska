@@ -37,7 +37,7 @@
                                         <h5 class="card-title">Jumlah Barang dipinjam</h5>
                                     </div>
                                 </div>
-                                <h1 class="mt-1 mb-3">{{ array_count_values(array_column($inventory->toArray(), 'inventory_isborrowed'))['1'] }}</h1>
+                                <h1 class="mt-1 mb-3">{{$inventoryBorrowed}}</h1>
                             </div>
                         </div>
                         <div class="card">
@@ -47,7 +47,7 @@
                                         <h5 class="card-title">Transaksi Belum diproses</h5>
                                     </div>
                                 </div>
-                                <h1 class="mt-1 mb-3">{{ array_count_values(array_column($inventoryLoan->toArray(), 'inventoryloan_status'))['Belum diproses'] }}</h1>
+                                <h1 class="mt-1 mb-3">{{ $inventoryLoanBelumProses }}</h1>
                             </div>
                         </div>
                     </div>
