@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Models\Accounts;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\File;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -35,6 +37,13 @@ class AppServiceProvider extends ServiceProvider
         });
         Gate::define('Kasubbag Umum',function(Accounts $account){
             return $account->account_jabatan === "Kepala Subbagian" && $account->account_unit == "Subbagian Umum dan Teknologi Informasi";
+        });
+
+        DB::listen(function($query) {
+            File::append(
+                storage_path('/logs/query.log'),
+                '[' . date('Y-m-d H:i:s') . ']; ' .  $query->sql . ' [' . implode(', ', $query->bindings) . ']; ' . PHP_EOL
+            );
         });
     }
 }

@@ -134,5 +134,11 @@ Route::group(['middleware' => 'auth'], function ()
     Route::resource('/backend/equipments', EquipmentController::class);
     Route::post('backend/equipments/get-datatable', [EquipmentController::class , 'getDataTable'])->name('equipments.list');
     Route::post('backend/equipments/get-equipments', [EquipmentController::class , 'getDataTableEquipment'])->name('equipments.detail');
+
+    ############################## Kendaraan ##############################
+    Route::resource('/backend/vehicles', EquipmentController::class);
+    // Route::post('backend/equipments/get-datatable', [EquipmentController::class , 'getDataTable'])->name('equipments.list');
+    // Route::post('backend/equipments/get-equipments', [EquipmentController::class , 'getDataTableEquipment'])->name('equipments.detail');
+
 });
 
