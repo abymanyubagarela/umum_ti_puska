@@ -26,7 +26,10 @@ class DatabaseSeeder extends Seeder
             'account_role' => 'Super Admin',
             'password' =>  bcrypt('password')
         ]);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5fd516d6a2cc75c65926fe7ba63b683aabf9d5cd
         // Accounts::create([
         //     'account_name' => 'Miftahul Rasyid Abdul Khair',
         //     'account_nip_bpk' => '24001122451',
