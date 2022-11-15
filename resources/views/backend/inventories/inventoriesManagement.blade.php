@@ -115,7 +115,7 @@
 
 @if(session()->has('success'))
 <script type="text/javascript">
-     toastr.success('{{ session('success') }}');
+     toastr.success('{{ session("success") }}');
 </script>
 @endif
 

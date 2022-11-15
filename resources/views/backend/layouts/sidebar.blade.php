@@ -117,14 +117,19 @@
                     <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard Kendaraan</span>
                 </a>
             </li>
-            <li class="sidebar-item inventory {{ Request::is('backend/vehicles*') ? 'active' : ' ' }}">
-                <a class="sidebar-link " href="/backend/vehicles/">
+            <li class="sidebar-item inventory {{ Request::is('backend/kendaraan*') ? 'active' : ' ' }}">
+                <a class="sidebar-link " href="/backend/kendaraan/">
                     <i class="align-middle" data-feather="package"></i> <span class="align-middle">Data Kendaraan</span>
                 </a>
             </li>
-            <li class="sidebar-item">
-                <a class="sidebar-link " href="#">
-                    <i class="align-middle" data-feather="clipboard"></i> <span class="align-middle">Peminjaman Ruangan</span>
+            <li class="sidebar-item inventory {{ Request::is('backend/kendaraan*') ? 'active' : ' ' }}">
+                <a class="sidebar-link " href="/backend/kendaraan/">
+                    <i class="align-middle" data-feather="package"></i> <span class="align-middle">Data Driver</span>
+                </a>
+            </li>
+            <li class="sidebar-item inventory {{ Request::is('backend/kendaraan*') ? 'active' : ' ' }}">
+                <a class="sidebar-link " href="/backend/kendaraan/">
+                    <i class="align-middle" data-feather="package"></i> <span class="align-middle">Peminjaman Kendaraan</span>
                 </a>
             </li>
             <li class="sidebar-item {{ \Route::currentRouteName() == 'inventoriesCrash.report' ? 'active' : ' ' }}">

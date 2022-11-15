@@ -26,8 +26,10 @@
                         <label for="{{ $data['name'] }}" class="form-label">{{ $data['label'] }}</label>
                         @if($data["type"] == 'input')
                         <input type="text" class="form-control @error($data['name']) is-invalid @enderror" id="{{ $data['name'] }}" name="{{ $data['name'] }}" value="{{ old($data['name']) }}"  {{ $data['required'] ? 'required' : ' ' }}>
+                        @elseif($data["type"] == 'number')
+                        <input type="number" class="form-control @error($data['name']) is-invalid @enderror" id="{{ $data['name'] }}" name="{{ $data['name'] }}" value="{{ old($data['name']) }}"  {{ $data['required'] ? 'required' : ' ' }}>
                         @elseif($data["type"] == 'email')
-                        <input type="email" class="form-control @error($data['name']) is-invalid @enderror" id="{{ $data['name'] }}" name="{{ $data['name'] }}" value="{{ old($data['name']) }}"  {{ $data['required'] ? 'required' : ' ' }}>
+                        <input type="email" class="form-control @error($data['name']) is-invalid @enderror" id="{{ $data['name'] }}" name="{{ $data['name'] }}" value="{{ old($data['name']) }}" min="{{ old($data['min'], 0) }}"  {{ $data['required'] ? 'required' : ' ' }}>
                         @elseif($data["type"] == 'textarea')
                         <textarea type="text" class="form-control @error($data['name']) is-invalid @enderror " id="{{ $data['name'] }}" name="{{ $data['name'] }}" value="{{ old($data['name']) }}" {{ $data['required'] ? 'required' : ' ' }}></textarea>
                         @elseif($data["type"] == 'select')
@@ -108,7 +110,7 @@
 @section('custom-script')
 @if(session()->has('success'))
 <script type="text/javascript">
-     toastr.success('{{ session('success') }}');
+     toastr.success('{{ session("success") }}');
 </script>
 @endif
 <script type="text/javascript">

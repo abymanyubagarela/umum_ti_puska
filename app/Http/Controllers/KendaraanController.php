@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Kendaraan;
 use App\Http\Requests\StoreKendaraanRequest;
 use App\Http\Requests\UpdateKendaraanRequest;
+use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class KendaraanController extends Controller
 {
@@ -15,7 +17,14 @@ class KendaraanController extends Controller
      */
     public function index()
     {
-        //
+        $data = [
+            'title' => "Data Kendaraan", 
+            'date' => date('m/d/Y'), 
+            'dataCreate' => Kendaraan::getTemplateFormData()
+
+        ];
+
+        return view('backend.kendaraans.management', $data);
     }
 
     /**
@@ -25,7 +34,13 @@ class KendaraanController extends Controller
      */
     public function create()
     {
-        //
+        $data = [
+            'title' => "Data Kendaraan", 
+            'date' => date('m/d/Y'), 
+            'dataCreate' => Kendaraan::getTemplateFormData()
+        ];
+
+        return view('backend.create', $data);
     }
 
     /**
@@ -36,7 +51,21 @@ class KendaraanController extends Controller
      */
     public function store(StoreKendaraanRequest $request)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required',
+            'nomor' => 'required',
+            'kapasitas' => '',
+        ]);
+
+        
+        Kendaraan::create($validatedData);
+
+        if ($request->input('more'))
+        {
+            return redirect('/backend/vehicles/create')->with('success', 'Data berhasil di tambahkan');
+        }
+
+        return redirect('/backend/vehicles')->with('success', 'Data berhasil di tambahkan');
     }
 
     /**
@@ -58,7 +87,9 @@ class KendaraanController extends Controller
      */
     public function edit(Kendaraan $kendaraan)
     {
-        //
+        $data = Kendaraan::find($kendaraan->id, ['id', 'name', 'nomor', 'kapasitas']);
+
+        return response()->json($data);
     }
 
     /**
@@ -68,9 +99,19 @@ class KendaraanController extends Controller
      * @param  \App\Models\Kendaraan  $kendaraan
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateKendaraanRequest $request, Kendaraan $kendaraan)
+    public function update(UpdateKendaraanRequest $request, $id)
     {
-        //
+        $rules = [
+            'name' => 'required',
+            'nomor' => 'required',
+            'kapasitas' => '',
+        ];
+
+        $updated = $request->validate($rules);
+
+        Kendaraan::where('id', $id)->update($updated);
+
+        return response()->json();
     }
 
     /**
@@ -79,8 +120,27 @@ class KendaraanController extends Controller
      * @param  \App\Models\Kendaraan  $kendaraan
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Kendaraan $kendaraan)
+    public function destroy($id)
     {
-        //
+        $data = Kendaraan::destroy($id);
+
+        return response()->json($data);
+    }
+
+    public function getDataTable(Request $request)
+    {
+        if ($request->ajax())
+        {
+            $data = Kendaraan::latest()->get();
+
+            return DataTables::of($data)->addIndexColumn()->addColumn('action', function ($row)
+            {
+                $actionBtn = '<button value="' . $row->id . '" class="edit open_modal badge bg-success ">Edit</button>
+                 <button value="' . $row->id . '"name="' . $row->name . '" class="delete delete-product badge bg-danger ">Delete</button>';
+
+                return $actionBtn;
+
+            })->rawColumns(['action'])->make(true);
+        }
     }
 }

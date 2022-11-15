@@ -19,7 +19,7 @@ use App\Http\Controllers\RoomLoanController;
 use App\Http\Controllers\RoomLoanDetailsController;
 use App\Http\Controllers\Users\UsersRoomLoanController;
 use App\Http\Controllers\EquipmentController;
-
+use App\Http\Controllers\KendaraanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -136,8 +136,8 @@ Route::group(['middleware' => 'auth'], function ()
     Route::post('backend/equipments/get-equipments', [EquipmentController::class , 'getDataTableEquipment'])->name('equipments.detail');
 
     ############################## Kendaraan ##############################
-    Route::resource('/backend/vehicles', EquipmentController::class);
-    // Route::post('backend/equipments/get-datatable', [EquipmentController::class , 'getDataTable'])->name('equipments.list');
+    Route::resource('/backend/kendaraan', KendaraanController::class);
+    Route::post('backend/kendaraan/get-datatable', [KendaraanController::class , 'getDataTable'])->name('kendaraans.list');
     // Route::post('backend/equipments/get-equipments', [EquipmentController::class , 'getDataTableEquipment'])->name('equipments.detail');
 
 });

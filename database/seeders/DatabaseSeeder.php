@@ -18,10 +18,10 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         Accounts::create([
-            'account_name' => 'Syahri Ramadhani',
+            'account_name' => 'Admin',
             'account_nip_bpk' => '2400114512',
             'account_nip_bkn' => '1998012520220310021',
-            'account_email' => 'syahri.ramadhani@bpk.go.id',
+            'account_email' => 'admin@bpk.go.id',
             'account_unit' => 'umum',
             'account_role' => 'Super Admin',
             'password' =>  bcrypt('password')
