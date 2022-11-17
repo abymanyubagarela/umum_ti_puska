@@ -29,12 +29,12 @@ class Drivers extends Model
         
         if(!empty($q)) {
             return Drivers::select('drivers.id', 'accounts.account_name as name')
-            ->join('accounts', 'accounts.id', '=', 'drivers.id')
+            ->join('accounts', 'accounts.id', '=', 'drivers.account_id')
             ->where('accounts.account_name', 'LIKE', '%'.$q.'%')
             ->get();
         } else {
             return Drivers::select('drivers.id', 'accounts.account_name as name')
-            ->join('accounts', 'accounts.id', '=', 'drivers.id')
+            ->join('accounts', 'accounts.id', '=', 'drivers.account_id')
             ->get();
         }
        
