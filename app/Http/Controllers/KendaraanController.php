@@ -54,7 +54,7 @@ class KendaraanController extends Controller
         $validatedData = $request->validate([
             'name' => 'required',
             'nomor' => 'required',
-            'kapasitas' => '',
+            'kapasitas' => 'required',
         ]);
 
         
@@ -104,7 +104,7 @@ class KendaraanController extends Controller
         $rules = [
             'name' => 'required',
             'nomor' => 'required',
-            'kapasitas' => '',
+            'kapasitas' => 'required',
         ];
 
         $updated = $request->validate($rules);
