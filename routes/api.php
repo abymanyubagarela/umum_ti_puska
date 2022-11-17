@@ -33,14 +33,18 @@ Route::put('vehicle-loan/{id}', [VehicleLoanApiController::class, 'update']);
 
 Route::delete('vehicle-loan/{id}', [VehicleLoanApiController::class, 'destroy']);
 
-Route::get('vehicles', function() {
-    return Kendaraan::all();
+Route::get('vehicles', function(Request $request) {
+    $q = $request->query('term');
+    return Kendaraan::where('nomor', 'LIKE', '%'.$q.'%')->orWhere('nomor', 'LIKE', '%'.$q.'%')->get();
 });
 
-Route::get('accounts', function() {
-    return Accounts::all();
+Route::get('accounts', function(Request $request) {
+    $q = $request->query('term');
+    return Accounts::where('account_name', 'LIKE', '%'.$q.'%')->select('id','account_name')->get();
 });
 
-Route::get('drivers', function() {
-    return Drivers::driversSelectOption();
+Route::get('drivers', function(Request $request) {
+    $q = $request->query('term');
+
+    return Drivers::driversSelectOption($q);
 });

@@ -24,11 +24,20 @@ class Drivers extends Model
         return Drivers::where('slug', $slug)->first($column);
     }
 
-    public static function driversSelectOption()
+    public static function driversSelectOption($q)
     {
-        return Drivers::select('drivers.id', 'accounts.account_name as name')
-        ->join('accounts', 'accounts.id', '=', 'drivers.id')
-        ->get();
+        
+        if(!empty($q)) {
+            return Drivers::select('drivers.id', 'accounts.account_name as name')
+            ->join('accounts', 'accounts.id', '=', 'drivers.id')
+            ->where('accounts.account_name', 'LIKE', '%'.$q.'%')
+            ->get();
+        } else {
+            return Drivers::select('drivers.id', 'accounts.account_name as name')
+            ->join('accounts', 'accounts.id', '=', 'drivers.id')
+            ->get();
+        }
+       
     }
 
     public function Accounts()
