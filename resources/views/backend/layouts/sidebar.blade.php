@@ -127,13 +127,13 @@
                     <i class="align-middle" data-feather="package"></i> <span class="align-middle">Data Driver</span>
                 </a>
             </li>
-            <li class="sidebar-item inventory {{ Request::is('backend/kendaraan*') ? 'active' : ' ' }}">
-                <a class="sidebar-link " href="/backend/kendaraan/">
+            <li class="sidebar-item inventory {{ Request::is('backend/vehicleLoan*') ? 'active' : ' ' }}">
+                <a class="sidebar-link " href="/backend/vehicleLoan/">
                     <i class="align-middle" data-feather="package"></i> <span class="align-middle">Peminjaman Kendaraan</span>
                 </a>
             </li>
-            <li class="sidebar-item {{ \Route::currentRouteName() == 'inventoriesCrash.report' ? 'active' : ' ' }}">
-                <a class="sidebar-link " href="#">
+            <li class="sidebar-item {{ \Route::currentRouteName() == 'vehicleLoan.report' ? 'active' : ' ' }}">
+                <a class="sidebar-link " href="/backend/pinjam-kendaraan-reports">
                     <i class="align-middle" data-feather="clipboard"></i> <span class="align-middle">Report Kendaraan</span>
                 </a>
             </li>

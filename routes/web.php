@@ -21,6 +21,8 @@ use App\Http\Controllers\RoomLoanDetailsController;
 use App\Http\Controllers\Users\UsersRoomLoanController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\KendaraanController;
+use App\Http\Controllers\VehicleLoanController;
+use App\Models\VehicleLoan;
 
 /*
 |--------------------------------------------------------------------------
@@ -141,5 +143,9 @@ Route::group(['middleware' => 'auth'], function ()
     Route::post('backend/kendaraan/get-datatable', [KendaraanController::class , 'getDataTable'])->name('kendaraans.list');
     Route::resource('/backend/driver', DriversController::class);
     Route::post('backend/driver/get-datatable', [DriversController::class , 'getDataTable'])->name('driver.list');
+    Route::resource('/backend/vehicleLoan', VehicleLoanController::class);
+    Route::post('backend/vehicleLoan/get-datatable', [VehicleLoanController::class , 'getDataTableProperty'])->name('vehicleLoan.list');
+    Route::get('/backend/pinjam-kendaraan-reports',[VehicleLoanController::class,'reportIndex'])->name('vehicleLoan.report');
+    Route::post('/backend/vehicleLoan/export-reports', [VehicleLoanController::class , 'exportReport'])->name('vehicleLoan.export');
 });
 

@@ -41,7 +41,6 @@ class RoomLoanController extends Controller
             ];
 
         return view('backend.roomsLoan.create', $data);
-
     }
 
     /**
