@@ -7,6 +7,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AccountsController;
 
 use App\Http\Controllers\DashboardControllers;
+use App\Http\Controllers\DriversController;
 use App\Http\Controllers\InventoriesLoanController;
 use App\Http\Controllers\Telegram\TelegramBotController;
 use App\Http\Controllers\InventoriesLoanDetailsController;
@@ -138,7 +139,7 @@ Route::group(['middleware' => 'auth'], function ()
     ############################## Kendaraan ##############################
     Route::resource('/backend/kendaraan', KendaraanController::class);
     Route::post('backend/kendaraan/get-datatable', [KendaraanController::class , 'getDataTable'])->name('kendaraans.list');
-    // Route::post('backend/equipments/get-equipments', [EquipmentController::class , 'getDataTableEquipment'])->name('equipments.detail');
-
+    Route::resource('/backend/driver', DriversController::class);
+    Route::post('backend/driver/get-datatable', [DriversController::class , 'getDataTable'])->name('driver.list');
 });
 

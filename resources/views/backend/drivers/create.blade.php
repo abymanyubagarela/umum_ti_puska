@@ -35,7 +35,7 @@
                         @elseif($data["type"] == 'select')
                             <select class="form-select inputData @error($data['name']) is-invalid @enderror" aria-label="Default select example" id="{{ $data['name'] }}" name="{{ $data['name'] }}" {{ $data['required'] ? 'required' : ' ' }}>
                                 @foreach($data["children"] as $selectValue)
-                                    <option value="{{ $selectValue['id'] }}">{{ $selectValue['label'] }}</option>
+                                    <option value="{{ $selectValue->id }}">{{ $selectValue->label }}</option>
                                 @endforeach
                             </select>
                         @elseif($data["type"] == 'file')

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Drivers;
 use App\Http\Requests\StoreDriversRequest;
 use App\Http\Requests\UpdateDriversRequest;
+use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class DriversController extends Controller
 {
@@ -15,7 +17,13 @@ class DriversController extends Controller
      */
     public function index()
     {
-        //
+        $data = [
+            'title' => "Data Drivers", 
+            'date' => date('m/d/Y'), 
+            'dataCreate' => Drivers::getTemplateFormData()
+        ];
+        
+        return view('backend.drivers.management', $data);
     }
 
     /**
@@ -25,7 +33,13 @@ class DriversController extends Controller
      */
     public function create()
     {
-        //
+        $data = [
+            'title' => "Data Drivers", 
+            'date' => date('m/d/Y'), 
+            'dataCreate' => Drivers::getTemplateFormData()
+        ];
+
+        return view('backend.drivers.create', $data);
     }
 
     /**
@@ -36,7 +50,19 @@ class DriversController extends Controller
      */
     public function store(StoreDriversRequest $request)
     {
-        //
+        $validatedData = $request->validate([
+            'account_id' => 'required',
+        ]);
+
+        
+        Drivers::create($validatedData);
+
+        if ($request->input('more'))
+        {
+            return redirect('/backend/driver/create')->with('success', 'Data berhasil di tambahkan');
+        }
+
+        return redirect('/backend/driver')->with('success', 'Data berhasil di tambahkan');
     }
 
     /**
@@ -56,9 +82,11 @@ class DriversController extends Controller
      * @param  \App\Models\Drivers  $drivers
      * @return \Illuminate\Http\Response
      */
-    public function edit(Drivers $drivers)
+    public function edit(Drivers $driver)
     {
-        //
+        $data = Drivers::find($driver->id, ['id', 'account_id']);
+
+        return response()->json($data);
     }
 
     /**
@@ -68,9 +96,17 @@ class DriversController extends Controller
      * @param  \App\Models\Drivers  $drivers
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateDriversRequest $request, Drivers $drivers)
+    public function update(UpdateDriversRequest $request, $id)
     {
-        //
+        $rules = [
+            'account_id' => 'required',
+        ];
+
+        $updated = $request->validate($rules);
+
+        Drivers::where('id', $id)->update($updated);
+
+        return response()->json();
     }
 
     /**
@@ -79,8 +115,26 @@ class DriversController extends Controller
      * @param  \App\Models\Drivers  $drivers
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Drivers $drivers)
+    public function destroy($id)
     {
-        //
+        $data = Drivers::destroy($id);
+
+        return response()->json($data);
+    }
+
+    public function getDataTable(Request $request)
+    {
+        if ($request->ajax())
+        {
+            $data = Drivers::with(['Accounts'])->latest()->get();
+
+            return DataTables::of($data)->addIndexColumn()->addColumn('action', function ($row)
+            {
+                $actionBtn = '<button value="' . $row->id . '"name="' . $row->name . '" class="delete delete-product badge bg-danger ">Delete</button>';
+
+                return $actionBtn;
+
+            })->rawColumns(['action'])->make(true);
+        }
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDriversTable extends Migration
+class AddStatusToKendaraansTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,9 @@ class CreateDriversTable extends Migration
      */
     public function up()
     {
-        Schema::create('drivers', function (Blueprint $table) {
-            $table->id();
-            $table->string('slug')->nullable();
-            $table->foreignId('account_id');
-            $table->boolean('is_active')->default(1)->length(1);   
-            $table->timestamps();
+        Schema::table('kendaraans', function (Blueprint $table) {
+            // 1 ready , 2 away
+            $table->boolean('status')->default(1)->length(1);   
         });
     }
 
@@ -29,6 +26,8 @@ class CreateDriversTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('drivers');
+        Schema::table('kendaraans', function (Blueprint $table) {
+            //
+        });
     }
 }

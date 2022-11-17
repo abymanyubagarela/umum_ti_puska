@@ -122,8 +122,8 @@
                     <i class="align-middle" data-feather="package"></i> <span class="align-middle">Data Kendaraan</span>
                 </a>
             </li>
-            <li class="sidebar-item inventory {{ Request::is('backend/kendaraan*') ? 'active' : ' ' }}">
-                <a class="sidebar-link " href="/backend/kendaraan/">
+            <li class="sidebar-item inventory {{ Request::is('backend/driver*') ? 'active' : ' ' }}">
+                <a class="sidebar-link " href="/backend/driver/">
                     <i class="align-middle" data-feather="package"></i> <span class="align-middle">Data Driver</span>
                 </a>
             </li>

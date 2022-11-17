@@ -14,6 +14,7 @@ use App\Models\InventoriesLoan;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\DB;
 
 class Accounts extends Authenticatable
 {
@@ -47,6 +48,15 @@ class Accounts extends Authenticatable
     public static function AccountSelectOption()
     {
         return Accounts::all('id','account_nip_bpk','account_name')->toArray();
+    }
+
+    public static function NonDriverAccountSelectOption()
+    {
+        return DB::table("accounts")->select('id','account_name as label')->whereNotIn('id',function($query) {
+
+            $query->select('account_id')->from('drivers');
+         
+        })->get();
     }
 
 
