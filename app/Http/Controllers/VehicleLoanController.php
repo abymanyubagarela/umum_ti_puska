@@ -163,9 +163,10 @@ class VehicleLoanController extends Controller
                 return date('H:i', $formatedDate);
 
             })->addColumn('driver', function ($data)
-            {
-                $data = Accounts::find($data->driver_id);
-
+            {      
+              
+                $data = Accounts::find($data->Drivers->account_id);
+                
                 return $data->account_name;
 
             })->rawColumns(['action'])->make(true);

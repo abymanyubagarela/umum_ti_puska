@@ -135,7 +135,7 @@
                         </select>
                    @else
                    <select id="keperluan" class="form-select" name="inventoryloan_tujuan">
-                    <option value="Pemeriksaan" {{ old('inventoryloan_tujuan',$inventoriesLoan->inventoryloan_tujuan) == "Peminjaman" ? 'selected' : '' }}>Pemeriksaan</option>
+                    <option value="Pemeriksaan" {{ old('inventoryloan_tujuan',$inventoriesLoan->inventoryloan_tujuan) == "Peminjaman" ? 'selected' : '' }}>Pemeriksaan / Berkala</option>
                     <option value="Keperluan Kerja" {{ old('inventoryloan_tujuan',$inventoriesLoan->inventoryloan_tujuan) == "Keperluan Kerja" ? 'selected' : '' }}>Keperluan Kerja</option>
                     <option id="kondisiTertentu" value="{{ old('inventoryloan_tujuan',$inventoriesLoan->inventoryloan_tujuan)}}" {{ old('inventoryloan_tujuan',$inventoriesLoan->inventoryloan_tujuan) != "Peminjaman" && "Keperluan Kerja" ? 'selected' : '' }}>Peminjaman Dengan Kondisi Tertentu</option>
                 </select>

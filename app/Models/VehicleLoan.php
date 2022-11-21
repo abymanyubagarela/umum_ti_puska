@@ -32,7 +32,7 @@ class VehicleLoan extends Model
 
     public function Drivers()
     {
-        return $this->belongsTo(Accounts::class , 'id');
+        return $this->belongsTo(Drivers::class , 'driver_id');
     }
 
     public function Vehicles()

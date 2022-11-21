@@ -46,6 +46,11 @@ class Accounts extends Authenticatable
     {
         return $this->hasMany(InventoriesLoan::class,'inventoryloan_penanggung_jawab');
     }
+     public function VehicleLoan()
+    {
+        return $this->hasMany(VehicleLoan::class,'account_id');
+    }
+
 
     public static function AccountSelectOption()
     {

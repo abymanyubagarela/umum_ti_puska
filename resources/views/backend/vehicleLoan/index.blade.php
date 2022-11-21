@@ -20,6 +20,7 @@
                     <th>Nama Peminjam</th>
                     <th>Nama Driver</th>
                     <th>Mobil</th>
+                    <th>Plat</th>
                     <th>Tanggal</th>
                     <th>Waktu</th>
                     <th>Tujuan</th>
@@ -67,6 +68,7 @@
               {data: 'accounts.account_name', name: 'accounts.account_name'},
               {data: 'driver', name: 'driver'},
               {data: 'vehicles.name', name: 'vehicles.name'},
+              {data: 'vehicles.nomor', name: 'vehicles.nomor'},
               {data: 'tanggal', name: 'tanggal'},
               {data: 'waktu', name: 'waktu'},
               {data: 'tujuan', name: 'tujuan'},
