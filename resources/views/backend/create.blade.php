@@ -27,7 +27,7 @@
                         @if($data["type"] == 'input')
                         <input type="text" class="form-control @error($data['name']) is-invalid @enderror" id="{{ $data['name'] }}" name="{{ $data['name'] }}" value="{{ old($data['name']) }}"  {{ $data['required'] ? 'required' : ' ' }}>
                         @elseif($data["type"] == 'number')
-                        <input type="number" class="form-control @error($data['name']) is-invalid @enderror" id="{{ $data['name'] }}" name="{{ $data['name'] }}" value="{{ old($data['name']) }}"  {{ $data['required'] ? 'required' : ' ' }} min="{{ old($data['min'], 0) }}">
+                        <input type="number" class="form-control @error($data['name']) is-invalid @enderror" id="{{ $data['name'] }}" name="{{ $data['name'] }}" value="{{ old($data['name']) }}"  {{ $data['required'] ? 'required' : ' ' }} >
                         @elseif($data["type"] == 'email')
                         <input type="email" class="form-control @error($data['name']) is-invalid @enderror" id="{{ $data['name'] }}" name="{{ $data['name'] }}" value="{{ old($data['name']) }}" {{ $data['required'] ? 'required' : ' ' }}>
                         @elseif($data["type"] == 'textarea')

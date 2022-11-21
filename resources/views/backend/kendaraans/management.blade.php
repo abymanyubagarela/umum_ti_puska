@@ -10,11 +10,11 @@
 <div class="row">
     <div class="container mt-4">
         <div class="col-md-12  text-start mb-4">
-            <a href="/backend/vehicles/create"><div class="btn btn-primary mr-3">Tambah Data </div></a>
+            <a href="/backend/kendaraan/create"><div class="btn btn-primary mr-3">Tambah Data </div></a>
             <!-- <div class="btn btn-export btn-secondary mr-3">Export Data</div>
             <div class="btn btn-import btn-success mr-3">Import Data</div> -->
         </div>
-        
+
         <table class="table table-bordered yajra-datatable mt-3">
             <thead>
                 <tr>

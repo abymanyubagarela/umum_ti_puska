@@ -42,6 +42,13 @@ Route::post('/backend/login', [LoginController::class , 'authenticate']);
 Route::post('/logout', [LoginController::class , 'logout']);
 Route::get('/tes', [InventoriesLoanController::class , 'ZipArchiveExample']);
 
+Route::get('/peminjaman-kendaraan', function(){
+    return view('frontend.peminjaman-kendaraan', [
+        'title' => 'Peminjaman Kendaraan',
+
+    ]);
+
+});
 
 Route::group(['middleware' => 'auth'], function ()
 {
@@ -102,7 +109,7 @@ Route::group(['middleware' => 'auth'], function ()
     Route::post('/backend/bmn-reports/exportLoanFile',[InventoriesLoanController::class,'ZipArchiveInventoriesLoan'])->name('exportInventoriesLoanFile');
 
     ############################## KERUSAKAN BMN ##############################
-    
+
     Route::get('/backend/kerusakan-bmn/dashboard', [InventoriesCrashController::class , 'dashboardView'])->name('inventoriesCrash.dashboard');
 
     Route::resource('/backend/inventoriesCrash', InventoriesCrashController::class);
@@ -120,19 +127,19 @@ Route::group(['middleware' => 'auth'], function ()
 
     Route::resource('/backend/rooms', RoomController::class);
     Route::post('backend/rooms/get-datatable', [RoomController::class , 'getDataTableRooms'])->name('rooms.list');
-    
+
     Route::resource('/backend/roomLoan', RoomLoanController::class);
     Route::post('backend/roomLoan/get-datatable', [RoomLoanController::class , 'getDataTableProperty'])->name('roomLoan.list');
 
     Route::resource('/backend/roomLoanDetails', RoomLoanDetailsController::class);
     Route::post('backend/roomLoanDetails/get-datatable/{request}', [RoomLoanDetailsController::class , 'getDataTableProperty']);
 
-    Route::resource('/pinjam-ruang/', UsersRoomLoanController::class);
+    Route::resource('/pinjam-ruang', UsersRoomLoanController::class);
     Route::get('/pinjam-ruang/{roomLoan}/edit', [UsersRoomLoanController::class , 'edit']);
     Route::put('/pinjam-ruang/{roomLoan}', [UsersRoomLoanController::class , 'update']);
     Route::delete('/pinjam-ruang/{roomLoan}', [UsersRoomLoanController::class , 'destroy']);
     Route::post('pinjam-ruang/get-datatable', [UsersRoomLoanController::class , 'getDataTableProperty'])->name('userRoom.list');
-    
+
     ############################## Equipment ##############################
     Route::resource('/backend/equipments', EquipmentController::class);
     Route::post('backend/equipments/get-datatable', [EquipmentController::class , 'getDataTable'])->name('equipments.list');

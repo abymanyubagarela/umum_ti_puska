@@ -10,11 +10,11 @@ class Kendaraan extends Model
     use HasFactory;
 
     protected $guarded = [];
-    
+
     private static $templateForm = [
-        ["name" => "name", "label" => "Merk Kendaraan", "type" => "input", "required" => true], 
-        ["name" => "nomor", "label" => "Plat Kendaraan", "type" => "input", "required" => true], 
-        ["name" => "kapasitas", "label" => "Kapasitas", "type" => "number", "required" => true], 
+        ["name" => "name", "label" => "Merk Kendaraan", "type" => "input", "required" => true],
+        ["name" => "nomor", "label" => "Plat Kendaraan", "type" => "input", "required" => true],
+        ["name" => "kapasitas", "label" => "Kapasitas", "type" => "number", "required" => true],
     ];
 
     public static function getTemplateFormData()

@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
             'account_role' => 'Super Admin',
             'password' =>  bcrypt('password')
         ]);
-        
+
         // Accounts::factory(200)->create();
         // Inventories::factory(200)->create();
         // InventoriesLoan::factory(50)->create();

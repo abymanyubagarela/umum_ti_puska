@@ -18,8 +18,8 @@ class KendaraanController extends Controller
     public function index()
     {
         $data = [
-            'title' => "Data Kendaraan", 
-            'date' => date('m/d/Y'), 
+            'title' => "Data Kendaraan",
+            'date' => date('m/d/Y'),
             'dataCreate' => Kendaraan::getTemplateFormData()
 
         ];
@@ -35,8 +35,8 @@ class KendaraanController extends Controller
     public function create()
     {
         $data = [
-            'title' => "Data Kendaraan", 
-            'date' => date('m/d/Y'), 
+            'title' => "Data Kendaraan",
+            'date' => date('m/d/Y'),
             'dataCreate' => Kendaraan::getTemplateFormData()
         ];
 
@@ -57,15 +57,15 @@ class KendaraanController extends Controller
             'kapasitas' => 'required',
         ]);
 
-        
+
         Kendaraan::create($validatedData);
 
         if ($request->input('more'))
         {
-            return redirect('/backend/vehicles/create')->with('success', 'Data berhasil di tambahkan');
+            return redirect('/backend/kendaraan/create')->with('success', 'Data berhasil di tambahkan');
         }
 
-        return redirect('/backend/vehicles')->with('success', 'Data berhasil di tambahkan');
+        return redirect('/backend/kendaraan')->with('success', 'Data berhasil di tambahkan');
     }
 
     /**
