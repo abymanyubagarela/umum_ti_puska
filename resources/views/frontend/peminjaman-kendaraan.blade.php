@@ -47,7 +47,7 @@
 			<div class="container-fluid p-0">
 				<div class="row align-items-center justify-content-center container-form-additional">
                     <div class="col-md-12 float-end">
-                        <a href="https://10.147.1.47:8080/tamu"><div class="btn btn-primary">Register Tamu</div></a>
+                        <a href="https://10.147.1.47/tamu"><div class="btn btn-primary">Register Tamu</div></a>
                     </div>
 					<div class="col-md-12 py-5 ">
 					  <h3>Peminjaman Kendaraan</h3>
