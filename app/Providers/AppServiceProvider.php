@@ -36,7 +36,7 @@ class AppServiceProvider extends ServiceProvider
             return $account->account_role === "Petugas BMN";
         });
         Gate::define('Kasubbag Umum',function(Accounts $account){
-            return $account->account_jabatan === "Kepala Subbagian" && $account->account_unit == "Subbagian Umum dan Teknologi Informasi";
+            return $account->account_role === "Pejabat Struktural" && $account->account_unit == "Subbagian Umum dan Teknologi Informasi";
         });
 
         DB::listen(function($query) {
