@@ -1,4 +1,4 @@
-@extends('backend.layouts.main')
+@extends('layouts.main')
 @section('bodyClass')
 <body class="inventory-management-index main-master">
 @endsection
@@ -12,12 +12,12 @@
         <div class="row">
         <div class="col-md-8 col-sm-12 text-start mb-4">
             <a href="/backend/accounts/create"><div class="btn btn-primary mr-3">Tambah Data </div></a>
-            <div class="btn btn-export btn-secondary mr-3">Export Data</div>
-            <div class="btn btn-import btn-success mr-3">Import Data</div>
+            <!-- <div class="btn btn-export btn-secondary mr-3">Export Data</div>
+            <div class="btn btn-import btn-success mr-3">Import Data</div> -->
         </div>
-        <div class="col-md-4 col-sm-12  text-start mb-4">
+        <!-- <div class="col-md-4 col-sm-12  text-start mb-4">
             <div class="btn btn-password btn-danger mr-3 float-end">Change Password</div>
-        </div>
+        </div> -->
     </div>
         <div class="container-form-import container-form-additional mb-4" style="display: none">
             <form action="{{ route('import-accounts') }}" method="POST" enctype="multipart/form-data">

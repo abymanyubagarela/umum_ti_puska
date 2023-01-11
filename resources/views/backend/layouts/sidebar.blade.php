@@ -108,7 +108,7 @@
             </li>
             @endcanany
 
-            @canany(['Super Admin', 'Petugas Kendaraan','Kasubbag Umum'])
+            @canany(['Super Admin', 'Petugas Kendaraan','Kasubbag Umum','Petugas Perpus'])
             <li class="sidebar-header">
                 Admin Peminjaman Kendaraan
             </li>

@@ -43,7 +43,7 @@ class AccountsController extends Controller
     public function create()
     {
         //
-        return view('backend.create', ['title' => "Data Akun", 'dataCreate' => Accounts::getTemplateFormData()
+        return view('layouts.create', ['title' => "Data Akun", 'dataCreate' => Accounts::getTemplateFormData()
         ]);
     }
 

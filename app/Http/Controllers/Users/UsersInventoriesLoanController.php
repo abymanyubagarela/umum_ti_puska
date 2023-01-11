@@ -155,7 +155,8 @@ class UsersInventoriesLoanController extends Controller
             return DataTables::of($data)->addIndexColumn()->addColumn('action', function ($row)
             {
                 if($row->inventoryloan_status == "Belum diproses"){
-                $actionBtn = '<a href="/pinjam-bmn/' . $row->id . '/edit" class="edit open_modal badge bg-success btn-sm">Detail</a> <button value="' . $row->id . '"  name="' . $row->account_name . '"class="delete delete-product badge bg-danger btn-sm">Delete</button>';
+                $actionBtn = '<a href="/pinjam-bmn/' . $row->id . '/edit" class="edit open_modal badge bg-success btn-sm">Detail</a> 
+                <button value="' . $row->id . '"  name="' . $row->account_name . '"class="delete delete-product badge bg-danger btn-sm">Delete</button>';
                 } else{
                 $actionBtn = '<a href="/pinjam-bmn/' . $row->id . '/edit" class="edit open_modal badge bg-success btn-sm">Detail</a>';
                 }

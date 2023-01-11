@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use App\Models\InventoriesLoanDetails;
@@ -9,7 +10,9 @@ class Inventories extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    private static $templateForm = [["name" => "inventory_name", "label" => "Nama Barang", "type" => "input", "required" => false], ["name" => "inventory_nup", "label" => "NUP", "type" => "input", "required" => false], ["name" => "inventory_brand", "label" => "Merek / Tipe", "type" => "input", "required" => false], ["name" => "inventory_description", "label" => "Deskripsi", "type" => "textarea", "required" => false], ["name" => "inventory_condition", "label" => "Kondisi Barang", "type" => "select", "required" => false, "children" => [['id' => 'Baik', 'label' => 'Baik'], ['id' => 'Rusak', 'label' => 'Rusak']]], ];
+    private static $templateForm = [["name" => "inventory_name", "label" => "Nama Barang", "type" => "input", "required" => false], ["name" => "inventory_nup", "label" => "NUP", "type" => "input", "required" => false], ["name" => "inventory_brand", "label" => "Merek / Tipe", "type" => "input", "required" => false], ["name" => "inventory_description", "label" => "Deskripsi", "type" => "textarea", "required" => false], 
+    ["name" => "inventory_condition", "label" => "Kondisi Barang", "type" => "select", "required" => false, 
+    "children" => [['id' => 'Baik', 'label' => 'Baik'], ['id' => 'Rusak', 'label' => 'Rusak']]],];
 
     public static function getTemplateFormData()
     {
@@ -18,15 +21,11 @@ class Inventories extends Model
 
     public function InvetoriesLoanDetails()
     {
-        return $this->hasMany(InventoriesLoanDetails::class , 'id', 'inventory_id');
+        return $this->hasMany(InventoriesLoanDetails::class, 'id', 'inventory_id');
     }
 
     public static function InvetoriesSelectOption()
     {
-        return Inventories::all('id','inventory_name','inventory_nup')->toArray();
+        return Inventories::all('id', 'inventory_name', 'inventory_nup')->toArray();
     }
-
-    
-
 }
-

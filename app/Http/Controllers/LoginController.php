@@ -18,13 +18,14 @@ class LoginController extends Controller
 
     public function authenticate(Request $request)
     {
+        
         $credentials = $request->validate(['email' => 'required|email', 'password' => 'required']);
 
         if (Auth::attempt(['account_email' => $credentials['email'], 'password' => $credentials['password']]))
         {
             $request->session()->regenerate();
 
-            return redirect()->intended('backend/dashboard');
+            return redirect()->intended('backend/dashboard/puska');
         }
 
         return redirect()->back()->withInput()->with('loginError', 'Login failed!');

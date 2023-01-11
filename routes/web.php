@@ -5,7 +5,11 @@ use Illuminate\Support\Facades\Route;
 use App\Models\InventoriesLoanDetails;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AccountsController;
-
+use App\Http\Controllers\BooksController;
+use App\Http\Controllers\BookTrxController;
+use App\Http\Controllers\BookTrxKembaliController;
+use App\Http\Controllers\BookTrxPinjamController;
+use App\Http\Controllers\BookTrxSelesaiController;
 use App\Http\Controllers\DashboardControllers;
 use App\Http\Controllers\DriversController;
 use App\Http\Controllers\InventoriesLoanController;
@@ -22,6 +26,7 @@ use App\Http\Controllers\Users\UsersRoomLoanController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\KendaraanController;
 use App\Http\Controllers\VehicleLoanController;
+use App\Http\Controllers\Welcome;
 use App\Models\VehicleLoan;
 
 /*
@@ -35,8 +40,8 @@ use App\Models\VehicleLoan;
 |
 */
 
+Route::get('/welcome', [Welcome::class , 'index']);
 Route::get('/', [LoginController::class , 'index']);
-
 Route::get('/login', [LoginController::class , 'index'])->name('login');
 Route::post('/backend/login', [LoginController::class , 'authenticate']);
 Route::post('/logout', [LoginController::class , 'logout']);
@@ -56,6 +61,7 @@ Route::group(['middleware' => 'auth'], function ()
     {
         return view('backend/dashboard/main');
     })->name('dashboard');
+    
     Route::get('/backend/getDataInventoryLoanDashboard',[InventoriesLoanController::class, 'getDataInventoryLoanDashboard']);
     Route::get('/backend/bmn/dashboard', [DashboardControllers::class , 'bmnDashboard']);
     //Inventories--------------------------------------------------------
@@ -150,9 +156,39 @@ Route::group(['middleware' => 'auth'], function ()
     Route::post('backend/kendaraan/get-datatable', [KendaraanController::class , 'getDataTable'])->name('kendaraans.list');
     Route::resource('/backend/driver', DriversController::class);
     Route::post('backend/driver/get-datatable', [DriversController::class , 'getDataTable'])->name('driver.list');
+    
     Route::resource('/backend/vehicleLoan', VehicleLoanController::class);
     Route::post('backend/vehicleLoan/get-datatable', [VehicleLoanController::class , 'getDataTableProperty'])->name('vehicleLoan.list');
     Route::get('/backend/pinjam-kendaraan-reports',[VehicleLoanController::class,'reportIndex'])->name('vehicleLoan.report');
     Route::post('/backend/vehicleLoan/export-reports', [VehicleLoanController::class , 'exportReport'])->name('vehicleLoan.export');
+
+    ############################## Books ##############################
+
+    Route::get('/backend/dashboard/puska', [DashboardControllers::class , 'puskaDashboard']);
+
+    Route::resource('/backend/books', BooksController::class);
+    Route::get('/backend/book/{books}/edit', [BooksController::class , 'edit']);
+    Route::put('/backend/book/{books}', [BooksController::class , 'update']);
+    Route::post('backend/books/get-datatable', [BooksController::class , 'getDataTable'])->name('books.list');
+    Route::post('backend/books/get-datatable-loan', [BooksController::class , 'getDataTableLoan'])->name('books.loan');
+    Route::get('/import-buku', [BooksController::class , 'importXlsx']);
+
+    Route::resource('/backend/transaksi-buku', BookTrxController::class);
+    Route::post('backend/transaksi-buku/get-datatable', [BookTrxController::class , 'getDataTable'])->name('trxbooks.list');
+    Route::post('backend/transaksi-buku/proceed', [BookTrxController::class , 'proceed']);
+
+    Route::resource('/backend/transaksi-buku-pinjam', BookTrxPinjamController::class);
+    Route::post('backend/transaksi-buku-pinjam/get-datatable', [BookTrxPinjamController::class , 'getDataTable'])->name('trxbookspinjam.list');
+
+    Route::resource('/backend/transaksi-buku-kembali', BookTrxKembaliController::class);
+    Route::post('backend/transaksi-buku-kembali/get-datatable', [BookTrxKembaliController::class , 'getDataTable'])->name('trxbookskembali.list');
+
+    Route::resource('/backend/transaksi-buku-selesai', BookTrxSelesaiController::class);
+    Route::post('backend/transaksi-buku-selesai/get-datatable', [BookTrxSelesaiController::class , 'getDataTable'])->name('trxbooksselesai.list');
+
 });
+
+
+
+
 
