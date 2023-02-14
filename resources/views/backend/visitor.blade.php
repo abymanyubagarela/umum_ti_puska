@@ -79,6 +79,7 @@
                                                     <option value="2">Tidak Memuaskan</option>
                                                 </select>
                                             </div>
+                                            <div class=" dont-have">Login <a href="/login">Disini</a></div>
                                             <div class="form-group mt-2">
                                                 <input type="hidden" value="in" name="type">
                                                 <button class="btn btn-primary btn-block" type="submit">Simpan</button>
@@ -127,6 +128,7 @@
                                                     <option value="2">Tidak Memuaskan</option>
                                                 </select>
                                             </div>
+                                            <div class=" dont-have">Login <a href="/login">Disini</a></div>
                                             <div class="form-group">
                                                 <input type="hidden" value="ex" name="type">
                                                 <button class="btn btn-primary btn-block" type="submit">Simpan</button>
