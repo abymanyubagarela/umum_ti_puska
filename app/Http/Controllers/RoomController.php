@@ -17,7 +17,8 @@ class RoomController extends Controller
      */
     public function index()
     {
-        $data = ['title' => "Data Ruangan", 'date' => date('m/d/Y') , 'dataCreate' => Room::getTemplateFormData()
+        $data = [
+            'title' => "Data Ruangan", 'date' => date('m/d/Y'), 'dataCreate' => Room::getTemplateFormData()
 
         ];
 
@@ -31,10 +32,13 @@ class RoomController extends Controller
      */
     public function create()
     {
-        return view('backend.create',
-        ['title' => "Data Ruangan",
-         'dataCreate' => Room::getTemplateFormData()
-        ]);
+        return view(
+            'backend.create',
+            [
+                'title' => "Data Ruangan",
+                'dataCreate' => Room::getTemplateFormData()
+            ]
+        );
     }
 
     /**
@@ -50,11 +54,10 @@ class RoomController extends Controller
             'detail_ruangan' => '',
         ]);
 
-        
+
         Room::create($validatedData);
 
-        if ($request->input('more'))
-        {
+        if ($request->input('more')) {
             return redirect('/backend/rooms/create')->with('success', 'Data berhasil di tambahkan');
         }
 
@@ -95,8 +98,8 @@ class RoomController extends Controller
     public function update(UpdateRoomRequest $request, $id)
     {
         $rules = [
-            'name' => 'required|max:255', 
-            'detail_ruangan' => 'max:255', 
+            'name' => 'required|max:255',
+            'detail_ruangan' => 'max:255',
         ];
 
         $updated = $request->validate($rules);
@@ -120,19 +123,15 @@ class RoomController extends Controller
 
     public function getDataTableRooms(Request $request)
     {
-        if ($request->ajax())
-        {
+        if ($request->ajax()) {
             $data = Room::latest()->get();
 
-            return DataTables::of($data)->addIndexColumn()->addColumn('action', function ($row)
-            {
+            return DataTables::of($data)->addIndexColumn()->addColumn('action', function ($row) {
                 $actionBtn = '<button value="' . $row->id . '" class="edit open_modal badge bg-success ">Edit</button>
                  <button value="' . $row->id . '"name="' . $row->name . '" class="delete delete-product badge bg-danger ">Delete</button>';
 
                 return $actionBtn;
-
             })->rawColumns(['action'])->make(true);
         }
     }
-    
 }

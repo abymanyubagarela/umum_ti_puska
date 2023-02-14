@@ -6,16 +6,16 @@
     @section('container')
 
     @if ($status == '1')
-        <input type="hidden" id="urlDataTable" value="{{ route('trxbooks.list') }}">
+    <input type="hidden" id="urlDataTable" value="{{ route('trxbooks.list') }}">
     @elseif ($status == '2')
-        <input type="hidden" id="urlDataTable" value="{{ route('trxbookspinjam.list') }}">
+    <input type="hidden" id="urlDataTable" value="{{ route('trxbookspinjam.list') }}">
     @elseif ($status == '3')
-        <input type="hidden" id="urlDataTable" value="{{ route('trxbookskembali.list') }}">
+    <input type="hidden" id="urlDataTable" value="{{ route('trxbookskembali.list') }}">
     @else
-        <input type="hidden" id="urlDataTable" value="{{ route('trxbooksselesai.list') }}">
+    <input type="hidden" id="urlDataTable" value="{{ route('trxbooksselesai.list') }}">
     @endif
-    
-    
+
+
     <meta name="_token" content="{!! csrf_token() !!}" />
     <input id="url" type="hidden" value="{{ \Request::url() }}">
     <h1 class="h3 mb-1"><strong>Daftar</strong> {{ $title }}</h1>
@@ -126,7 +126,7 @@
                         responsivePriority: 2,
                         targets: -1
                     }
-                ]
+                ],
             });
 
 

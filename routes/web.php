@@ -26,6 +26,7 @@ use App\Http\Controllers\Users\UsersRoomLoanController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\KendaraanController;
 use App\Http\Controllers\VehicleLoanController;
+use App\Http\Controllers\VisitorController;
 use App\Http\Controllers\Welcome;
 use App\Models\VehicleLoan;
 
@@ -45,15 +46,14 @@ Route::get('/', [LoginController::class , 'index']);
 Route::get('/login', [LoginController::class , 'index'])->name('login');
 Route::post('/backend/login', [LoginController::class , 'authenticate']);
 Route::post('/logout', [LoginController::class , 'logout']);
-Route::get('/tes', [InventoriesLoanController::class , 'ZipArchiveExample']);
 
 Route::get('/peminjaman-kendaraan', function(){
     return view('frontend.peminjaman-kendaraan', [
         'title' => 'Peminjaman Kendaraan',
-
     ]);
-
 });
+
+Route::get('/buku-tamu', [DashboardControllers::class , 'bukuTamu'])->name('buku-tamu');
 
 Route::group(['middleware' => 'auth'], function ()
 {
@@ -186,6 +186,10 @@ Route::group(['middleware' => 'auth'], function ()
     Route::resource('/backend/transaksi-buku-selesai', BookTrxSelesaiController::class);
     Route::post('backend/transaksi-buku-selesai/get-datatable', [BookTrxSelesaiController::class , 'getDataTable'])->name('trxbooksselesai.list');
 
+    Route::resource('/backend/visitor', VisitorController::class);
+    Route::get('/backend/visitor-in', [VisitorController::class , 'pengunjungPegawai']);
+    Route::get('/backend/visitor-ex', [VisitorController::class , 'pengunjungExternal']);
+     Route::post('/buku-tamu/in', [VisitorController::class , 'submitTamu']);
 });
 
 

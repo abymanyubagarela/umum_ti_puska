@@ -39,6 +39,16 @@
                     </ul>
                 </li>
 
+                <li class="submenu {{ Request::is('backend/anggota*') ? 'active' : ' ' }} ">
+                    <a href="#">
+                        <i class="fe fe-users"></i> <span> Pengunjung</span> <span class="menu-arrow"></span>
+                    </a>
+                    <ul>
+                        <li><a href="/backend/visitor-in">Pengunjung Pegawai</a></li>
+                        <li><a href="/backend/visitor-ex">Pengunjung umum</a></li>
+                    </ul>
+                </li>
+
                 <li class="submenu">
                     <a href="#">
                         <i class="fe fe-power"></i> <span> Logout</span> <span class="menu-arrow"></span>

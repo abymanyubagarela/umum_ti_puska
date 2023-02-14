@@ -164,7 +164,7 @@ class BookTrxPinjamController extends Controller
 
             })->addColumn('tanggal_pengembalian', function ($data)
             {
-                if($data->tanggal_pengembalian !== null) {
+                if($data->status !== 2) {
                     $formatedDate = strtotime($data->tanggal_pengembalian);
                     
                     return date('d M Y', $formatedDate);
