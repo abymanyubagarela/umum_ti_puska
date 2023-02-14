@@ -34,7 +34,6 @@ class LoginController extends Controller
             $res = ldap_search($dc, 'dc=bpk,dc=go,dc=id', "(samaccountname={$cn})", ['description']);
             $data = ldap_get_entries($dc, $res);
 
-            dd($data);
             if ($data['count'] > 0) {
                 $nip_pendek = trim($data[0]['description'][0]);
                 // TODO auth ok
@@ -54,7 +53,7 @@ class LoginController extends Controller
 
 
 
-        return redirect()->back()->withInput()->with('loginError', 'Login failed!');
+        return redirect()->back()->withInput()->with('loginError', 'Gagal Login');
     }
 
     public function logout(Request $request)
