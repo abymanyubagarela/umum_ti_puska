@@ -45,7 +45,7 @@
                     </a>
                     <ul>
                         <li><a href="/backend/visitor-in">Pengunjung Pegawai</a></li>
-                        <li><a href="/backend/visitor-ex">Pengunjung umum</a></li>
+                        <li><a href="/backend/visitor-ex">Pengunjung Umum</a></li>
                     </ul>
                 </li>
 
