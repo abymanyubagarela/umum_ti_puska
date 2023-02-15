@@ -25,6 +25,7 @@ use App\Http\Controllers\RoomLoanDetailsController;
 use App\Http\Controllers\Users\UsersRoomLoanController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\KendaraanController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\VehicleLoanController;
 use App\Http\Controllers\VisitorController;
 use App\Http\Controllers\Welcome;
@@ -191,6 +192,12 @@ Route::group(['middleware' => 'auth'], function ()
     Route::resource('/backend/visitor', VisitorController::class);
     Route::get('/backend/visitor-in', [VisitorController::class , 'pengunjungPegawai']);
     Route::get('/backend/visitor-ex', [VisitorController::class , 'pengunjungExternal']);
+
+    ############# REPORT #####################
+    Route::get('/backend/reportIndexBookPinjam',[ReportController::class,'reportIndexBookPinjam']);
+    Route::post('/backend/reportIndexBookPinjam/export-reports', [ReportController::class , 'exportReportIndexBookPinjam'])->name('exportReportIndexBookPinjam.export');
+    Route::get('/backend/reportIndexBookKembali',[ReportController::class,'reportIndexBookKembali']);
+    Route::post('/backend/reportIndexBookKembali/export-reports', [ReportController::class , 'exportReportIndexBookKembali'])->name('exportReportIndexBookKembali.export');
 });
 
 

@@ -49,6 +49,16 @@
                     </ul>
                 </li>
 
+                <li class="submenu {{ Request::is('backend/report*') ? 'active' : ' ' }} ">
+                    <a href="#">
+                        <i class="fe fe-box"></i> <span> Laporan</span> <span class="menu-arrow"></span>
+                    </a>
+                    <ul>
+                        <li><a href="/backend/reportIndexBookPinjam">Laporan Peminjaman</a></li>
+                        <li><a href="/backend/reportIndexBookKembali">Laporan Pengembalian</a></li>
+                    </ul>
+                </li>
+
                 <li class="submenu">
                     <a href="#">
                         <i class="fe fe-power"></i> <span> Logout</span> <span class="menu-arrow"></span>

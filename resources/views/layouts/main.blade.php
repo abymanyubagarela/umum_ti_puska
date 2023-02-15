@@ -53,9 +53,9 @@
             @yield('container')
         </div>
 
-        <footer>
+        <!-- <footer>
             <p>Copyright © 2022 Dreamguys.</p>
-        </footer>
+        </footer> -->
     </div>
 </div>
 
