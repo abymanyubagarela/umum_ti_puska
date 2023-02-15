@@ -55,6 +55,8 @@ Route::get('/peminjaman-kendaraan', function(){
 
 Route::get('/buku-tamu', [DashboardControllers::class , 'bukuTamu'])->name('buku-tamu');
 
+Route::post('/buku-tamu/in', [VisitorController::class , 'submitTamu']);
+
 Route::group(['middleware' => 'auth'], function ()
 {
     Route::get('/backend/dashboard', function ()
@@ -189,7 +191,6 @@ Route::group(['middleware' => 'auth'], function ()
     Route::resource('/backend/visitor', VisitorController::class);
     Route::get('/backend/visitor-in', [VisitorController::class , 'pengunjungPegawai']);
     Route::get('/backend/visitor-ex', [VisitorController::class , 'pengunjungExternal']);
-     Route::post('/buku-tamu/in', [VisitorController::class , 'submitTamu']);
 });
 
 

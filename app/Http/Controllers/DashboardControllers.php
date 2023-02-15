@@ -30,14 +30,15 @@ class DashboardControllers extends Controller
 
     public function puskaDashboard()
     {
+        // dd('x');
         $data = [
             'date' => date('m/d/Y') ,
             'total_buku' => Books::select('id')->count(),
             'total_isbn' => Books::whereNotNull('book_isbn')->select('id')->count(),
             'total_pinjam' => BookTrx::select('id')->where('status', 2)->count(),
             'total_kembali' => BookTrx::select('id')->where('status', 3)->count(),
-            'buku_pinjam' => BookTrx::latest()->take(10)->where('status', 2)->with(['Accounts', 'name' =>'Books'])->get(),
-            'buku_kembali' => BookTrx::latest()->take(10)->where('status', 3)->with(['Accounts', 'name' =>'Books'])->get(),
+            'buku_pinjam' => BookTrx::latest()->take(10)->where('status', 2)->with(['Accounts','Books'])->get(),
+            'buku_kembali' => BookTrx::latest()->take(10)->where('status', 3)->with(['Accounts','Books'])->get(),
         ];
 
         return view('backend/dashboard/puska', $data);

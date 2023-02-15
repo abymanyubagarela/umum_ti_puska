@@ -37,7 +37,7 @@ class VisitorController extends Controller
                $v->alasan .= $data['alasan_in'][$i-1]['name'].'<br>';
             }
         }
-
+        
         return view('backend.visitors.internal', $data);
     }
 
@@ -134,7 +134,7 @@ class VisitorController extends Controller
         $validatedData = null;
 
         $type = $request->input('type');
-        // dd($request->all());
+        
         if ($type == 'ex') {
             $validatedData = $request->validate([
                 'name' => 'required',

@@ -13,15 +13,18 @@
             <thead>
                 <tr>
                     <th>No</th>
+                    <th>Tanggal Kunjungan</th>
                     <th>Nama</th>
                     <th>Keperluan</th>
                     <th>Rating</th>
+                    
                 </tr>
             </thead>
             <tbody>
             @foreach ($visitors as $v)
             <tr>
                 <td>{{ $loop->index+1 }} </td>
+                <td>{{ date_format($v->created_at,"Y/m/d") }} </td>
                 <td>{{ $v->account_name }} </td>
                 <td>{!! $v->alasan !!} </td>
                 <td>{{ $v->rate == '1' ? 'Memuaskan' : 'Tidak Memuaskan' }} </td>

@@ -13,6 +13,8 @@
             <thead>
                 <tr>
                     <th>No</th>
+                    <th>Tanggal Kunjungan</th>
+                    
                     <th>Nama</th>
                     <th>Email</th>
                     <th>Whatsapp</th>
@@ -27,8 +29,9 @@
             <tr>
                 <td>{{ $loop->index+1 }} </td>
                 <td>{{ $v->name }} </td>
-                <td>{{ $v->email }} </td>
-                <td>{{ $v->phone }} </td>
+                <td>{{ date_format($v->created_at,"Y/m/d") }} </td>
+                <td>{{ empty($v->email) ? '-' : $v->email }} </td>
+                <td>{{ empty($v->phone) ? '-' : $v->phone }} </td>
                 <td>{{ $instansi[$v->instansi_id-1]['name'] }} </td>
                 <td>{{ $v->instansi }} </td>
                 <td>{{ $alasan_out[$v->reason_id-1]['name'] }} </td>

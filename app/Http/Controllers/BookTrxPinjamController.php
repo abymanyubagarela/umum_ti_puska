@@ -21,7 +21,7 @@ class BookTrxPinjamController extends Controller
     public function index()
     {
         
-        $data = ['title' => "Data Transaksi Buku", 'date' => date('m/d/Y'), 'status' => 2 ];
+        $data = ['title' => "Peminjaman", 'date' => date('m/d/Y'), 'status' => 2 ];
         
         return view('backend.booksLoan.index', $data);
     }
@@ -33,7 +33,7 @@ class BookTrxPinjamController extends Controller
      */
     public function create()
     {
-        $data = ['title' => "Detail Transaksi Buku",
+        $data = ['title' => "Peminjaman",
                 'accounts' => Accounts::all(),
                 'books' => Books::all()
             ];

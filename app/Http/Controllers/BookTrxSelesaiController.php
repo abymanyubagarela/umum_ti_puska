@@ -20,7 +20,7 @@ class BookTrxSelesaiController extends Controller
      */
     public function index()
     {
-        $data = ['title' => "Data Transaksi Buku", 'date' => date('m/d/Y'), 'status' => 4 ];
+        $data = ['title' => "Selesai", 'date' => date('m/d/Y'), 'status' => 4 ];
         
         return view('backend.booksLoan.index', $data);
     }
@@ -32,7 +32,7 @@ class BookTrxSelesaiController extends Controller
      */
     public function create()
     {
-        $data = ['title' => "Detail Transaksi Buku",
+        $data = ['title' => "Selesai",
                 'accounts' => Accounts::all(),
                 'books' => Books::all()
             ];

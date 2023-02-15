@@ -25,25 +25,25 @@ class LoginController extends Controller
         define('LDAP_HOST', 'ldap://dcrodc.bpk.go.id:389');
         $username =  $credentials['email'];
         $password =  $credentials['password'];
-        // $dc = ldap_connect(LDAP_HOST);
-        // ldap_set_option($dc, LDAP_OPT_REFERRALS, 0);
-        // ldap_set_option($dc, LDAP_OPT_PROTOCOL_VERSION, 3);
-        // $bind = @ldap_bind($dc, $username, $password);
+        $dc = ldap_connect(LDAP_HOST);
+        ldap_set_option($dc, LDAP_OPT_REFERRALS, 0);
+        ldap_set_option($dc, LDAP_OPT_PROTOCOL_VERSION, 3);
+        $bind = @ldap_bind($dc, $username, $password);
 
-        $bind = 1 ;
+        // $bind = 1 ;
         if ($bind) {
-            // $cn = substr($username, 0, strpos($username, '@'));
-            // $res = ldap_search($dc, 'dc=bpk,dc=go,dc=id', "(samaccountname={$cn})", ['description']);
-            // $data = ldap_get_entries($dc, $res);
-
-            if (TRUE) {
-                // $nip_pendek = trim($data[0]['description'][0]);
+            $cn = substr($username, 0, strpos($username, '@'));
+            $res = ldap_search($dc, 'dc=bpk,dc=go,dc=id', "(samaccountname={$cn})", ['description']);
+            $data = ldap_get_entries($dc, $res);
+            // dd($data);
+            if ($data['count'] > 0) {
+                $nip_pendek = trim($data[0]['description'][0]);
                 // TODO auth ok
                 // dd($nip_pendek);
                 $user = Accounts::where('account_email', '=', $username)->first();
-
+                // dd($user);
                 if (Auth::loginUsingId($user->id)) {
-
+                    
                     $request->session()->regenerate();
 
                     return redirect()->intended('backend/dashboard/puska');
