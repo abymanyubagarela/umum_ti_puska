@@ -145,7 +145,12 @@ class BookTrxController extends Controller
     public function getDataTable(Request $request)
     {
         if ($request->ajax()) {
-            $data = BookTrx::where('status', 1)->with(['Accounts', 'Books'])->latest()->get();
+            if(auth()->user()->account_role == "Super Admin"){
+                $data = BookTrx::where('status', 1)->with(['Accounts','Books'])->latest()->get();
+                
+              } else {
+                $data = BookTrx::where('status', 1)->where('id_pegawai',auth()->user()->id)->with(['Accounts','Books'])->latest()->get();
+              }
 
             return DataTables::of($data)->addIndexColumn()->addColumn('action', function ($row) {
                 if(auth()->user()->account_role == 'user') {

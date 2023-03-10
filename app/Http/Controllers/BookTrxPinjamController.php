@@ -138,8 +138,12 @@ class BookTrxPinjamController extends Controller
     {
         if ($request->ajax())
         {
+          if(auth()->user()->account_role == "Super Admin"){
             $data = BookTrx::where('status', 2)->with(['Accounts','Books'])->latest()->get();
             
+          } else {
+            $data = BookTrx::where('status', 2)->where('id_pegawai',auth()->user()->id)->with(['Accounts','Books'])->latest()->get();
+          }
             return DataTables::of($data)->addIndexColumn()->addColumn('action', function ($row)
             {
                 if(auth()->user()->account_role == 'user') {

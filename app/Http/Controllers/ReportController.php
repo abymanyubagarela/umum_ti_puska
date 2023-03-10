@@ -24,7 +24,7 @@ class ReportController extends Controller
     }
 
     public function exportReportIndexBookKembali(Request $request)
-    {
+    {   
         return Excel::download(new ExportBooks($request) , 'Data Pengembalian Buku.xlsx');
     }
 }

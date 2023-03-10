@@ -29,7 +29,7 @@
                 <input type="date" class="form-control inputData" id="sampaiTanggal" name="dateNext">
             </div>
             <div class="col-md-2 sm-12 align-self-end">
-                <input type="hidden" name="status" value="3">
+                <input type="hidden" name="status" value="4">
                 <button type="submit" class="btn btn-success w-100 ">Download</button>
             </div>
             </form>

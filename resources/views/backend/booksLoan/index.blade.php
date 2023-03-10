@@ -15,7 +15,6 @@
     <input type="hidden" id="urlDataTable" value="{{ route('trxbooksselesai.list') }}">
     @endif
 
-
     <meta name="_token" content="{!! csrf_token() !!}" />
     <input id="url" type="hidden" value="{{ \Request::url() }}">
     <h1 class="h3 mb-1"><strong>Daftar</strong> {{ $title }}</h1>
@@ -39,8 +38,10 @@
                         <th>Tanggal Pinjam</th>
                         <th>Tanggal Harus Kembali</th>
                         <th>Tanggal Pengembalian</th>
+                        <?php if(auth()->user()->account_role == "Super Admin"){?>
                         <th>Status</th>
                         <th>Aksi</th>
+                        <?php } ?>
                     </tr>
                 </thead>
                 <tbody>
@@ -106,6 +107,7 @@
                         data: 'tanggal_pengembalian',
                         name: 'tanggal_pengembalian'
                     },
+                    <?php if(auth()->user()->account_role == "Super Admin"){?>
                     {
                         data: 'status',
                         name: 'status'
@@ -117,6 +119,7 @@
                         orderable: true,
                         searchable: true
                     }
+                    <?php } ?>
                 ],
                 columnDefs: [{
                         responsivePriority: 3,

@@ -22,7 +22,7 @@ class ExportBooks implements FromView
     public function view(): View
     {
         $request = $this->request;
-
+        $request['dateNext'] = date('Y-m-d',strtotime($request['dateNext'] . "+1 days"));
         if ($request['dateFrom']) {
 
             $data = [
@@ -35,7 +35,6 @@ class ExportBooks implements FromView
                 'dateMin' => $request['dateFrom'],
                 'dateMax' => $request['dateNext']
             ];
-
             // dd($request, $data);
             return view('backend.report.exportbooks', $data);
         }
