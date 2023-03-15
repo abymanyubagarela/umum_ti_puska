@@ -26,21 +26,16 @@
             </a>
         </li>
 
-        <li class="nav-item dropdown has-arrow new-user-menus">
-            <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
+        <li class="nav-item dropdown new-user-menus">
+            <div  class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
                 <span class="user-img">
                     <div class="user-text">
                         <h6>{{ auth()->user()->account_name }}</h6>
                         <p class="text-muted mb-0">{{ auth()->user()->account_role }}</p>
                     </div>
                 </span>
-            </a>
-            <div class="dropdown-menu">
-                <form action="/logout" method="post">
-                        @csrf
-                    <button type="submit" class="dropdown-item">Logout</button>
-                </form>
             </div>
+
         </li>
 
     </ul>

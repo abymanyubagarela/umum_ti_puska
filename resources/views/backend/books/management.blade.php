@@ -6,11 +6,31 @@
 
     <meta name="_token" content="{!! csrf_token() !!}" />
     <input id="url" type="hidden" value="{{ \Request::url() }}">
-    
+
     <div class="col-md-12  text-start mb-4">
-        <a href="/backend/books/create">
-            <div class="btn btn-primary mr-3">Tambah Data </div>
-        </a>
+    <div class="row">
+        <div class="col-md-4  text-start mb-4">
+            <a href="/backend/books/create">
+                <div class="btn btn-primary mr-3">Tambah Data </div>
+            </a>
+        </div>
+        <div class="col-md-8  text-start mb-4">
+            <form method="post" action="/backend/books/export">
+                @csrf
+                <select style="width:60%;display:inline-block;" class="select2input form-select" name="export" id="exportbook">
+                        <option value="BMN"> BMN </option>
+                        <option value="Bukan BMN">Bukan BMN </option>
+                        <option value="Semua">Semua</option>
+                    </select>
+
+                    <Button type="submit" class="btn btn-primary mr-3">Export Koleksi Buku </Button>
+
+            </form>
+        </div>
+    </div>
+
+
+
     </div>
     <div class="col-lg-12">
         <div class="card">
@@ -27,6 +47,7 @@
                                 <th>Penulis</th>
                                 <th>Kelas Buku</th>
                                 <th>Subjek Kelas</th>
+                                <th>Jenis Buku</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -89,6 +110,10 @@
                     {
                         data: 'book_subject',
                         name: 'book_subject'
+                    },
+                    {
+                        data: 'isBMN',
+                        name: 'isBMN'
                     },
                     {
                         data: 'action',

@@ -43,8 +43,17 @@ class DashboardControllers extends Controller
 
         return view('backend/dashboard/puska', $data);
     }
+    public function dashboardKeterlambatan()
+    {
+        // dd('x');
+        $data = [
+            'buku_pinjam' => BookTrx::where('status','>', 1)->where('status','<',4)->where('tanggal_pengembalian','<',date('Y/m/d'))->with(['Accounts','Books'])->get(),
+        ];
 
-    
+        return view('backend/dashboard/keterlambatan', $data);
+    }
+
+
     public function bukuTamu()
     {
         $data = [
@@ -57,7 +66,7 @@ class DashboardControllers extends Controller
                 ['id' => 4, 'name' =>'Diskusi'],
                 ['id' => 5, 'name' =>'Mengerjakan Tugas'],
                 ['id' => 6, 'name' =>'Penelitian'],
-                
+
             ],
             'alasan_out' => [
                 ['id' => 1, 'name' =>'Penelitian'],

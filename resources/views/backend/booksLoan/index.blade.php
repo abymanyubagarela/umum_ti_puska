@@ -27,7 +27,12 @@
                 </a>
             </div>
             @endif
-
+            <style>
+                .table td button{
+                    width: 100%;
+                    margin: 2px 0;
+                }
+            </style>
             <table class="table table-bordered yajra-datatable mt-3">
                 <thead>
                     <tr>
@@ -169,10 +174,10 @@
                         },
                         success: function(data) {
                             $(".dataTable").DataTable().ajax.reload();
-                            toastr.info("Data Berhasil diproses");
+                            toastr.info(data.message);
                         },
                         error: function(data) {
-                            toastr.info("Maaf Terjadi Kesalahan");
+                            toastr.info("Maaf Peminjam telah meminjam 3 Buku");
                         },
                     });
                 }
@@ -183,6 +188,7 @@
     @if(session()->has('success'))
     <script type="text/javascript">
         toastr.success('{{ session("success") }}');
+        toastr.error('{{ session("error") }}');
     </script>
     @endif
 

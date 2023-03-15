@@ -9,7 +9,10 @@
                 <li class="submenu {{ Request::is('backend/dashboard*') ? 'active' : ' ' }} ">
                     <a href="#"><i class="fe fe-layout"></i> <span> Dashboard</span> <span class="menu-arrow"></span></a>
                     <ul>
-                        <li><a href="#">Dashboard</a></li>
+                        <li><a href="/backend/dashboard/puska">Dashboard</a></li>
+                    @canany(['Super Admin', 'Petugas Kendaraan','Kasubbag Umum','Petugas Perpus'])
+                        <li><a href="/backend/dashboard/keterlambatan">Dashboard Keterlambatan</a></li>
+                    @endcanany
                     </ul>
                 </li>
 

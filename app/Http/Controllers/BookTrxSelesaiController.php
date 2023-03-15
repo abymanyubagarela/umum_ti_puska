@@ -21,7 +21,7 @@ class BookTrxSelesaiController extends Controller
     public function index()
     {
         $data = ['title' => "Selesai", 'date' => date('m/d/Y'), 'status' => 4 ];
-        
+
         return view('backend.booksLoan.index', $data);
     }
 
@@ -52,23 +52,23 @@ class BookTrxSelesaiController extends Controller
             'id_pegawai' => 'required|max:48',
             'tanggal' => 'required|date',
         ]);
-        
+
         $books = $request->input('book');
-        
+
         if(!empty($books)) {
             foreach ($books as $eq => $e) {
-             
+
                 BookTrx::create([
-                    'id_buku' => $e, 
+                    'id_buku' => $e,
                     'id_pegawai' => $request->input('id_pegawai'),
-                    'tanggal_peminjaman' => $request->input('tanggal'),                    
+                    'tanggal_peminjaman' => $request->input('tanggal'),
                 ]);
 
                 Books::where('id', $e)->update(['book_isavailable' => 0]);
-            }    
+            }
         } else {
             return redirect('/backend/transaksi-buku-kembali/')->with('error', 'Tidak ada buku ditambahkan');
-        } 
+        }
 
         return redirect('/backend/transaksi-buku-kembali/')->with('success', 'Data berhasil di tambahkan');
     }
@@ -94,7 +94,7 @@ class BookTrxSelesaiController extends Controller
     {
         $data = ['title' => "Detail Transaksi Buku",
             'books' => Books::all(),
-            'bookTrx' => $bookTrx, 
+            'bookTrx' => $bookTrx,
         ];
 
         return view('backend.booksLoan.edit', $data);
@@ -114,9 +114,9 @@ class BookTrxSelesaiController extends Controller
             'id' => 'required|max:48',
             'status' => 'required|max:48',
         ]);
-        
+
         // BookTrx::where('id', $bookTrx->id)->update($validatedData);
-       
+
         return redirect('/backend/transaksi-buku')->with('success', 'Data berhasil di tambahkan');
     }
 
@@ -129,7 +129,7 @@ class BookTrxSelesaiController extends Controller
     public function destroy($id)
     {
         $datas = BookTrx::destroy($id);
-        
+
         return response()->json($datas);
     }
 
@@ -139,11 +139,11 @@ class BookTrxSelesaiController extends Controller
         {
             if(auth()->user()->account_role == "Super Admin"){
                 $data = BookTrx::where('status', 4)->with(['Accounts','Books'])->latest()->get();
-                
+
               } else {
                 $data = BookTrx::where('status', 4)->where('id_pegawai',auth()->user()->id)->with(['Accounts','Books'])->latest()->get();
               }
-            
+
             return DataTables::of($data)->addIndexColumn()->addColumn('action', function ($row)
             {
                 $processBtn = '<span class="badge badge-soft-success">Selesai</span>';
@@ -153,25 +153,25 @@ class BookTrxSelesaiController extends Controller
             })->addColumn('tanggal_peminjaman', function ($data)
             {
                 $formatedDate = strtotime($data->tanggal_peminjaman);
-                
+
                 return date('d M Y', $formatedDate);
 
             })->addColumn('tanggal_harus_kembali', function ($data)
             {
                 $formatedDate = strtotime($data->tanggal_peminjaman. ' +21 day');
-                
+
                 return date('d M Y', $formatedDate);
 
             })->addColumn('tanggal_pengembalian', function ($data)
             {
                 if($data->tanggal_pengembalian !== null) {
                     $formatedDate = strtotime($data->tanggal_pengembalian);
-                    
+
                     return date('d M Y', $formatedDate);
                 } else {
                     return '-';
                 }
-                
+
 
             })->addColumn('denda', function ($data)
             {
@@ -199,7 +199,7 @@ class BookTrxSelesaiController extends Controller
                         $status = 'Permintaan';
                         break;
                 }
-                
+
                 return $status;
 
             })->rawColumns(['action'])->make(true);
@@ -208,7 +208,7 @@ class BookTrxSelesaiController extends Controller
 
     public function proceed(Request $request){
         BookTrx::where('id', $request->input('id'))->update(['status' => $request->input('status') + 1]);
-        
+
         return redirect('/backend/transaksi-buku')->with('success', 'Data berhasil di proses');
     }
 }
