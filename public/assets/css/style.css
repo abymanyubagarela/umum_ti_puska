@@ -2654,9 +2654,11 @@ footer p {
 }
 .login-wrapper .loginbox .login-left {
 	align-items: center;
-    background: #18aefa;
+	/* background: #18aefa; */
+	background-image: url('/assets/img/bg-book.webp');
     flex-direction: column;
-    justify-content: end;
+	/* justify-content: end; */
+	justify-content: center;
     width: 400px;
     display: flex;
     background-blend-mode: multiply;
@@ -2665,7 +2667,7 @@ footer p {
 }
 .login-wrapper .loginbox .login-left:before {
 	content: "";
-	background-image: url(../img/login-icon-01.png);
+	/* background-image: url(../img/login-icon-01.png); */
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -2674,7 +2676,7 @@ footer p {
 }
 .login-wrapper .loginbox .login-left:after {
 	content: "";
-	background-image: url(../img/login-icon-02.png);
+	/* background-image: url(../img/login-icon-02.png); */
 	position: absolute;
 	top: 0;
 	right: 0;
