@@ -56,16 +56,21 @@ class BookTrxController extends Controller
 
         $books = $request->input('book');
 
+
         if (!empty($books)) {
-            foreach ($books as $eq => $e) {
-
-                BookTrx::create([
-                    'id_buku' => $e,
-                    'id_pegawai' => $request->input('id_pegawai'),
-                    'tanggal_peminjaman' => $request->input('tanggal'),
-                ]);
-
-                Books::where('id', $e)->update(['book_isavailable' => 0]);
+            $jumlah_item = BookTrx::where('id_pegawai',$request->id_pegawai)->where('status','!=','4')->where('status','!=','1')->count();
+            $total_buku = $jumlah_item + count($books);
+            if($total_buku < 4 ){
+                foreach ($books as $eq => $e) {
+                    BookTrx::create([
+                        'id_buku' => $e,
+                        'id_pegawai' => $request->input('id_pegawai'),
+                        'tanggal_peminjaman' => $request->input('tanggal'),
+                    ]);
+                    Books::where('id', $e)->update(['book_isavailable' => 0]);
+                }
+            } else {
+                 return redirect('/backend/transaksi-buku/create')->with('error', 'Buku Yang dipinjam = '.$total_buku.' maks.3 buku');
             }
         } else {
             return redirect('/backend/transaksi-buku/')->with('error', 'Tidak ada buku ditambahkan');
@@ -145,14 +150,23 @@ class BookTrxController extends Controller
     public function getDataTable(Request $request)
     {
         if ($request->ajax()) {
-            $data = BookTrx::where('status', 1)->with(['Accounts', 'Books'])->latest()->get();
+            if(auth()->user()->account_role == "Super Admin"){
+                $data = BookTrx::where('status', 1)->with(['Accounts','Books'])->latest()->get();
+
+              } else {
+                $data = BookTrx::where('status', 1)->where('id_pegawai',auth()->user()->id)->with(['Accounts','Books'])->latest()->get();
+              }
 
             return DataTables::of($data)->addIndexColumn()->addColumn('action', function ($row) {
                 if(auth()->user()->account_role == 'user') {
                     return '<span class="badge badge-soft-warning">Waiting</span>';
                 }
-                
-                $processBtn = '<button value="' . $row->id . '"name="' . $row->name . '" class="update-pinjam-buku btn btn-warning btn-sm" data-status="' . $row->status . '">Proceed</button>';
+
+                $processBtn =
+                '
+                <button value="' . $row->id . '"name="' . $row->name . '" class="update-pinjam-buku btn btn-warning btn-sm" data-status="' . $row->status . '">Konfirmasi</button>
+                <button value="' . $row->id . '"name="' . $row->name . '" class="delete-product btn btn-danger btn-sm" data-status="' . $row->status . '">Hapus</button>
+                ';
 
                 return $processBtn;
             })->addColumn('tanggal_peminjaman', function ($data) {
@@ -186,7 +200,7 @@ class BookTrxController extends Controller
                         $status = 'Pengembalian';
                         break;
                     default:
-                        
+
                         break;
                 }
 
@@ -197,12 +211,21 @@ class BookTrxController extends Controller
 
     public function proceed(Request $request)
     {
+        $trx = BookTrx::find($request->input('id'));
+        $id_pegawai = $trx->id_pegawai;
+        $jumlah_item = BookTrx::where('id_pegawai',$id_pegawai)->where('status','!=','4')->where('status','!=','1')->count();
+        if($jumlah_item > 3){
+            return response()->json(['message' => "Maaf Peminjam Telah Mencapai Batas Peminjaman Maksimum"], 201);
+            // return redirect('/backend/transaksi-buku')->with('error', 'Maaf Peminjam sudah mencapai batas maksimal Peminjaman');
+        }
         BookTrx::where('id', $request->input('id'))->update(['status' => $request->input('status') + 1, 'tanggal_pengembalian' => date('Y-m-d H:i:s')]);
-        
+
         $trx = BookTrx::find($request->input('id'));
 
         Books::where('id', $trx->id_buku)->update(['book_isavailable' => 1]);
 
+
+        return response()->json(['message' => "Data Berhasil disimpan"], 200);
         return redirect('/backend/transaksi-buku')->with('success', 'Data berhasil di proses');
     }
 }

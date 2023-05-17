@@ -63,7 +63,7 @@
 										Password is required
 									</div>
 								</div>
-								<div class=" dont-have">Buku Tamu <a href="/buku-tamu">Disini</a></div>
+								{{-- <div class=" dont-have">Buku Tamu <a href="/buku-tamu">Disini</a></div> --}}
 
 								<div class="form-group">
 									<button class="btn btn-primary btn-block" type="submit">Login</button>

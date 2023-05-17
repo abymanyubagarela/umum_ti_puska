@@ -9,7 +9,10 @@
                 <li class="submenu {{ Request::is('backend/dashboard*') ? 'active' : ' ' }} ">
                     <a href="#"><i class="fe fe-layout"></i> <span> Dashboard</span> <span class="menu-arrow"></span></a>
                     <ul>
-                        <li><a href="#">Dashboard</a></li>
+                        <li><a href="/backend/dashboard/puska">Dashboard</a></li>
+                    @canany(['Super Admin', 'Petugas Kendaraan','Kasubbag Umum','Petugas Perpus'])
+                        <li><a href="/backend/dashboard/keterlambatan">Dashboard Keterlambatan</a></li>
+                    @endcanany
                     </ul>
                 </li>
 
@@ -38,7 +41,7 @@
                         <li><a href="/backend/transaksi-buku-selesai">Selesai</a></li>
                     </ul>
                 </li>
-
+                @canany(['Super Admin', 'Petugas Kendaraan','Kasubbag Umum','Petugas Perpus'])
                 <li class="submenu {{ Request::is('backend/anggota*') ? 'active' : ' ' }} ">
                     <a href="#">
                         <i class="fe fe-users"></i> <span> Pengunjung</span> <span class="menu-arrow"></span>
@@ -58,7 +61,7 @@
                         <li><a href="/backend/reportIndexBookKembali">Laporan Pengembalian</a></li>
                     </ul>
                 </li>
-
+                @endcanany
                 <li class="submenu">
                     <a href="#">
                         <i class="fe fe-power"></i> <span> Logout</span> <span class="menu-arrow"></span>

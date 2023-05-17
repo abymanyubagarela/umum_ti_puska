@@ -12,7 +12,7 @@
     </div>
 </div>
 <div class="row mt-3">
-    <div class="card p-2">
+    <div class="card p-4">
             @if($errors->any())
                 <div class="alert alert-danger">{{$errors->first()}}</div>
             @endif
@@ -29,8 +29,8 @@
                 <input type="date" class="form-control inputData" id="sampaiTanggal" name="dateNext">
             </div>
             <div class="col-md-2 sm-12 align-self-end">
-                <input type="hidden" name="status" value="3">
-                <button type="submit" class="btn btn-success w-100 ">Download</button>
+                <input type="hidden" name="status" value="4">
+                <button type="submit" class="btn btn-success w-100 ">Unduk Laporan</button>
             </div>
             </form>
         </div>

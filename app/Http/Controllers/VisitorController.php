@@ -17,8 +17,8 @@ class VisitorController extends Controller
     public function pengunjungPegawai()
     {
         $data = [
-            'title' => "Data Pengunjung Pegawai", 
-            'date' => date('m/d/Y'), 
+            'title' => "Data Pengunjung Pegawai",
+            'date' => date('m/d/Y'),
             'visitors' => Visitor::select('visitors.*','accounts.account_name')->latest()->where('type','=','1')->leftJoin('accounts', 'visitors.account_id', '=', 'accounts.id')->get(),
             'alasan_in' => [
                 ['id' => 0, 'name' =>'Peminjaman-Pengembalian'],
@@ -28,16 +28,16 @@ class VisitorController extends Controller
                 ['id' => 4, 'name' =>'Diskusi'],
                 ['id' => 5, 'name' =>'Mengerjakan Tugas'],
                 ['id' => 6, 'name' =>'Penelitian'],
-                
+
             ],
         ];
         foreach ($data['visitors'] as $key => $v) {
             $r = explode(',', $v->reason_id);
             foreach ($r as $i) {
-               $v->alasan .= $data['alasan_in'][$i-1]['name'].'<br>';
+               $v->alasan .= $data['alasan_in'][$i]['name'].'<br>';
             }
         }
-        
+
         return view('backend.visitors.internal', $data);
     }
 
@@ -134,7 +134,7 @@ class VisitorController extends Controller
         $validatedData = null;
 
         $type = $request->input('type');
-        
+
         if ($type == 'ex') {
             $validatedData = $request->validate([
                 'name' => 'required',
@@ -156,7 +156,7 @@ class VisitorController extends Controller
         }
 
         Visitor::create($validatedData);
-        
+
         return redirect('/buku-tamu')->with('success', 'Pengunjung berhasil di tambahkan');
     }
 }

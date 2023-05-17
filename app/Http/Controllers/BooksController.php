@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\BooksCollectionExport;
 use App\Models\Books;
 use App\Http\Requests\StorebooksRequest;
 use App\Http\Requests\UpdatebooksRequest;
@@ -20,7 +21,7 @@ class BooksController extends Controller
     public function index()
     {
         $data = [
-            'title' => "Data Buku", 'date' => date('m/d/Y') , 
+            'title' => "Data Buku", 'date' => date('m/d/Y') ,
             'dataCreate' => Books::getTemplateFormData()
         ];
 
@@ -55,7 +56,7 @@ class BooksController extends Controller
             'book_nup' => '',
             'book_brand' => '',
         ]);
-        
+
         Books::create($validatedData);
 
         if ($request->input('more'))
@@ -70,12 +71,16 @@ class BooksController extends Controller
     {
         //
     }
+    public function export(Request $request)
+    {
+        return Excel::download(new BooksCollectionExport($request) , 'Data Buku.csv',\Maatwebsite\Excel\Excel::CSV);
+    }
 
     public function edit(Books $books)
     {
         $data = [
-            'title' => "Data Buku", 
-            'date' => date('m/d/Y') , 
+            'title' => "Data Buku",
+            'date' => date('m/d/Y') ,
             'dataCreate' => Books::getTemplateFormData(),
             'detail' => $books,
         ];
@@ -105,7 +110,7 @@ class BooksController extends Controller
         ];
 
         $validatedData = $request->validate($rules);
-        
+
         Books::where('id', $books->id)->update($validatedData);
 
         return redirect('/backend/books')->with('success', 'Data berhasil diubah');
@@ -123,12 +128,12 @@ class BooksController extends Controller
         if ($request->ajax())
         {
             $data = Books::latest()->get();
-            
+
             return DataTables::of($data)->addIndexColumn()->addColumn('action', function ($row)
             {
-                $editBtn = '<button value="/backend/book/' . $row->id . '/edit" class="edit-product btn bg-info btn-sm">Edit</button>';
+                $editBtn = '<button style="margin-right:2px;color:white" value="/backend/book/' . $row->id . '/edit" class="edit-product btn bg-success btn-sm">Ubah</button>';
 
-                $deteleBtn = '<button value="' . $row->id . '"name="' . $row->name . '" class="delete delete-product btn btn-danger btn-sm ">Delete</button>';
+                $deteleBtn = '<button value="' . $row->id . '"name="' . $row->name . '" class="delete delete-product btn btn-danger btn-sm ">Hapus</button>';
 
                 return $editBtn.$deteleBtn;
 
@@ -141,7 +146,7 @@ class BooksController extends Controller
         if ($request->ajax())
         {
             $data = Books::where('book_isavailable', 1)->latest()->get();
-            
+
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('action', function ($row) {
                 $actionBtn = '<div value="' . $row->id . '" class="edit adding btn bg-info btn-sm">Tambah</div>';
@@ -153,7 +158,7 @@ class BooksController extends Controller
     }
 
     public function importXlsx()
-    {   
+    {
         Excel::import(new ImportBooks, public_path().'/BukuIndux.csv');
     }
 }

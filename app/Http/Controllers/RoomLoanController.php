@@ -122,7 +122,7 @@ class RoomLoanController extends Controller
             'id_pegawai' => 'required|max:48',
             'id_ruangan' => 'required|max:48',
             'kegiatan' => 'required|max:100',
-            'detail_ruangan' => 'max:100|required',
+            'detail_ruangan' => 'max:500|required',
             'waktu' => 'required',
             'tanggal' => 'required|date',
         ]);

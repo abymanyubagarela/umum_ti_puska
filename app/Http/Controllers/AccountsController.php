@@ -161,7 +161,7 @@ class AccountsController extends Controller
             $data = Accounts::latest()->get();
             return DataTables::of($data)->addIndexColumn()->addColumn('action', function ($row)
             {
-                $actionBtn = '<button value="' . $row->id . '" class="edit open_modal badge bg-success btn-sm">Edit</button> <button value="' . $row->id . '"  name="' . $row->account_name . '"class="delete delete-product badge bg-danger btn-sm">Delete</button>';
+                $actionBtn = '<button value="' . $row->id . '" class="edit open_modal badge bg-success btn-sm">Ubah</button> <button value="' . $row->id . '"  name="' . $row->account_name . '"class="delete delete-product badge bg-danger btn-sm">Hapus</button>';
                 return $actionBtn;
             })->rawColumns(['action'])->make(true);
         }

@@ -15,7 +15,6 @@
     <input type="hidden" id="urlDataTable" value="{{ route('trxbooksselesai.list') }}">
     @endif
 
-
     <meta name="_token" content="{!! csrf_token() !!}" />
     <input id="url" type="hidden" value="{{ \Request::url() }}">
     <h1 class="h3 mb-1"><strong>Daftar</strong> {{ $title }}</h1>
@@ -28,7 +27,12 @@
                 </a>
             </div>
             @endif
-
+            <style>
+                .table td button{
+                    width: 100%;
+                    margin: 2px 0;
+                }
+            </style>
             <table class="table table-bordered yajra-datatable mt-3">
                 <thead>
                     <tr>
@@ -39,8 +43,10 @@
                         <th>Tanggal Pinjam</th>
                         <th>Tanggal Harus Kembali</th>
                         <th>Tanggal Pengembalian</th>
+                        <?php if(auth()->user()->account_role == "Super Admin"){?>
                         <th>Status</th>
                         <th>Aksi</th>
+                        <?php } ?>
                     </tr>
                 </thead>
                 <tbody>
@@ -106,6 +112,7 @@
                         data: 'tanggal_pengembalian',
                         name: 'tanggal_pengembalian'
                     },
+                    <?php if(auth()->user()->account_role == "Super Admin"){?>
                     {
                         data: 'status',
                         name: 'status'
@@ -117,6 +124,7 @@
                         orderable: true,
                         searchable: true
                     }
+                    <?php } ?>
                 ],
                 columnDefs: [{
                         responsivePriority: 3,
@@ -166,10 +174,10 @@
                         },
                         success: function(data) {
                             $(".dataTable").DataTable().ajax.reload();
-                            toastr.info("Data Berhasil diproses");
+                            toastr.info(data.message);
                         },
                         error: function(data) {
-                            toastr.info("Maaf Terjadi Kesalahan");
+                            toastr.info("Maaf Peminjam telah meminjam 3 Buku");
                         },
                     });
                 }
@@ -180,6 +188,7 @@
     @if(session()->has('success'))
     <script type="text/javascript">
         toastr.success('{{ session("success") }}');
+        toastr.error('{{ session("error") }}');
     </script>
     @endif
 

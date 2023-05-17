@@ -10,11 +10,14 @@
     <div class="col-md-8">
         <h1 class="h3 mb-1 inline"><strong>Daftar</strong> {{ $title }}</h1>
     </div>
+
 </div>
 <div class="row">
-    <div class="container mt-4">
-        <div class="container-form-export container-form-additional mb-4"  >
+    <div class="container mt-2">
+
+        <div class="container-form-export container-form-additional mb-2"  >
             <div class="row ">
+
                 @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul>
@@ -24,9 +27,13 @@
                     </ul>
                 </div>
                  @endif
+                 <div class="alert alert-warning" role="alert">
+                    Maksimal peminjaman buku satu pegawai adalah 3 buku
+                </div>
                 <form class="row g-3" method="post" action="/backend/transaksi-buku/" enctype="multipart/form-data" >
                     @method('post')
                     @csrf
+                    <?php if(auth()->user()->account_role == "Super Admin"){?>
                     <div class="col-md-6">
                         <label for="inputEmail4" class="form-label">Nama Peminjam</label>
                         <select class="select2input form-select" name="id_pegawai" required>
@@ -39,13 +46,16 @@
                             @endforeach
                           </select>
                     </div>
-                   
-                    <div class="col-md-6">
+                    <?php } else {?>
+                        <input type="hidden" name="id_pegawai" value="{{auth()->user()->id}}">
+                    <?php }?>
+
+                    <div class="col-md-12">
                         <label for="inputPassword4" class="form-label">Tanggal Peminjaman</label>
                         <input type="date" name="tanggal" class="form-control" value="{{ old('tanggal_peminjaman') }}" required>
                     </div>
 
-                  
+
                     <div class="col-12">
                         <div class="row mb-3">
                             <div class="col-md-8">
