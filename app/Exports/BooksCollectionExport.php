@@ -22,6 +22,7 @@ class BooksCollectionExport implements FromView
      public function view(): View
      {
          $request = $this->request;
+         
          if ($request['export']) {
             if($request['export'] == "BMN"){
                 $status = 1;
@@ -44,7 +45,7 @@ class BooksCollectionExport implements FromView
                 ];
             }
 
-            //  dd($request, $data);
+             // dd($request, $data);
              return view('backend.report.exportBooksCollection', $data);
          }
      }

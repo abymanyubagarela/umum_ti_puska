@@ -137,6 +137,10 @@ class BooksController extends Controller
 
                 return $editBtn.$deteleBtn;
 
+            })->addColumn('isBMN', function ($row) {
+
+                return $row->book_acq == null ? '-' : $row->book_acq;
+
             })->rawColumns(['action'])->make(true);
         }
     }

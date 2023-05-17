@@ -124,7 +124,17 @@ class InventoriesLoanController extends Controller
         {
             if ($request->oldBAP)
             {
+                dd('if');
                 Storage::delete($request->oldBAP);
+            } else {
+                dd('else');
+                $inventoryDetails = InventoriesLoanDetails::where('inventoryloan_id', '=',$inventoriesLoan->id)->get();
+                foreach($inventoryDetails as $inventoryDetail){
+                    $inventory_id = $inventoryDetail->inventory_id;
+                    Inventories::where('id', $inventory_id)->update(array(
+                        'inventory_isborrowed' => 0
+                    ));
+                }
             }
             $bapName= str_replace($symbol,'-',$request->inventoryloan_nomorBAP);
             $validatedData['inventoryloan_tglpengembalian'] = date('Y-m-d');

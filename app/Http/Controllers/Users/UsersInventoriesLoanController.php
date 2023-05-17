@@ -111,11 +111,18 @@ class UsersInventoriesLoanController extends Controller
             if ($request->oldBAP)
             {
                 Storage::delete($request->oldBAP);
+                
+            } else {
+                $inventoryDetails = InventoriesLoanDetails::where('inventoryloan_id', '=', $inventoryloan_id)->get();
+                foreach($inventoryDetails as $inventoryDetail){
+                    $inventory_id = $inventoryDetail->inventory_id;
+                    Inventories::where('id', $inventory_id)->update(array(
+                        'inventory_isborrowed' => 0
+                    ));
+                }
             }
             $validatedData['inventoryloan_filepengembalian'] = $request->file('inventoryloan_filepengembalian')->store('bap-files');
             TelegramBotController::messages(auth()->user()->account_name.' Telah Mengupload BAP');
-
-
         }
         //insert data
         InventoriesLoan::where('id', $inventoriesLoan->id)->update($validatedData);
