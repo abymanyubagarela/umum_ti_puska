@@ -43,12 +43,12 @@ class LoginController extends Controller
 
         $bind = 1 ;
         if ($bind) {
-            // $cn = substr($username, 0, strpos($username, '@'));
-            // $res = ldap_search($dc, 'dc=bpk,dc=go,dc=id', "(samaccountname={$cn})", ['description']);
-            // $data = ldap_get_entries($dc, $res);
+            $cn = substr($username, 0, strpos($username, '@'));
+            $res = ldap_search($dc, 'dc=bpk,dc=go,dc=id', "(samaccountname={$cn})", ['description']);
+            $data = ldap_get_entries($dc, $res);
             // dd($data);
             if (true) {
-                // $nip_pendek = trim($data[0]['description'][0]);
+                $nip_pendek = trim($data[0]['description'][0]);
                 // TODO auth ok
                 // dd($nip_pendek);
                 $user = Accounts::where('account_email', '=', $username)->first();

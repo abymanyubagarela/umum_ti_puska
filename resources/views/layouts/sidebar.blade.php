@@ -38,7 +38,9 @@
                         <li><a href="/backend/transaksi-buku">Permintaan Peminjaman</a></li>
                         <li><a href="/backend/transaksi-buku-pinjam">Peminjaman</a></li>
                         <li><a href="/backend/transaksi-buku-kembali">Pengembalian</a></li>
+                        @canany(['Super Admin', 'Petugas Kendaraan','Kasubbag Umum','Petugas Perpus'])
                         <li><a href="/backend/transaksi-buku-selesai">Selesai</a></li>
+                        @endcanany
                     </ul>
                 </li>
                 @canany(['Super Admin', 'Petugas Kendaraan','Kasubbag Umum','Petugas Perpus'])

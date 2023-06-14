@@ -10,10 +10,12 @@ use Illuminate\Http\Request;
 use App\Models\InventoriesLoan;
 use Illuminate\Support\Facades\DB;
 use App\Models\InventoriesLoanDetails;
+use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpWord\Writer\HTML\Part\Body;
 
 class DashboardControllers extends Controller
 {
+    
     public function bmnDashboard()
     {
         $data = [
@@ -30,7 +32,8 @@ class DashboardControllers extends Controller
 
     public function puskaDashboard()
     {
-        // dd('x');
+        
+        $user_role = Auth::user()->account_role;
         $data = [
             'date' => date('m/d/Y') ,
             'total_buku' => Books::select('id')->count(),
@@ -41,14 +44,33 @@ class DashboardControllers extends Controller
             'buku_kembali' => BookTrx::latest()->take(10)->where('status', 3)->with(['Accounts','Books'])->get(),
         ];
 
+        if($user_role == "Pegawai") {
+            $data = [
+                'date' => date('m/d/Y') ,
+                'total_buku' => Books::select('id')->count(),
+                'total_isbn' => Books::whereNotNull('book_isbn')->select('id')->count(),
+                'total_pinjam' => BookTrx::select('id')->where('status', 2)->where('id_pegawai', Auth::user()->id)->count(),
+                'total_kembali' => BookTrx::select('id')->where('status', 3)->where('id_pegawai', Auth::user()->id)->count(),
+                'buku_pinjam' => BookTrx::latest()->take(10)->where('status', 2)->where('id_pegawai', Auth::user()->id)->with(['Accounts','Books'])->get(),
+                'buku_kembali' => BookTrx::latest()->take(10)->where('status', 3)->where('id_pegawai', Auth::user()->id)->with(['Accounts','Books'])->get(),
+            ];
+        }
+
         return view('backend/dashboard/puska', $data);
     }
     public function dashboardKeterlambatan()
     {
-        // dd('x');
+        $user_role = Auth::user()->account_role;
+        
         $data = [
             'buku_pinjam' => BookTrx::where('status','>', 1)->where('status','<',4)->where('tanggal_pengembalian','<',date('Y/m/d'))->with(['Accounts','Books'])->get(),
         ];
+
+        if($user_role == "Pegawai") {
+            $data = [
+                'buku_pinjam' => BookTrx::where('status','>', 1)->where('status','<',4)->where('tanggal_pengembalian','<',date('Y/m/d'))->with(['Accounts','Books'])->get(),
+            ];
+        }
 
         return view('backend/dashboard/keterlambatan', $data);
     }

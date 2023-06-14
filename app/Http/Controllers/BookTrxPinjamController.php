@@ -150,7 +150,7 @@ class BookTrxPinjamController extends Controller
                     return '<span class="badge badge-soft-warning">Waiting</span>';
                 }
 
-                $processBtn = '<button value="' . $row->id . '"name="' . $row->name . '" class="update-pinjam-buku btn btn-warning btn-sm" data-status="'.$row->status.'">Konfirmasi</button>';
+                $processBtn = '<button value="' . $row->id . '"name="' . $row->name . '" class="update-pinjam-buku btn btn-warning btn-sm" data-status="'.$row->status.'">Pengembalian</button>';
 
                 return $processBtn;
 

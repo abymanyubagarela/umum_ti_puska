@@ -28,8 +28,8 @@
 </div>
 
 <script type="text/javascript">
-    var dataRowAdd = [];
-
+    
+    var count = 0;
     $(function() {
         getDataTableModal();
     });
@@ -39,9 +39,9 @@
         $('.yajra-datatable-modal').DataTable().ajax.reload();
     });
 
-    $(document).on('click','div.adding',function(){
+    $(document).on('click', 'div.adding', function() {
         var typeModal = $('table #type').val();
-        if(typeModal == 'edit'){
+        if (typeModal == 'edit') {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
@@ -56,33 +56,41 @@
                 url: "/backend/inventoriesLoanDetails/",
                 data: formData,
                 dataType: 'json',
-                success: function (data) {
+                success: function(data) {
                     $('#myModal').modal('hide')
                     $('.dataTable').DataTable().ajax.reload();
                     toastr.success('Data berhasil ditambah');
                 },
-                error: function (reject) {
+                error: function(reject) {
                     console.log(reject);
                 }
             });
         } else {
-            var tableRows = $(this).parent().parent();
-            dataRowAdd.push($(this).attr('value'));
-            $(this).removeClass('adding');
-            $(this).addClass('deleting');
-            $(this).text('Hapus');
-            $(this).append('<input name="book[]" value="'+$(this).attr('value')+'" type="hidden" />')
-            $('.yajra-datatable').append(tableRows);
+            if(count < 3) {
+                var tableRows = $(this).parent().parent();
+                dataRowAdd.push($(this).attr('value'));
+                $(this).removeClass('adding');
+                $(this).addClass('deleting');
+                $(this).text('Hapus');
+                $(this).append('<input name="book[]" value="' + $(this).attr('value') + '" type="hidden" />')
+                $('.yajra-datatable').append(tableRows);
+                count++;
+            } else {
+                toastr.error('Maksimal peminjaman buku satu pegawai adalah 3 buku');
+            }
         }
 
     });
 
     $(document).on('click', 'div.deleting', function() {
+        
         values = $(this).attr('value');
         dataRowAdd = $.grep(dataRowAdd, function(n) {
             return n != values;
         });
         var tableRows = $(this).parent().parent().remove();
+        count--;
+        
     });
 
     function getDataTableModal() {
@@ -128,6 +136,22 @@
                         }
                     })
                 });
+            },
+            "initComplete": function() {
+                $(".dataTables_filter input")
+                    .unbind() // Unbind previous default bindings
+                    .bind("input", function(e) { // Bind our desired behavior
+                        // If the length is 3 or more characters, or the user pressed ENTER, search
+                        if (this.value.length > 2 || e.keyCode == 13) {
+                            // Call the API search function
+                            table.search(this.value).draw();
+                        }
+                        // Ensure we clear the search if they backspace far enough
+                        if (this.value == "") {
+                            table.search("").draw();
+                        }
+                        return;
+                    });
             }
         });
     };
